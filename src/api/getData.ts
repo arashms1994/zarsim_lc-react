@@ -1,72 +1,123 @@
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./base";
+import type { Customer, Product } from "../utils/Type";
 
-async function fetcher(url: string) {
-  const res = await fetch(url, {
-    headers: { Accept: "application/json;odata=verbose" },
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
+export async function getOpenningListItems() {
+  const listTitle = "LC_Openning";
+
+  const metadataRes = await fetch(
+    `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json;odata=verbose",
+      },
+    }
+  );
+
+  if (!metadataRes.ok) {
+    const err = await metadataRes.text();
+    throw new Error("خطا در گرفتن metadata لیست: " + err);
   }
-  return res.json();
+
+  const metadataData = await metadataRes.json();
+  const entityType = metadataData.d.ListItemEntityTypeFullName;
+  console.log("Entity Type:", entityType);
+
+  const itemsRes = await fetch(
+    `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json;odata=verbose",
+      },
+    }
+  );
+
+  if (!itemsRes.ok) {
+    const err = await itemsRes.text();
+    throw new Error("خطا در گرفتن آیتم‌ها: " + err);
+  }
+
+  const itemsData = await itemsRes.json();
+  console.log("آیتم‌ها:", itemsData.d.results);
+
+  return {
+    entityType,
+    items: itemsData.d.results,
+  };
 }
 
-export function useOpenningListItems() {
-  return useQuery({
-    queryKey: ["openningListItems"],
-    queryFn: async () => {
-      const listTitle = "LC_Openning";
+export async function getCustomerFactor(factorNumber: string): Promise<Customer> {
+  const listTitle = "customer_factor";
 
-      const metadataData = await fetcher(
-        `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')`
-      );
-      const entityType = metadataData.d.ListItemEntityTypeFullName;
+  const itemsRes = await fetch(
+    `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=Title eq '${factorNumber}'`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json;odata=verbose",
+      },
+    }
+  );
 
-      const itemsData = await fetcher(
-        `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items`
-      );
+  if (!itemsRes.ok) {
+    const err = await itemsRes.text();
+    throw new Error("خطا در گرفتن آیتم‌ها: " + err);
+  }
 
-      return {
-        entityType,
-        items: itemsData.d.results,
-      };
-    },
-  });
+  const itemData = await itemsRes.json();
+
+  return {
+    item: itemData.d.results.at(0),
+  };
 }
 
-export function useCustomerFactor(factorNumber: string) {
-  return useQuery({
-    queryKey: ["customerFactor", factorNumber],
-    queryFn: async () => {
-      const listTitle = "customer_factor";
+export async function getCustomerFactorDetails(factorNumber: string): Promise<Product[]> {
+  const listTitle = "detail_customer_factor";
+  let allResults: Product[] = [];
+  let nextUrl = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=OrderNumber eq '${factorNumber}'`;
 
-      const itemData = await fetcher(
-        `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=Title eq '${factorNumber}'`
-      );
+  try {
+    while (nextUrl) {
+      const response = await fetch(nextUrl, {
+        method: "GET",
+        headers: {
+          Accept: "application/json;odata=verbose",
+        },
+      });
 
-      return itemData.d.results.at(0);
-    },
-    enabled: !!factorNumber,
-  });
-}
-
-export function useCustomerFactorDetails(factorNumber: string) {
-  return useQuery({
-    queryKey: ["customerFactorDetails", factorNumber],
-    queryFn: async () => {
-      const listTitle = "detail_customer_factor";
-      let allResults: unknown[] = [];
-      let nextUrl = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=OrderNumber eq '${factorNumber}'`;
-
-      while (nextUrl) {
-        const data = await fetcher(nextUrl);
-        allResults = [...allResults, ...data.d.results];
-        nextUrl = data.d.__next || null;
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error("خطا در گرفتن جزئیات محصولات: " + err);
       }
 
-      return allResults;
-    },
-    enabled: !!factorNumber,
+      const data = await response.json();
+
+      allResults = [...allResults, ...data.d.results];
+
+      nextUrl = data.d.__next || null;
+    }
+
+    return allResults;
+  } catch (err) {
+    console.error("خطا در دریافت آیتم‌ها:", err);
+    return [];
+  }
+}
+
+export function useCustomerFactor(faktorNumber: string) {
+  return useQuery<Customer, Error>({
+    queryKey: ["customerFactor", faktorNumber],
+    queryFn: () => getCustomerFactor(faktorNumber),
+    enabled: !!faktorNumber,
+  });
+}
+
+export function useCustomerFactorDetails(faktorNumber: string) {
+  return useQuery<Product[], Error>({
+    queryKey: ["customerFactorDetails", faktorNumber],
+    queryFn: () => getCustomerFactorDetails(faktorNumber),
+    enabled: !!faktorNumber,
   });
 }
