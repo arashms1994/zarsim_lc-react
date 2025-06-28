@@ -48,7 +48,9 @@ export async function getOpenningListItems() {
   };
 }
 
-export async function getCustomerFactor(factorNumber: string): Promise<Customer> {
+export async function getCustomerFactor(
+  factorNumber: string
+): Promise<Customer> {
   const listTitle = "customer_factor";
 
   const itemsRes = await fetch(
@@ -73,7 +75,9 @@ export async function getCustomerFactor(factorNumber: string): Promise<Customer>
   };
 }
 
-export async function getCustomerFactorDetails(factorNumber: string): Promise<Product[]> {
+export async function getCustomerFactorDetails(
+  factorNumber: string
+): Promise<Product[]> {
   const listTitle = "detail_customer_factor";
   let allResults: Product[] = [];
   let nextUrl = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=OrderNumber eq '${factorNumber}'`;
