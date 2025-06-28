@@ -4,7 +4,7 @@ import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
 import { LCOpenningDates, settlementDates } from "../../utils/constants";
 import { useOutletContext } from "react-router";
 
-const Openning: React.FC<{ faktorNumber: string }> = () => {
+const Openning = () => {
   const { faktorNumber } = useOutletContext<{ faktorNumber: string }>();
 
   const [formData, setFormData] = useState({
