@@ -1,7 +1,7 @@
 import { useCustomerFactor, useCustomerFactorDetails } from "../../api/getData";
-// import Faktor from "./faktor/Faktor";
-// import FaktorDetail from "./faktor/FaktorDetail";
+import Faktor from "./Faktor";
 import { useOutletContext } from "react-router";
+import FaktorDetail from "./FaktorDetail";
 
 const PreInvoice = () => {
   const { faktorNumber } = useOutletContext<{ faktorNumber: string }>();
