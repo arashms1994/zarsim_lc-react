@@ -1,0 +1,64 @@
+// components/Layout.tsx
+import React, { useState, useEffect } from "react";
+import { useLocation, Outlet, useNavigate } from "react-router-dom";
+import classNames from "classnames";
+import { LayoutContext } from "../../providers/LayoutContext";
+
+export const Layout: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchQuery] = useState<string>("");
+  const [faktorNumber, setFaktorNumber] = useState<string>("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const faktor = params.get("Factor_ID") || "4-70105-1";
+    setFaktorNumber(faktor);
+  }, []);
+
+  const getButtonClass = (targetPath: string) => {
+    return classNames(
+      "text-[20px] font-medium cursor-pointer transition-all duration-300 p-3 md:p-4 rounded-[12px] flex justify-center items-center",
+      location.pathname === targetPath
+        ? "bg-[#009E08] text-white"
+        : "bg-[#c5c5c5] text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+    );
+  };
+
+  return (
+    <LayoutContext.Provider value={{ searchQuery, faktorNumber }}>
+      <div className="p-5 md:p-10 rtl">
+        <header className="bg-[#dddFC9] w-full p-5 md:p-10 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around">
+          <button onClick={() => navigate("/")} className={getButtonClass("/")}>
+            نمایش پیش فاکتور
+          </button>
+
+          <button
+            onClick={() => navigate("/openning")}
+            className={getButtonClass("/openning")}
+          >
+            گشایش و ابلاغ
+          </button>
+
+          <button
+            onClick={() => navigate("/carry")}
+            className={getButtonClass("/carry")}
+          >
+            حمل و بارگیری
+          </button>
+
+          <button
+            onClick={() => navigate("/payment")}
+            className={getButtonClass("/payment")}
+          >
+            پیگیری تعهد پرداخت
+          </button>
+        </header>
+
+        <main>
+          <Outlet context={{ faktorNumber }} />
+        </main>
+      </div>
+    </LayoutContext.Provider>
+  );
+};
