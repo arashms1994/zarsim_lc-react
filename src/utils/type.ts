@@ -38,3 +38,9 @@ export interface IFaktorProps {
 export interface IFaktorDetailProps {
   products?: IProduct[];
 }
+
+
+export interface IFileUploaderProps {
+  orderNumber: string;
+  subFolder: string;
+}
