@@ -1,5 +1,5 @@
 import { BASE_URL } from "./base";
-import { getDigest } from "./GetDigest";
+import { getDigest } from "./getDigest";
 
 export interface IOpenningState {
   LCTotalPrice: number;
