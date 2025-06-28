@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./base";
-import type { Customer, Product } from "../utils/Type";
+import type { ICustomer, IProduct } from "../utils/Type";
 
 export async function getOpenningListItems() {
   const listTitle = "LC_Openning";
@@ -50,7 +50,7 @@ export async function getOpenningListItems() {
 
 export async function getCustomerFactor(
   factorNumber: string
-): Promise<Customer> {
+): Promise<ICustomer> {
   const listTitle = "customer_factor";
 
   const itemsRes = await fetch(
@@ -77,9 +77,9 @@ export async function getCustomerFactor(
 
 export async function getCustomerFactorDetails(
   factorNumber: string
-): Promise<Product[]> {
+): Promise<IProduct[]> {
   const listTitle = "detail_customer_factor";
-  let allResults: Product[] = [];
+  let allResults: IProduct[] = [];
   let nextUrl = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=OrderNumber eq '${factorNumber}'`;
 
   try {
@@ -111,7 +111,7 @@ export async function getCustomerFactorDetails(
 }
 
 export function useCustomerFactor(faktorNumber: string) {
-  return useQuery<Customer, Error>({
+  return useQuery<ICustomer, Error>({
     queryKey: ["customerFactor", faktorNumber],
     queryFn: () => getCustomerFactor(faktorNumber),
     enabled: !!faktorNumber,
@@ -119,7 +119,7 @@ export function useCustomerFactor(faktorNumber: string) {
 }
 
 export function useCustomerFactorDetails(faktorNumber: string) {
-  return useQuery<Product[], Error>({
+  return useQuery<IProduct[], Error>({
     queryKey: ["customerFactorDetails", faktorNumber],
     queryFn: () => getCustomerFactorDetails(faktorNumber),
     enabled: !!faktorNumber,
