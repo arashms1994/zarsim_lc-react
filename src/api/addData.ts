@@ -1,6 +1,6 @@
 import type { IOpenningState } from "../utils/Type";
 import { BASE_URL } from "./base";
-import { getDigest } from "./getDigest";
+import { getDigest } from "../utils/getDigest";
 
 export async function AddToOpenningDate(state: IOpenningState): Promise<void> {
   const listName = "LC_Openning";
