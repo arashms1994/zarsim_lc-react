@@ -62,7 +62,7 @@ const Openning = () => {
             شماره اعتبار اسنادی:
           </label>
           <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg"
+            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 flex justify-center it"
             type="text"
             name="LCNumber"
             value={formData.LCNumber}
@@ -76,7 +76,7 @@ const Openning = () => {
             مبلغ اعتبار (ریال):
           </label>
           <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg"
+            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 flex justify-center it"
             type="text"
             name="LCTotalPrice"
             value={formatNumberWithComma(formData.LCTotalPrice)}

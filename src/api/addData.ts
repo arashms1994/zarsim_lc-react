@@ -1,14 +1,6 @@
+import type { IOpenningState } from "../utils/Type";
 import { BASE_URL } from "./base";
 import { getDigest } from "./getDigest";
-
-export interface IOpenningState {
-  LCTotalPrice: number;
-  LCNumber: string;
-  LCOpenningDate: string;
-  LCCommunicationDate: string;
-  LCSettlementDate: string;
-  LCOriginOpenningDate: string;
-}
 
 export async function AddToOpenningDate(state: IOpenningState): Promise<void> {
   const listName = "LC_Openning";
