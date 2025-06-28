@@ -3,10 +3,14 @@ import { AddToOpenningDate } from "../../api/addData";
 import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
 import { LCOpenningDates, settlementDates } from "../../utils/constants";
 import { useOutletContext } from "react-router";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import type DateObject from "react-date-object";
+import FileUploader from "../file-uploader/FileUploader";
+import { Select } from "../ui/select";
 
 const Openning = () => {
-  const { faktorNumber } = useOutletContext<{ faktorNumber: string }>();
-
   const [formData, setFormData] = useState({
     LCTotalPrice: 0,
     LCNumber: "",
@@ -15,6 +19,10 @@ const Openning = () => {
     LCSettlementDate: "",
     LCOriginOpenningDate: "",
   });
+
+  const { faktorNumber } = useOutletContext<{ faktorNumber: string }>();
+  const [dueDate, setDueDate] = useState<DateObject | null>(null);
+  const [dayOfYear, setDayOfYear] = useState<string>("");
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -49,12 +57,22 @@ const Openning = () => {
           <label className="text-[22px] font-medium" htmlFor="LCOpenningDate">
             تاریخ گشایش:
           </label>
-          {/* <PersianDatePicker
-            value={formData.LCOpenningDate}
-            onChange={(value: string) =>
-              setFormData((prev) => ({ ...prev, LCOpenningDate: value }))
-            }
-          /> */}
+          <DatePicker
+            calendar={persian}
+            locale={persian_fa}
+            value={dueDate}
+            onChange={(date: DateObject) => {
+              setDueDate(date);
+              setDayOfYear(String(date.dayOfYear));
+              setFormData((prev) => ({
+                ...prev,
+                LCOpenningDate: date.format("YYYY/MM/DD"),
+              }));
+            }}
+            inputClass="w-full sm:w-48 px-2 py-1 border-2 border-primary rounded-md font-semibold focus:outline-none"
+            placeholder="تاریخ را انتخاب کنید"
+            format="YYYY/MM/DD"
+          />
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
@@ -92,12 +110,22 @@ const Openning = () => {
           >
             تاریخ ابلاغ:
           </label>
-          {/* <PersianDatePicker
-            value={formData.LCCommunicationDate}
-            onChange={(value: string) =>
-              setFormData((prev) => ({ ...prev, LCCommunicationDate: value }))
-            }
-          /> */}
+          <DatePicker
+            calendar={persian}
+            locale={persian_fa}
+            value={dueDate}
+            onChange={(date: DateObject) => {
+              setDueDate(date);
+              setDayOfYear(String(date.dayOfYear));
+              setFormData((prev) => ({
+                ...prev,
+                LCOpenningDate: date.format("YYYY/MM/DD"),
+              }));
+            }}
+            inputClass="w-full sm:w-48 px-2 py-1 border-2 border-primary rounded-md font-semibold focus:outline-none"
+            placeholder="تاریخ را انتخاب کنید"
+            format="YYYY/MM/DD"
+          />
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
@@ -110,7 +138,7 @@ const Openning = () => {
           <select
             name="LCOriginOpenningDate"
             id="LCOriginOpenningDate"
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg"
+            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg  border-2"
             value={formData.LCOriginOpenningDate}
             onChange={handleChange}
           >
@@ -133,7 +161,7 @@ const Openning = () => {
           <select
             name="LCSettlementDate"
             id="LCSettlementDate"
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg"
+            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
             value={formData.LCSettlementDate}
             onChange={handleChange}
           >
@@ -156,7 +184,10 @@ const Openning = () => {
           >
             آپلود ابلاغیه:
           </label>
-          {/* <FileUploader orderNumber={faktorNumber} subFolder={"گشایش و ابلاغ"} /> */}
+          <FileUploader
+            orderNumber={faktorNumber}
+            subFolder={"گشایش و ابلاغ"}
+          />
         </div>
 
         <button
