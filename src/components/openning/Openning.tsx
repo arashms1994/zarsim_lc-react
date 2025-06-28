@@ -8,7 +8,8 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import type DateObject from "react-date-object";
 import FileUploader from "../file-uploader/FileUploader";
-import { Select } from "../ui/select";
+import { Button } from "../ui/button";
+import { SelectItem,Select, SelectContent, SelectTrigger, SelectValue  } from "../ui/select";
 
 const Openning = () => {
   const [formData, setFormData] = useState({
@@ -53,6 +54,17 @@ const Openning = () => {
         onSubmit={handleSubmit}
         className="flex flex-col justify-center items-center gap-5 py-10"
       >
+        <Button> SJDHGJKS </Button>
+        <Select>
+  <SelectTrigger className="w-[180px]">
+    <SelectValue placeholder="Theme" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="light">Light</SelectItem>
+    <SelectItem value="dark">Dark</SelectItem>
+    <SelectItem value="system">System</SelectItem>
+  </SelectContent>
+</Select>
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium" htmlFor="LCOpenningDate">
             تاریخ گشایش:
