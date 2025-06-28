@@ -1,6 +1,6 @@
-import type { FaktorDetailProps } from "../../utils/Type";
+import type { IFaktorDetailProps } from "../../utils/Type";
 
-export default function FaktorDetail({ products = [] }: FaktorDetailProps) {
+export default function FaktorDetail({ products = [] }: IFaktorDetailProps) {
   if (!products || products.length === 0) {
     return <div className="text-center text-gray-600">در حال بارگذاری...</div>;
   }

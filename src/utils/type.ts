@@ -3,10 +3,6 @@ export interface LayoutContextType {
   faktorNumber: string;
 }
 
-export interface IZarsimLcProps {
-  faktorNumber: string;
-}
-
 export interface IOpenningState {
   LCTotalPrice: number;
   LCNumber: string;
@@ -16,7 +12,7 @@ export interface IOpenningState {
   LCOriginOpenningDate: string;
 }
 
-export interface Customer {
+export interface ICustomer {
   item: {
     Title: string;
     Date: string;
@@ -25,7 +21,7 @@ export interface Customer {
   };
 }
 
-export interface Product {
+export interface IProduct {
   id: string | number;
   Title: string;
   colertitle: string;
@@ -35,10 +31,10 @@ export interface Product {
   Value: string | number;
 }
 
-export interface FaktorProps {
-  customer?: Customer;
+export interface IFaktorProps {
+  customer?: ICustomer;
 }
 
-export interface FaktorDetailProps {
-  products?: Product[];
+export interface IFaktorDetailProps {
+  products?: IProduct[];
 }

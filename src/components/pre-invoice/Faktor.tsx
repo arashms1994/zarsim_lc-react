@@ -1,6 +1,6 @@
-import type { FaktorProps } from "../../utils/Type";
+import type { IFaktorProps } from "../../utils/Type";
 
-export default function Faktor({ customer }: FaktorProps) {
+export default function Faktor({ customer }: IFaktorProps) {
   if (!customer || !customer.item) {
     return <div className="text-center text-gray-600">در حال بارگذاری...</div>;
   }
