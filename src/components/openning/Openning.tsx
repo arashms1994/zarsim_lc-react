@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { AddToOpenningDate } from "../../api/addData";
 import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
-import { LCOpenningDates, settlementDates } from "../../utils/constants";
+// import { LCOpenningDates, settlementDates } from "../../utils/constants";
 import { useOutletContext } from "react-router";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import type DateObject from "react-date-object";
 import FileUploader from "../file-uploader/FileUploader";
-import {
-  SelectItem,
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+// import {
+//   SelectItem,
+//   Select,
+//   SelectContent,
+//   SelectTrigger,
+//   SelectValue,
+// } from "../ui/select";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
@@ -83,7 +83,7 @@ const Openning = () => {
             format="YYYY/MM/DD"
           />
         </div>
-
+        
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium" htmlFor="LCNumber">
             شماره اعتبار اسنادی:
@@ -143,7 +143,7 @@ const Openning = () => {
           >
             مبدا گشایش اعتبار:
           </label>
-          <Select value={formData.LCOriginOpenningDate} onChange={handleChange}>
+          {/* <Select value={formData.LCOriginOpenningDate} onChange={handleChange}>
             <SelectTrigger
               name="LCOriginOpenningDate"
               id="LCOriginOpenningDate"
@@ -162,14 +162,14 @@ const Openning = () => {
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
+          </Select> */}
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium" htmlFor="LCSettlementDate">
             مدت زمان تسویه:
           </label>
-          <Select value={formData.LCOriginOpenningDate} onChange={handleChange}>
+          {/* <Select value={formData.LCOriginOpenningDate} onChange={handleChange}>
             <SelectTrigger
               name="LCOriginOpenningDate"
               id="LCOriginOpenningDate"
@@ -188,7 +188,7 @@ const Openning = () => {
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
+          </Select> */}
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
