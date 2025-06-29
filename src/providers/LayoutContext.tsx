@@ -1,6 +1,6 @@
 // context/LayoutContext.tsx
 import { createContext, useContext } from "react";
-import type { LayoutContextType } from "../utils/Type";
+import type { LayoutContextType } from "../utils/type";
 
 export const LayoutContext = createContext<LayoutContextType | null>(null);
 

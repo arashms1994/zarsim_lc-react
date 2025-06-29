@@ -1,4 +1,4 @@
-import type { IFaktorProps } from "../../utils/Type";
+import type { IFaktorProps } from "@/utils/type";
 
 export default function Faktor({ customer }: IFaktorProps) {
   if (!customer || !customer.item) {

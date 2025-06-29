@@ -1,4 +1,4 @@
-import type { IFaktorDetailProps } from "../../utils/Type";
+import type { IFaktorDetailProps } from "@/utils/type";
 
 export default function FaktorDetail({ products = [] }: IFaktorDetailProps) {
   if (!products || products.length === 0) {
