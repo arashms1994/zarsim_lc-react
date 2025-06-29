@@ -8,8 +8,15 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import type DateObject from "react-date-object";
 import FileUploader from "../file-uploader/FileUploader";
+import {
+  SelectItem,
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { SelectItem,Select, SelectContent, SelectTrigger, SelectValue  } from "../ui/select";
 
 const Openning = () => {
   const [formData, setFormData] = useState({
@@ -22,8 +29,10 @@ const Openning = () => {
   });
 
   const { faktorNumber } = useOutletContext<{ faktorNumber: string }>();
-  const [dueDate, setDueDate] = useState<DateObject | null>(null);
-  const [dayOfYear, setDayOfYear] = useState<string>("");
+  const [openningDate, setOpenningDate] = useState<DateObject | null>(null);
+  const [communicationDate, setCommunicationDate] = useState<DateObject | null>(
+    null
+  );
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -54,17 +63,6 @@ const Openning = () => {
         onSubmit={handleSubmit}
         className="flex flex-col justify-center items-center gap-5 py-10"
       >
-        <Button> SJDHGJKS </Button>
-        <Select>
-  <SelectTrigger className="w-[180px]">
-    <SelectValue placeholder="Theme" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectItem value="light">Light</SelectItem>
-    <SelectItem value="dark">Dark</SelectItem>
-    <SelectItem value="system">System</SelectItem>
-  </SelectContent>
-</Select>
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium" htmlFor="LCOpenningDate">
             تاریخ گشایش:
@@ -72,10 +70,9 @@ const Openning = () => {
           <DatePicker
             calendar={persian}
             locale={persian_fa}
-            value={dueDate}
+            value={openningDate}
             onChange={(date: DateObject) => {
-              setDueDate(date);
-              setDayOfYear(String(date.dayOfYear));
+              setOpenningDate(date);
               setFormData((prev) => ({
                 ...prev,
                 LCOpenningDate: date.format("YYYY/MM/DD"),
@@ -91,8 +88,8 @@ const Openning = () => {
           <label className="text-[22px] font-medium" htmlFor="LCNumber">
             شماره اعتبار اسنادی:
           </label>
-          <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 flex justify-center it"
+          <Input
+            className="w-48 min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 flex justify-center it"
             type="text"
             name="LCNumber"
             value={formData.LCNumber}
@@ -105,8 +102,8 @@ const Openning = () => {
           <label className="text-[22px] font-medium" htmlFor="LCTotalPrice">
             مبلغ اعتبار (ریال):
           </label>
-          <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 flex justify-center it"
+          <Input
+            className="w-48 min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 flex justify-center it"
             type="text"
             name="LCTotalPrice"
             value={formatNumberWithComma(formData.LCTotalPrice)}
@@ -125,13 +122,12 @@ const Openning = () => {
           <DatePicker
             calendar={persian}
             locale={persian_fa}
-            value={dueDate}
+            value={communicationDate}
             onChange={(date: DateObject) => {
-              setDueDate(date);
-              setDayOfYear(String(date.dayOfYear));
+              setCommunicationDate(date);
               setFormData((prev) => ({
                 ...prev,
-                LCOpenningDate: date.format("YYYY/MM/DD"),
+                LCCommunicationDate: date.format("YYYY/MM/DD"),
               }));
             }}
             inputClass="w-full sm:w-48 px-2 py-1 border-2 border-primary rounded-md font-semibold focus:outline-none"
@@ -147,46 +143,52 @@ const Openning = () => {
           >
             مبدا گشایش اعتبار:
           </label>
-          <select
-            name="LCOriginOpenningDate"
-            id="LCOriginOpenningDate"
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg  border-2"
-            value={formData.LCOriginOpenningDate}
-            onChange={handleChange}
-          >
-            {LCOpenningDates.map(({ value, label }) => (
-              <option
-                key={value || "empty"}
-                value={value}
-                className="min-w-[230px] min-h-[30px] p-1 text-[18px] font-normal text-gray-800 rounded-lg"
-              >
-                {label}
-              </option>
-            ))}
-          </select>
+          <Select value={formData.LCOriginOpenningDate} onChange={handleChange}>
+            <SelectTrigger
+              name="LCOriginOpenningDate"
+              id="LCOriginOpenningDate"
+              className="w-48 min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg  border-2"
+            >
+              <SelectValue placeholder="یک گزینه انتخاب کنید" />
+            </SelectTrigger>
+            <SelectContent>
+              {LCOpenningDates.map(({ value, label }) => (
+                <SelectItem
+                  key={value || "empty"}
+                  value={value}
+                  className="min-h-[30px] p-1 text-[18px] font-normal text-gray-800 rounded-lg"
+                >
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium" htmlFor="LCSettlementDate">
             مدت زمان تسویه:
           </label>
-          <select
-            name="LCSettlementDate"
-            id="LCSettlementDate"
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
-            value={formData.LCSettlementDate}
-            onChange={handleChange}
-          >
-            {settlementDates.map(({ value, label }) => (
-              <option
-                key={value || "empty"}
-                value={value}
-                className="min-w-[230px] min-h-[30px] p-1 text-[18px] font-normal text-gray-800 rounded-lg"
-              >
-                {label}
-              </option>
-            ))}
-          </select>
+          <Select value={formData.LCOriginOpenningDate} onChange={handleChange}>
+            <SelectTrigger
+              name="LCOriginOpenningDate"
+              id="LCOriginOpenningDate"
+              className="w-48 min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg  border-2"
+            >
+              <SelectValue placeholder="یک گزینه انتخاب کنید" />
+            </SelectTrigger>
+            <SelectContent>
+              {settlementDates.map(({ value, label }) => (
+                <SelectItem
+                  key={value || "empty"}
+                  value={value}
+                  className="min-h-[30px] p-1 text-[18px] font-normal text-gray-800 rounded-lg"
+                >
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
@@ -202,12 +204,12 @@ const Openning = () => {
           />
         </div>
 
-        <button
+        <Button
           type="submit"
-          className="border-none rounded-lg min-w-[200px] px-3 py-2 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
+          className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
         >
           ثبت اطلاعات
-        </button>
+        </Button>
       </form>
 
       <p className="text-red-600 text-center text-[16px] font-normal mt-4">
