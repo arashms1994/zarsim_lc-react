@@ -1,4 +1,4 @@
-import type { IOpenningState } from "../utils/Type";
+import type { IOpenningState } from "../utils/type";
 import { BASE_URL } from "./base";
 import { getDigest } from "../utils/getDigest";
 

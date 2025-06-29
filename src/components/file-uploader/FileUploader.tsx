@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { BASE_URL } from "../../api/base";
 import { getDigest } from "../../utils/getDigest";
-import type { IFileUploaderProps } from "../../utils/Type";
+import type { IFileUploaderProps } from "@/utils/type";
 
 const FileUploader: React.FC<IFileUploaderProps> = ({
   orderNumber,

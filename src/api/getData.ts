@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./base";
-import type { ICustomer, IProduct } from "../utils/Type";
+import type { ICustomer, IProduct } from "@/utils/type";
 
 export async function getOpenningListItems() {
   const listTitle = "LC_Openning";
