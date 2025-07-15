@@ -12,6 +12,10 @@ export interface IOpenningState {
   LCOriginOpenningDate: string;
 }
 
+export interface ICarryProps {
+  faktorNumber: string;
+}
+
 export interface ICustomer {
   ID: number;
   Title: string;
@@ -47,4 +51,9 @@ export interface IFaktorDetailProps {
 export interface IFileUploaderProps {
   orderNumber: string;
   subFolder: string;
+}
+
+export interface ISearchBarProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

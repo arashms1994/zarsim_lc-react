@@ -43,7 +43,7 @@ const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
         <p className="text-2xl text-[#0e7216]">مشخصات مشتری</p>
       </div>
 
-      <div className="w-full flex justify-between items-center flex-wrap gap-8 px-8 pt-2.5">
+      <div className="w-full flex justify-start items-center flex-wrap gap-8 px-8 pt-2.5">
         <Link
           className="flex justify-center items-center text-center"
           to={`http://portal/Lists/customer_factor/DispForm.aspx?ID=${customer.ID}`}
