@@ -7,10 +7,10 @@ import QueryProvider from "./providers/QueryProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <QueryProvider>
+    <QueryProvider>
+      <BrowserRouter basename="/SitePages/finallc.aspx">
         <App />
-      </QueryProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </QueryProvider>
   </StrictMode>
 );
