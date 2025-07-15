@@ -1,3 +1,5 @@
+import type { DateObject } from "react-multi-date-picker";
+
 export interface LayoutContextType {
   searchQuery: string;
   faktorNumber: string;
@@ -56,4 +58,9 @@ export interface IFileUploaderProps {
 export interface ISearchBarProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface IPersianDatePickerProps {
+  value: string | Date | DateObject | null;
+  onChange: (date: string) => void;
 }

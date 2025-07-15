@@ -4,6 +4,7 @@ import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
 import { LCOpenningDates, settlementDates } from "../../utils/constants";
 import { AddToOpenningDate } from "../../api/addData";
 import Guid from "@/utils/createGUID";
+import PersianDatePicker from "../persian-date-picker/PersianDatePicker";
 
 const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
   const sendRef = useRef<any>(null);
@@ -59,15 +60,15 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
           <label className="text-[22px] font-medium" htmlFor="LCOpenningDate">
             تاریخ گشایش:
           </label>
-          {/* <PersianDatePicker
+          <PersianDatePicker
             value={formData.LCOpenningDate}
-            onChange={(value: string) =>
+            onChange={(date: string) =>
               setFormData((prev) => ({
                 ...prev,
-                LCOpenningDate: value,
+                LCOpenningDate: date,
               }))
             }
-          /> */}
+          />
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
@@ -75,7 +76,7 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
             شماره اعتبار اسنادی:
           </label>
           <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
+            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
             type="text"
             name="LCNumber"
             value={formData.LCNumber}
@@ -89,7 +90,7 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
             مبلغ اعتبار (ریال):
           </label>
           <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
+            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
             type="text"
             name="LCTotalPrice"
             value={formatNumberWithComma(formData.LCTotalPrice)}
@@ -99,22 +100,29 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium" htmlFor="LCCommunicationDate">
+          <label
+            className="text-[22px] font-medium"
+            htmlFor="LCCommunicationDate"
+          >
             تاریخ ابلاغ:
           </label>
-          {/* <PersianDatePicker
-            value={formData.LCCommunicationDate}
-            onChange={(value: string) =>
+          <PersianDatePicker
+            value={formData.LCOpenningDate}
+            onChange={(date: string) =>
               setFormData((prev) => ({
                 ...prev,
-                LCCommunicationDate: value,
+                LCCommunicationDate: date,
               }))
             }
-          /> */}
+          />
+
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium" htmlFor="LCOriginOpenningDate">
+          <label
+            className="text-[22px] font-medium"
+            htmlFor="LCOriginOpenningDate"
+          >
             مبدا گشایش اعتبار:
           </label>
           <select
@@ -162,7 +170,10 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium" htmlFor="openningUploadFile">
+          <label
+            className="text-[22px] font-medium"
+            htmlFor="openningUploadFile"
+          >
             آپلود ابلاغیه:
           </label>
           <FileUploader
@@ -187,3 +198,23 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
 };
 
 export default Openning;
+
+{/* <PersianDatePicker
+            value={formData.LCOpenningDate}
+            onChange={(value: string) =>
+              setFormData((prev) => ({
+                ...prev,
+                LCOpenningDate: value,
+              }))
+            }
+          /> */}
+
+                    {/* <PersianDatePicker
+            value={formData.LCCommunicationDate}
+            onChange={(value: string) =>
+              setFormData((prev) => ({
+                ...prev,
+                LCCommunicationDate: value,
+              }))
+            }
+          /> */}
