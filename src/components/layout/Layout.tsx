@@ -29,11 +29,16 @@ export const Layout: React.FC = () => {
     <LayoutContext.Provider value={{ searchQuery, faktorNumber }}>
       <div className="p-5 md:p-10 rtl">
         <header className="bg-[#dddFC9] w-full p-5 md:p-10 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around">
-          <button onClick={() => navigate("/")} className={getButtonClass("/")}>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className={getButtonClass("/")}
+          >
             نمایش پیش فاکتور
           </button>
 
           <button
+            type="button"
             onClick={() => navigate("/openning")}
             className={getButtonClass("/openning")}
           >
@@ -41,6 +46,7 @@ export const Layout: React.FC = () => {
           </button>
 
           <button
+            type="button"
             onClick={() => navigate("/carry")}
             className={getButtonClass("/carry")}
           >
@@ -48,6 +54,7 @@ export const Layout: React.FC = () => {
           </button>
 
           <button
+            type="button"
             onClick={() => navigate("/payment")}
             className={getButtonClass("/payment")}
           >

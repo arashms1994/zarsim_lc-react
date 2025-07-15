@@ -1,6 +1,7 @@
+import type { ICustomer } from './../utils/type';
 import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./base";
-import type { ICustomer, IProduct } from "@/utils/type";
+import type { IProduct } from "@/utils/type";
 
 export async function getOpenningListItems() {
   const listTitle = "LC_Openning";
@@ -70,9 +71,7 @@ export async function getCustomerFactor(
 
   const itemData = await itemsRes.json();
 
-  return {
-    item: itemData.d.results.at(0),
-  };
+  return itemData.d.results.at(0) as ICustomer;
 }
 
 export async function getCustomerFactorDetails(

@@ -13,12 +13,21 @@ export interface IOpenningState {
 }
 
 export interface ICustomer {
-  item: {
-    Title: string;
-    Date: string;
-    Customer: string;
-    type_factor: string;
-  };
+  ID: number;
+  Title: string;
+  Date: string;
+  Customer: string;
+  type_factor: string;
+  MainTotalCu: number;
+  MainTotakTICU: number;
+  total_SUM: number;
+  takhfif: number;
+  avarez: number;
+  total_mani: number;
+}
+
+export interface IFaktorProps {
+  customer: ICustomer;
 }
 
 export interface IProduct {
@@ -31,14 +40,9 @@ export interface IProduct {
   Value: string | number;
 }
 
-export interface IFaktorProps {
-  customer?: ICustomer;
-}
-
 export interface IFaktorDetailProps {
   products?: IProduct[];
 }
-
 
 export interface IFileUploaderProps {
   orderNumber: string;

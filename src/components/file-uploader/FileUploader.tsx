@@ -1,33 +1,34 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { BASE_URL } from "../../api/base";
 import { getDigest } from "../../utils/getDigest";
 import type { IFileUploaderProps } from "@/utils/type";
 
-const FileUploader: React.FC<IFileUploaderProps> = ({
-  orderNumber,
-  subFolder,
-}) => {
+const FileUploader = forwardRef<unknown, IFileUploaderProps>(({ orderNumber, subFolder }, ref) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState("");
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const clearFile = () => {
+  useImperativeHandle(ref, () => ({
+    getFile: () => selectedFile,
+    uploadFile,
+    clearFile,
+  }));
+
+  function clearFile() {
     setSelectedFile(null);
     setUploadStatus("");
     setUploadProgress(0);
-
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-  };
+  }
 
-  const uploadFile = async () => {
+  async function uploadFile() {
     if (!selectedFile) {
       setUploadStatus("لطفا یک فایل انتخاب کنید");
       return;
     }
-
     if (!orderNumber) {
       setUploadStatus("شماره سفارش معتبر نیست");
       return;
@@ -64,6 +65,7 @@ const FileUploader: React.FC<IFileUploaderProps> = ({
           headers: {
             Accept: "application/json;odata=verbose",
             "X-RequestDigest": digest,
+            "Content-Type": "application/octet-stream",
           },
         }
       );
@@ -71,6 +73,10 @@ const FileUploader: React.FC<IFileUploaderProps> = ({
       if (uploadRes.ok) {
         setUploadStatus("فایل با موفقیت آپلود شد");
         setUploadProgress(100);
+        setSelectedFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       } else {
         throw new Error("خطا در آپلود فایل");
       }
@@ -79,21 +85,23 @@ const FileUploader: React.FC<IFileUploaderProps> = ({
       setUploadStatus("خطا در آپلود فایل");
       setUploadProgress(0);
     }
-  };
+  }
+
+  const inputId = React.useMemo(() => "file_" + Math.random().toString(36).substring(2, 9), []);
 
   return (
     <div className="flex justify-around items-center min-w-[230px] h-[50px] gap-4 flex-wrap">
       <label
-        htmlFor="fileUpload"
+        htmlFor={inputId}
         className="px-2 py-1 w-[95px] h-[30px] rounded-lg text-white bg-green-600 font-semibold flex justify-center items-center cursor-pointer hover:bg-green-800 transition-all duration-300"
       >
         انتخاب فایل
       </label>
       <input
-        id="fileUpload"
+        className="hidden"
+        id={inputId}
         type="file"
         ref={fileInputRef}
-        className="hidden"
         onChange={(e) => {
           const file = e.target.files && e.target.files[0];
           if (file) {
@@ -105,42 +113,28 @@ const FileUploader: React.FC<IFileUploaderProps> = ({
       />
 
       {selectedFile ? (
-        <div className="flex items-center">
-          <p className="text-[13px] font-bold text-gray-800">
-            {selectedFile.name}
-          </p>
+        <div className="flex items-center justify-center">
+          <p className="text-[13px] font-bold text-gray-800 flex items-center">{selectedFile.name}</p>
           <button
+            type="button"
             onClick={clearFile}
             aria-label="پاک کردن فایل"
-            className="ml-2 text-red-600 text-xl font-bold hover:text-red-400 transition-all duration-300"
+            className="ml-2 text-red-600 text-xl font-bold hover:text-red-400 transition-all duration-300 bg-transparent border-none"
           >
             ×
           </button>
         </div>
       ) : (
-        <p className="text-[13px] font-bold text-gray-800">
-          هنوز فایلی انتخاب نشده
-        </p>
+        <p className="text-[13px] font-bold text-gray-800 flex items-center">هنوز فایلی انتخاب نشده</p>
       )}
 
       {uploadStatus && (
-        <div
-          className={`font-bold ${
-            uploadProgress === 100 ? "text-green-700" : "text-red-600"
-          }`}
-        >
+        <div className={`font-bold ${uploadProgress === 100 ? "text-green-700" : "text-red-600"}`}>
           {uploadStatus}
         </div>
       )}
-
-      <button
-        onClick={uploadFile}
-        className="px-3 py-1 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-800 transition-all duration-300"
-      >
-        آپلود فایل
-      </button>
     </div>
   );
-};
+});
 
 export default FileUploader;
