@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  base: '/lc_vite/',
+  base: '/SitePages/finallc.aspx',
   build: {
     outDir: "dist",
     assetsDir: ".",
