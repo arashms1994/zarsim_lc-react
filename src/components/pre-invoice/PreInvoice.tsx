@@ -1,14 +1,13 @@
+import type { ContextType } from "@/utils/type";
 import { useCustomerFactor } from "../../api/getData";
 import Faktor from "./Faktor";
 import { useOutletContext } from "react-router";
 
 const PreInvoice = () => {
-  const { faktorNumber } = useOutletContext<{ faktorNumber: string }>();
+  const { faktorNumber } = useOutletContext<ContextType>();
 
-  const {
-    data: customer,
-    isLoading: customerLoading,
-  } = useCustomerFactor(faktorNumber);
+  const { data: customer, isLoading: customerLoading } =
+    useCustomerFactor(faktorNumber);
 
   if (customerLoading) return <div>در حال بارگذاری...</div>;
 

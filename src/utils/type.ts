@@ -64,3 +64,5 @@ export interface IPersianDatePickerProps {
   value: string | Date | DateObject | null;
   onChange: (date: string) => void;
 }
+
+export type ContextType = { faktorNumber: string };

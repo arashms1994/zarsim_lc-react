@@ -5,8 +5,12 @@ import { LCOpenningDates, settlementDates } from "../../utils/constants";
 import { AddToOpenningDate } from "../../api/addData";
 import Guid from "@/utils/createGUID";
 import PersianDatePicker from "../persian-date-picker/PersianDatePicker";
+import { useOutletContext } from "react-router";
+import type { ContextType } from "@/utils/type";
 
-const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
+const Openning = () => {
+  const { faktorNumber } = useOutletContext<ContextType>();
+
   const sendRef = useRef<any>(null);
   const [formData, setFormData] = useState({
     LCTotalPrice: 0,
@@ -115,7 +119,6 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
               }))
             }
           />
-
         </div>
 
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
@@ -199,7 +202,8 @@ const Openning = ({ faktorNumber }: { faktorNumber: string }) => {
 
 export default Openning;
 
-{/* <PersianDatePicker
+{
+  /* <PersianDatePicker
             value={formData.LCOpenningDate}
             onChange={(value: string) =>
               setFormData((prev) => ({
@@ -207,9 +211,11 @@ export default Openning;
                 LCOpenningDate: value,
               }))
             }
-          /> */}
+          /> */
+}
 
-                    {/* <PersianDatePicker
+{
+  /* <PersianDatePicker
             value={formData.LCCommunicationDate}
             onChange={(value: string) =>
               setFormData((prev) => ({
@@ -217,4 +223,5 @@ export default Openning;
                 LCCommunicationDate: value,
               }))
             }
-          /> */}
+          /> */
+}

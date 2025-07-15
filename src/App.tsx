@@ -3,6 +3,7 @@ import { Layout } from "./components/layout/Layout";
 import PreInvoice from "./components/pre-invoice/PreInvoice";
 import Openning from "./components/openning/Openning";
 import Carry from "./components/carry/Carry";
+import Payment from "./components/payment/Payment";
 
 const App: React.FC = () => {
   const routes = useRoutes([
@@ -11,9 +12,9 @@ const App: React.FC = () => {
       element: <Layout />,
       children: [
         { path: "/", element: <PreInvoice /> },
-        { path: "/openning", element: <Openning faktorNumber="" /> },
-        { path: "/carry", element: <Carry faktorNumber="" /> },
-        // { path: "/payment", element: <Payment /> },
+        { path: "/openning", element: <Openning /> },
+        { path: "/carry", element: <Carry /> },
+        { path: "/payment", element: <Payment /> },
       ],
     },
   ]);
