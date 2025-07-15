@@ -10,7 +10,7 @@ const App: React.FC = () => {
       element: <Layout />,
       children: [
         { path: "/", element: <PreInvoice /> },
-        { path: "/openning", element: <Openning /> },
+        { path: "/openning", element: <Openning faktorNumber="" /> },
         // { path: "/carry", element: <Carry /> },
         // { path: "/payment", element: <Payment /> },
       ],
