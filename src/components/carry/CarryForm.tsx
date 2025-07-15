@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
+import Guid from "@/utils/createGUID";
 import FileUploader from "../file-uploader/FileUploader";
 import { AddToCarryReceipt } from "../../api/addData";
 import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
-import Guid from "@/utils/createGUID";
 import { useExitRequestsByOrderNumber, useLCNumberAndTotalPrice } from "@/api/getData";
 import { calculateExitSummary } from "@/utils/exitSummary";
 
