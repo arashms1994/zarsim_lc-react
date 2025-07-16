@@ -137,7 +137,7 @@ const Openning = () => {
             className="text-[22px] font-medium"
             htmlFor="LCOriginOpenningDate"
           >
-            مبدا گشایش اعتبار:
+            مبدا زمان تسویه:
           </label>
           <select
             name="LCOriginOpenningDate"
@@ -212,27 +212,3 @@ const Openning = () => {
 };
 
 export default Openning;
-
-{
-  /* <PersianDatePicker
-            value={formData.LCOpenningDate}
-            onChange={(value: string) =>
-              setFormData((prev) => ({
-                ...prev,
-                LCOpenningDate: value,
-              }))
-            }
-          /> */
-}
-
-{
-  /* <PersianDatePicker
-            value={formData.LCCommunicationDate}
-            onChange={(value: string) =>
-              setFormData((prev) => ({
-                ...prev,
-                LCCommunicationDate: value,
-              }))
-            }
-          /> */
-}
