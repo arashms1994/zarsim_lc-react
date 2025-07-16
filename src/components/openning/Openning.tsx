@@ -67,8 +67,14 @@ const Openning = () => {
 
   return (
     <div>
+      <div className="rounded-lg px-5 py-2.5 m-5 bg-[#dddFC9] text-[#0e7216] text-center flex justify-center items-center">
+        <span className="text-2xl text-[#0e7216]">
+          اطلاعات اعتبار اسنادی (ابلاغ)
+        </span>
+      </div>
+
       <form
-        className="flex flex-col justify-center items-center gap-5 py-10"
+        className="flex flex-col justify-center items-center gap-5 py-5"
         onSubmit={handleSubmit}
       >
         <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
