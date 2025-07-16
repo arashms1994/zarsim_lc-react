@@ -42,7 +42,7 @@ const Openning = () => {
     }
 
     try {
-      await AddToOpenningDate(formData);
+      await AddToOpenningDate(formData, faktorNumber);
       alert("اطلاعات با موفقیت ثبت شد.");
 
       if (sendRef.current) {
