@@ -3,7 +3,10 @@ import type { IOpenningState } from "@/utils/type";
 import { BASE_URL } from "./base";
 
 
-export async function AddToOpenningDate(state: IOpenningState): Promise<void> {
+export async function AddToOpenningDate(
+  state: IOpenningState,
+  faktorNumber: string
+): Promise<void> {
   const listName = "LC_Openning";
   const itemType = `SP.Data.LC_x005f_OpenningListItem`;
   const digest = await getDigest();
@@ -19,7 +22,7 @@ export async function AddToOpenningDate(state: IOpenningState): Promise<void> {
       },
       body: JSON.stringify({
         __metadata: { type: itemType },
-        Title: "اعتبار اسنادی",
+        Title: faktorNumber,
         LC_Number: String(state.LCNumber),
         Total_Price: String(state.LCTotalPrice),
         Settlement_Period: String(state.LCSettlementDate),
