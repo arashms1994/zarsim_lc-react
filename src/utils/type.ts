@@ -71,7 +71,6 @@ export interface ICarrySliderProps {
   setPage: (value: number) => void;
 }
 
-
 export interface ISliderControlsProps {
   onNext: () => void;
   onPrev: () => void;
@@ -79,3 +78,7 @@ export interface ISliderControlsProps {
   disablePrev?: boolean;
 }
 
+export interface ISectionHeaderProps {
+  title: string;
+  className?: string;
+}

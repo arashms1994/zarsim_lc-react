@@ -7,6 +7,7 @@ import Guid from "@/utils/createGUID";
 import PersianDatePicker from "../persian-date-picker/PersianDatePicker";
 import { useOutletContext } from "react-router";
 import type { ContextType } from "@/utils/type";
+import SectionHeader from "../ui/SectionHeader";
 
 const Openning = () => {
   const { faktorNumber } = useOutletContext<ContextType>();
@@ -67,10 +68,8 @@ const Openning = () => {
 
   return (
     <div>
-      <div className="rounded-lg px-5 py-2.5 m-5 bg-[#dddFC9] text-[#0e7216] text-center flex justify-center items-center">
-        <span className="text-2xl text-[#0e7216]">
-          اطلاعات اعتبار اسنادی (ابلاغ)
-        </span>
+      <div>
+        <SectionHeader title="اطلاعات اعتبار اسنادی (ابلاغ)" />
       </div>
 
       <form

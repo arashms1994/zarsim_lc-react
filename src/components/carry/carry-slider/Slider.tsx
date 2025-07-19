@@ -7,7 +7,7 @@ import Slide5 from "./Slide5";
 import Slide4 from "./Slide4";
 
 const Slider = () => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   return (
     <>
