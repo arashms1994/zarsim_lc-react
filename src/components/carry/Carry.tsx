@@ -3,6 +3,7 @@ import CarryForm from "./CarryForm";
 import type { ContextType } from "@/utils/type";
 import { useOutletContext } from "react-router";
 import Slider from "./carry-slider/Slider";
+import SectionHeader from "../ui/SectionHeader";
 
 const Carry = () => {
   const { faktorNumber } = useOutletContext<ContextType>();
@@ -10,8 +11,8 @@ const Carry = () => {
 
   return (
     <div className="flex flex-col justify-center items-center gap-5">
-      <div className="rounded-lg px-5 py-2.5 m-5 bg-[#dddFC9] text-[#0e7216] text-center flex justify-center items-center">
-        <span className="text-2xl text-[#0e7216]">حمل و پرداخت</span>
+      <div>
+        <SectionHeader title="حمل و پرداخت" />
       </div>
 
       <button
@@ -19,7 +20,7 @@ const Carry = () => {
         onClick={() => setIsModalOpen(true)}
         className="bg-green-600 text-white px-4 py-2 rounded"
       >
-        +
+        افزودن مرحله حمل
       </button>
 
       {isModalOpen && (
@@ -31,9 +32,6 @@ const Carry = () => {
             >
               ×
             </button>
-            <div className="text-center text-lg mb-4">
-              hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
-            </div>
             <Slider />
           </div>
         </div>
