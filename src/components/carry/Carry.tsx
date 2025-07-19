@@ -4,6 +4,7 @@ import type { ContextType } from "@/utils/type";
 import { useOutletContext } from "react-router";
 import Slider from "./carry-slider/Slider";
 import SectionHeader from "../ui/SectionHeader";
+import { Button } from "../ui/button";
 
 const Carry = () => {
   const { faktorNumber } = useOutletContext<ContextType>();
@@ -24,14 +25,16 @@ const Carry = () => {
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg relative w-full max-w-md max-h-[600px] overflow-y-auto">
-            <button
+        <div className="mx-auto my-auto w-full h-full fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 overflow-y-auto">
+          <div className="bg-white p-6 rounded-lg shadow-lg relative  w-[1100px] h-[700px] ">
+            <Button
+              type="button"
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 left-2 text-red-600 text-xl"
+              className="min-w-0 gap-0 w-7 h-7 botder-none flex justify-center items-center text-center absolute bg-red-600 p-1 top-2 left-2 text-white text-xl rounded-full hover:bg-slate-100 hover:text-red-600 transition-all duration-300"
             >
-              ×
-            </button>
+              X
+            </Button>
+
             <Slider />
           </div>
         </div>

@@ -1,16 +1,15 @@
+import SlideLayout from "@/components/ui/SliderLayout";
 import type { ICarrySliderProps } from "@/utils/type";
-import SliderControls from "@/components/ui/SLiderControls";
-import SectionHeader from "@/components/ui/SectionHeader";
 
 const Slide4: React.FC<ICarrySliderProps> = ({ setPage }) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center">
-      <div>
-        <SectionHeader title="رسید بانک" />
-      </div>
-
-      <SliderControls onNext={() => setPage(5)} onPrev={() => setPage(3)} />
-    </div>
+    <SlideLayout
+      title="رسید بانک"
+      onNext={() => setPage(5)}
+      onPrev={() => setPage(3)}
+    >
+      <h2 className="text-xl">این محتوای اسلاید 4 است</h2>
+    </SlideLayout>
   );
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 import { Link } from "react-router";
 import type { IFaktorProps } from "@/utils/type";
+import SectionHeader from "../ui/SectionHeader";
 
 const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
   const customerDetails = [
@@ -39,8 +40,8 @@ const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
 
   return (
     <div className="flex flex-col justify-center items-center px-5 pt-5 relative">
-      <div className="rounded-lg px-5 py-2.5 mb-5 bg-[#dddFC9] text-[#0e7216]">
-        <span className="text-2xl text-[#0e7216]">مشخصات مشتری</span>
+      <div>
+        <SectionHeader title="مشخصات مشتری" />
       </div>
 
       <div className="w-[650px] flex justify-between items-center flex-wrap gap-10 pt-2.5">
@@ -60,8 +61,12 @@ const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
             key={index}
             className="p-3 flex justify-start items-center flex-row gap-1 shadow-md border-gray-400"
           >
-            <span className="text-gray-500 text-sm font-medium">{item.label}</span>
-            <span className="text-gray-700 text-2xl font-medium">{item.value}</span>
+            <span className="text-gray-500 text-sm font-medium">
+              {item.label}
+            </span>
+            <span className="text-gray-700 text-2xl font-medium">
+              {item.value}
+            </span>
           </div>
         ))}
       </div>
