@@ -66,3 +66,16 @@ export interface IPersianDatePickerProps {
 }
 
 export type ContextType = { faktorNumber: string };
+
+export interface ICarrySliderProps {
+  setPage: (value: number) => void;
+}
+
+
+export interface ISliderControlsProps {
+  onNext: () => void;
+  onPrev: () => void;
+  disableNext?: boolean;
+  disablePrev?: boolean;
+}
+
