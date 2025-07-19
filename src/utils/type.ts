@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { DateObject } from "react-multi-date-picker";
 
 export interface LayoutContextType {
@@ -81,4 +82,13 @@ export interface ISliderControlsProps {
 export interface ISectionHeaderProps {
   title: string;
   className?: string;
+}
+
+export interface ISlideLayoutProps {
+  title: string;
+  onNext: () => void;
+  onPrev: () => void;
+  disableNext?: boolean;
+  disablePrev?: boolean;
+  children: ReactNode;
 }

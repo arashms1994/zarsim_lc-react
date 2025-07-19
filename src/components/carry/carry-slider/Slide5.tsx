@@ -1,16 +1,15 @@
 import type { ICarrySliderProps } from "@/utils/type";
-import SliderControls from "@/components/ui/SLiderControls";
-import SectionHeader from "@/components/ui/SectionHeader";
+import SlideLayout from "@/components/ui/SliderLayout";
 
 const Slide5: React.FC<ICarrySliderProps> = ({ setPage }) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center">
-      <div>
-        <SectionHeader title="تایید اسناد" />
-      </div>
-
-      <SliderControls onNext={() => setPage(6)} onPrev={() => setPage(4)} />
-    </div>
+    <SlideLayout
+      title="تایید اسناد"
+      onNext={() => setPage(6)}
+      onPrev={() => setPage(4)}
+    >
+      <h2 className="text-xl">این محتوای اسلاید 5 است</h2>
+    </SlideLayout>
   );
 };
 
