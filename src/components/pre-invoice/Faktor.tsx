@@ -2,7 +2,6 @@ import React from "react";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 import { Link } from "react-router";
 import type { IFaktorProps } from "@/utils/type";
-import SectionHeader from "../ui/SectionHeader";
 
 const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
   const customerDetails = [
@@ -40,10 +39,6 @@ const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
 
   return (
     <div className="flex flex-col justify-center items-center px-5 pt-5 relative">
-      <div>
-        <SectionHeader title="مشخصات مشتری" />
-      </div>
-
       <div className="w-[650px] flex justify-between items-center flex-wrap gap-10 pt-2.5">
         <Link
           className="flex justify-between items-center text-center"

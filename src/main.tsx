@@ -8,7 +8,7 @@ import QueryProvider from "./providers/QueryProvider.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryProvider>
-      <BrowserRouter basename="/SitePages/finallc.aspx">
+      <BrowserRouter basename="/SitePages/lcdocuments.aspx">
         <App />
       </BrowserRouter>
     </QueryProvider>
