@@ -1,15 +1,12 @@
-import FileUploader from "@/components/file-uploader/FileUploader";
-import Guid from "@/utils/createGUID";
-import type { ICarrySlideProps } from "@/utils/type";
 import { useRef } from "react";
+import { FIRST_SLIDE_DOCS } from "@/utils/constants";
+import type { ICarrySlideProps } from "@/utils/type";
+import FileUploader from "@/components/file-uploader/FileUploader";
 
-const Slide1: React.FC<ICarrySlideProps> = ({
-  faktorNumber,
-}: {
-  faktorNumber: string;
-}) => {
+const Slide1: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
   const fileUploaders = useRef<any[]>([]);
-  const subFolder = Guid();
+  
+  const subFolder = GUID;
 
   const uploadAllFiles = () => {
     fileUploaders.current.forEach((uploader) => {
@@ -21,19 +18,19 @@ const Slide1: React.FC<ICarrySlideProps> = ({
 
   return (
     <div className="flex flex-col justify-center items-center gap-5">
-      {["فاکتور فروش", "بارنامه", "برگه باسکول"].map((label, idx) => (
+      {FIRST_SLIDE_DOCS.map((d, i) => (
         <div
           className="w-full min-w-[500px] flex justify-between items-center gap-5"
-          key={label}
+          key={i}
         >
-          <label className="text-[22px] font-medium">{`آپلود ${label}:`}</label>
+          <label className="text-[22px] font-medium">{`آپلود ${d.label}:`}</label>
           <FileUploader
             ref={(el) => {
-              if (el) fileUploaders.current[idx] = el;
+              if (el) fileUploaders.current[i] = el;
             }}
             orderNumber={faktorNumber}
             subFolder={subFolder}
-            docType={label}
+            docType={d.value}
           />
         </div>
       ))}
