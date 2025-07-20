@@ -6,13 +6,11 @@ import Slide4 from "./Slide4";
 import Slide5 from "./Slide5";
 import Slide6 from "./Slide6";
 import type { ICarrySliderProps } from "@/utils/type";
+import Guid from "@/utils/createGUID";
 
-const Slider: React.FC<ICarrySliderProps> = ({
-  faktorNumber,
-}: {
-  faktorNumber: string;
-}) => {
+const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber }) => {
   const [page, setPage] = useState(1);
+  const GUID = Guid();
 
   const tabs = [
     { id: 1, label: "حمل" },
@@ -26,17 +24,29 @@ const Slider: React.FC<ICarrySliderProps> = ({
   const renderSlide = () => {
     switch (page) {
       case 1:
-        return <Slide1 setPage={setPage} faktorNumber={faktorNumber} />;
+        return (
+          <Slide1 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+        );
       case 2:
-        return <Slide2 setPage={setPage} faktorNumber={faktorNumber} />;
+        return (
+          <Slide2 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+        );
       case 3:
-        return <Slide3 setPage={setPage} faktorNumber={faktorNumber} />;
+        return (
+          <Slide3 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+        );
       case 4:
-        return <Slide4 setPage={setPage} faktorNumber={faktorNumber} />;
+        return (
+          <Slide4 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+        );
       case 5:
-        return <Slide5 setPage={setPage} faktorNumber={faktorNumber} />;
+        return (
+          <Slide5 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+        );
       case 6:
-        return <Slide6 setPage={setPage} faktorNumber={faktorNumber} />;
+        return (
+          <Slide6 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+        );
       default:
         return null;
     }
