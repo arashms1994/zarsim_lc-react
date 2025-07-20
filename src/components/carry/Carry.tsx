@@ -35,7 +35,7 @@ const Carry = () => {
               X
             </Button>
 
-            <Slider />
+            <Slider faktorNumber={faktorNumber}/>
           </div>
         </div>
       )}

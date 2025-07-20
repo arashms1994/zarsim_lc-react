@@ -5,8 +5,13 @@ import Slide3 from "./Slide3";
 import Slide4 from "./Slide4";
 import Slide5 from "./Slide5";
 import Slide6 from "./Slide6";
+import type { ICarrySliderProps } from "@/utils/type";
 
-const Slider = () => {
+const Slider: React.FC<ICarrySliderProps> = ({
+  faktorNumber,
+}: {
+  faktorNumber: string;
+}) => {
   const [page, setPage] = useState(1);
 
   const tabs = [
@@ -21,17 +26,17 @@ const Slider = () => {
   const renderSlide = () => {
     switch (page) {
       case 1:
-        return <Slide1 setPage={setPage} />;
+        return <Slide1 setPage={setPage} faktorNumber={faktorNumber} />;
       case 2:
-        return <Slide2 setPage={setPage} />;
+        return <Slide2 setPage={setPage} faktorNumber={faktorNumber} />;
       case 3:
-        return <Slide3 setPage={setPage} />;
+        return <Slide3 setPage={setPage} faktorNumber={faktorNumber} />;
       case 4:
-        return <Slide4 setPage={setPage} />;
+        return <Slide4 setPage={setPage} faktorNumber={faktorNumber} />;
       case 5:
-        return <Slide5 setPage={setPage} />;
+        return <Slide5 setPage={setPage} faktorNumber={faktorNumber} />;
       case 6:
-        return <Slide6 setPage={setPage} />;
+        return <Slide6 setPage={setPage} faktorNumber={faktorNumber} />;
       default:
         return null;
     }

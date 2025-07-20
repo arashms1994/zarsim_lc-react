@@ -54,6 +54,7 @@ export interface IFaktorDetailProps {
 export interface IFileUploaderProps {
   orderNumber: string;
   subFolder: string;
+  docType?: string;
 }
 
 export interface ISearchBarProps {
@@ -68,8 +69,13 @@ export interface IPersianDatePickerProps {
 
 export type ContextType = { faktorNumber: string };
 
-export interface ICarrySliderProps {
+export interface ICarrySlideProps {
   setPage: (value: number) => void;
+  faktorNumber: string
+}
+
+export interface ICarrySliderProps {
+  faktorNumber: string
 }
 
 export interface ISliderControlsProps {
