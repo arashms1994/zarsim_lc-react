@@ -70,12 +70,13 @@ export interface IPersianDatePickerProps {
 export type ContextType = { faktorNumber: string };
 
 export interface ICarrySlideProps {
+  GUID: string;
+  faktorNumber: string;
   setPage: (value: number) => void;
-  faktorNumber: string
 }
 
 export interface ICarrySliderProps {
-  faktorNumber: string
+  faktorNumber: string;
 }
 
 export interface ISliderControlsProps {
