@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import FileUploader from "../file-uploader/FileUploader";
 import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
-import { LCOpenningDates, settlementDates } from "../../utils/constants";
+import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "../../utils/constants";
 import { AddToOpenningDate } from "../../api/addData";
 import PersianDatePicker from "../persian-date-picker/PersianDatePicker";
 import { useOutletContext } from "react-router";
@@ -9,9 +9,8 @@ import type { ContextType } from "@/utils/type";
 import SectionHeader from "../ui/SectionHeader";
 
 const Openning = () => {
-  const { faktorNumber } = useOutletContext<ContextType>();
-
   const sendRef = useRef<any>(null);
+
   const [formData, setFormData] = useState({
     LCTotalPrice: 0,
     LCNumber: "",
@@ -20,6 +19,9 @@ const Openning = () => {
     LCSettlementDate: "",
     LCOriginOpenningDate: "",
   });
+
+  const { faktorNumber } = useOutletContext<ContextType>();
+  const subFolder = "eblaghiyeh";
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -149,7 +151,7 @@ const Openning = () => {
             onChange={handleChange}
           >
             <option value="">یک گزینه انتخاب کنید</option>
-            {LCOpenningDates.map(({ value, label }) => (
+            {LC_OPENNING_DATES.map(({ value, label }) => (
               <option
                 key={value || "empty"}
                 value={value}
@@ -173,7 +175,7 @@ const Openning = () => {
             onChange={handleChange}
           >
             <option value="">یک گزینه انتخاب کنید</option>
-            {settlementDates.map(({ value, label }) => (
+            {LC_SETTLEMENT_DATES.map(({ value, label }) => (
               <option
                 key={value || "empty"}
                 value={value}
@@ -195,7 +197,7 @@ const Openning = () => {
           <FileUploader
             ref={sendRef}
             orderNumber={faktorNumber}
-            subFolder="eblaghiyeh"
+            subFolder={subFolder}
           />
         </div>
 
