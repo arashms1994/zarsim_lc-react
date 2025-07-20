@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  base: '/SitePages/finallc.aspx',
+  base: '/SitePages/lcdocuments.aspx',
   build: {
     outDir: "dist",
     assetsDir: ".",
