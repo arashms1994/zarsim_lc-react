@@ -3,7 +3,6 @@ import FileUploader from "../file-uploader/FileUploader";
 import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
 import { LCOpenningDates, settlementDates } from "../../utils/constants";
 import { AddToOpenningDate } from "../../api/addData";
-import Guid from "@/utils/createGUID";
 import PersianDatePicker from "../persian-date-picker/PersianDatePicker";
 import { useOutletContext } from "react-router";
 import type { ContextType } from "@/utils/type";
@@ -21,8 +20,6 @@ const Openning = () => {
     LCSettlementDate: "",
     LCOriginOpenningDate: "",
   });
-
-  const subFolder = Guid();
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -198,7 +195,7 @@ const Openning = () => {
           <FileUploader
             ref={sendRef}
             orderNumber={faktorNumber}
-            subFolder={subFolder}
+            subFolder="eblaghiyeh"
           />
         </div>
 

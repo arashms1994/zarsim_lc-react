@@ -1,6 +1,6 @@
-import type { ICarrySliderProps } from "@/utils/type";
+import type { ICarrySlideProps } from "@/utils/type";
 
-const Slide2: React.FC<ICarrySliderProps> = () => {
+const Slide2: React.FC<ICarrySlideProps> = () => {
   return <h2 className="text-xl">این محتوای اسلاید 2 است</h2>;
 };
 
