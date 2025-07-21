@@ -5,7 +5,7 @@ import FileUploader from "@/components/file-uploader/FileUploader";
 
 const Slide1: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
   const fileUploaders = useRef<any[]>([]);
-  
+
   const subFolder = GUID;
 
   const uploadAllFiles = () => {

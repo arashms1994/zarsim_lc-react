@@ -5,7 +5,7 @@ import FileUploader from "@/components/file-uploader/FileUploader";
 const Slide3: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
   const sendRef = useRef<any>(null);
 
-  const label = "نامه رسمی پوششی";
+  const label = "نامه پوششی";
   const subFolder = GUID;
   const docType = "namehpoosheshi";
 
@@ -32,7 +32,7 @@ const Slide3: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
         className="border-none rounded-lg min-w-[200px] p-2 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
         onClick={uploadFile}
       >
-        آپلود فایل
+        {`آپلود ${label}`}
       </button>
     </div>
   );

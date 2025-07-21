@@ -44,7 +44,7 @@ const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
           className="flex justify-between items-center text-center"
           to={`http://portal/Lists/customer_factor/DispForm.aspx?ID=${customer.ID}`}
         >
-          <div className="absolute top-5 right-0 p-3 flex justify-center items-center rounded-xl bg-blue-700 cursor-pointer hover:bg-blue-300 transition-all duration-300">
+          <div className="absolute -top-16 -right-24 p-3 flex justify-center items-center rounded-xl bg-blue-700 cursor-pointer hover:bg-blue-300 transition-all duration-300">
             <span className="text-white text-base font-normal">
               مشاهده کامل پیش فاکتور
             </span>
