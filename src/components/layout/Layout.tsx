@@ -23,13 +23,18 @@ export const Layout: React.FC = () => {
         : "bg-[#c5c5c5] text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
     );
 
+  const handleNavigate = (targetPath: string) => {
+    const params = new URLSearchParams(location.search);
+    navigate(`${targetPath}?${params.toString()}`);
+  };
+
   return (
     <LayoutContext.Provider value={{ faktorNumber }}>
       <div className="flex flex-col justify-center items-center p-5 md:p-10 rtl">
         <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around">
           <Button
             type="button"
-            onClick={() => navigate("/")}
+            onClick={() => handleNavigate("/")}
             className={getButtonClass("/")}
           >
             اطلاعات پیش فاکتور
@@ -39,7 +44,7 @@ export const Layout: React.FC = () => {
 
           <Button
             type="button"
-            onClick={() => navigate("/openning")}
+            onClick={() => handleNavigate("/openning")}
             className={getButtonClass("/openning")}
           >
             اطلاعات اعتبار اسنادی (ابلاغ)
@@ -49,7 +54,7 @@ export const Layout: React.FC = () => {
 
           <Button
             type="button"
-            onClick={() => navigate("/carry")}
+            onClick={() => handleNavigate("/carry")}
             className={getButtonClass("/carry")}
           >
             حمل و پرداخت
@@ -59,7 +64,7 @@ export const Layout: React.FC = () => {
 
           <Button
             type="button"
-            onClick={() => navigate("/payment")}
+            onClick={() => handleNavigate("/payment")}
             className={getButtonClass("/payment")}
           >
             اختتامیه اعتبار اسنادی
