@@ -14,8 +14,6 @@ body {
   direction: rtl;
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
