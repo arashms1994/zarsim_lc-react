@@ -10,7 +10,7 @@ export const Layout: React.FC = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const faktor = params.get("Factor_ID") || "4-70105-1";
+    const faktor = params.get("Factor_ID") ?? "";
     setFaktorNumber(faktor);
   }, [location.search]);
 
