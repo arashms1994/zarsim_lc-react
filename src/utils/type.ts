@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { DateObject } from "react-multi-date-picker";
 
 export interface LayoutContextType {
-  searchQuery: string;
+  searchQuery?: string;
   faktorNumber: string;
 }
 

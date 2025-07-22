@@ -4,9 +4,8 @@ import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
 import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "../../utils/constants";
 import { AddToOpenningDate } from "../../api/addData";
 import PersianDatePicker from "../persian-date-picker/PersianDatePicker";
-import { useOutletContext } from "react-router";
-import type { ContextType } from "@/utils/type";
 import SectionHeader from "../ui/SectionHeader";
+import { useLayoutContext } from "@/providers/LayoutContext";
 
 const Openning = () => {
   const sendRef = useRef<any>(null);
@@ -20,7 +19,7 @@ const Openning = () => {
     LCOriginOpenningDate: "",
   });
 
-  const { faktorNumber } = useOutletContext<ContextType>();
+  const { faktorNumber } = useLayoutContext();
   const subFolder = "eblaghiyeh";
 
   const handleChange = (
