@@ -1,11 +1,10 @@
-import type { ContextType } from "@/utils/type";
-import { useCustomerFactor } from "../../api/getData";
 import Faktor from "./Faktor";
-import { useOutletContext } from "react-router";
 import SectionHeader from "../ui/SectionHeader";
+import { useCustomerFactor } from "../../api/getData";
+import { useLayoutContext } from "@/providers/LayoutContext";
 
 const PreInvoice = () => {
-  const { faktorNumber } = useOutletContext<ContextType>();
+  const { faktorNumber } = useLayoutContext();
 
   const { data: customer, isLoading: customerLoading } =
     useCustomerFactor(faktorNumber);

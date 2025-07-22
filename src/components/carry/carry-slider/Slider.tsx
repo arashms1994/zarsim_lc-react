@@ -5,8 +5,8 @@ import Slide3 from "./Slide3";
 import Slide4 from "./Slide4";
 import Slide5 from "./Slide5";
 import Slide6 from "./Slide6";
-import type { ICarrySliderProps } from "@/utils/type";
 import Guid from "@/utils/createGUID";
+import type { ICarrySliderProps } from "@/utils/type";
 
 const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber }) => {
   const [page, setPage] = useState(1);

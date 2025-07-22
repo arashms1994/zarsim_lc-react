@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, Outlet, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { Button } from "../ui/button";
+import { LayoutContext } from "@/providers/LayoutContext";
 
 export const Layout: React.FC = () => {
   const location = useLocation();
@@ -23,50 +24,52 @@ export const Layout: React.FC = () => {
     );
 
   return (
-    <div className="flex flex-col justify-center items-center p-5 md:p-10 rtl">
-      <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around">
-        <Button
-          type="button"
-          onClick={() => navigate("/")}
-          className={getButtonClass("/")}
-        >
-          اطلاعات پیش فاکتور
-        </Button>
+    <LayoutContext.Provider value={{ faktorNumber }}>
+      <div className="flex flex-col justify-center items-center p-5 md:p-10 rtl">
+        <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around">
+          <Button
+            type="button"
+            onClick={() => navigate("/")}
+            className={getButtonClass("/")}
+          >
+            اطلاعات پیش فاکتور
+          </Button>
 
-        <div className="w-24 h-[2px] bg-muted-foreground"></div>
+          <div className="w-24 h-[2px] bg-muted-foreground"></div>
 
-        <Button
-          type="button"
-          onClick={() => navigate("/openning")}
-          className={getButtonClass("/openning")}
-        >
-          اطلاعات اعتبار اسنادی (ابلاغ)
-        </Button>
+          <Button
+            type="button"
+            onClick={() => navigate("/openning")}
+            className={getButtonClass("/openning")}
+          >
+            اطلاعات اعتبار اسنادی (ابلاغ)
+          </Button>
 
-        <div className="w-24 h-[2px] bg-muted-foreground"></div>
+          <div className="w-24 h-[2px] bg-muted-foreground"></div>
 
-        <Button
-          type="button"
-          onClick={() => navigate("/carry")}
-          className={getButtonClass("/carry")}
-        >
-          حمل و پرداخت
-        </Button>
+          <Button
+            type="button"
+            onClick={() => navigate("/carry")}
+            className={getButtonClass("/carry")}
+          >
+            حمل و پرداخت
+          </Button>
 
-        <div className="w-24 h-[2px] bg-muted-foreground"></div>
+          <div className="w-24 h-[2px] bg-muted-foreground"></div>
 
-        <Button
-          type="button"
-          onClick={() => navigate("/payment")}
-          className={getButtonClass("/payment")}
-        >
-          اختتامیه اعتبار اسنادی
-        </Button>
-      </header>
+          <Button
+            type="button"
+            onClick={() => navigate("/payment")}
+            className={getButtonClass("/payment")}
+          >
+            اختتامیه اعتبار اسنادی
+          </Button>
+        </header>
 
-      <main>
-        <Outlet context={{ faktorNumber }} />
-      </main>
-    </div>
+        <main>
+          <Outlet context={{ faktorNumber }} />
+        </main>
+      </div>
+    </LayoutContext.Provider>
   );
 };

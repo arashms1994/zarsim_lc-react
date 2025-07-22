@@ -1,13 +1,12 @@
 import { useState } from "react";
 import CarryForm from "./CarryForm";
-import type { ContextType } from "@/utils/type";
-import { useOutletContext } from "react-router";
+import { Button } from "../ui/button";
 import Slider from "./carry-slider/Slider";
 import SectionHeader from "../ui/SectionHeader";
-import { Button } from "../ui/button";
+import { useLayoutContext } from "@/providers/LayoutContext";
 
 const Carry = () => {
-  const { faktorNumber } = useOutletContext<ContextType>();
+  const { faktorNumber } = useLayoutContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
