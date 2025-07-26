@@ -1,13 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
-import Guid from "@/utils/createGUID";
-import FileUploader from "../file-uploader/FileUploader";
+import React, { useState, useEffect } from "react";
 import { AddToCarryReceipt } from "../../api/addData";
 import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
 import { useExitRequestsByOrderNumber, useLCNumberAndTotalPrice } from "@/api/getData";
 import { calculateExitSummary } from "@/utils/exitSummary";
 
 const CarryForm = ({ faktorNumber }: { faktorNumber: string }) => {
-  const fileUploaders = useRef<any[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
   const [productCounts, setProductCounts] = useState<{ [key: string]: string }>(
     {}
@@ -16,18 +13,9 @@ const CarryForm = ({ faktorNumber }: { faktorNumber: string }) => {
   const [exitRequests, setExitRequests] = useState<any[]>([]);
   const [totalMablagh, setTotalMablagh] = useState(0);
   const [totalMetraj, setTotalMetraj] = useState(0);
-  const subFolder = Guid();
 
   const exitRequestsQuery = useExitRequestsByOrderNumber(faktorNumber);
   useLCNumberAndTotalPrice(faktorNumber);
-
-  const uploadAllFiles = () => {
-    fileUploaders.current.forEach((uploader) => {
-      if (uploader && uploader.uploadFile) {
-        uploader.uploadFile();
-      }
-    });
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -132,35 +120,6 @@ const CarryForm = ({ faktorNumber }: { faktorNumber: string }) => {
           </div>
         </div>
       </form>
-
-      {[
-        "صورتحساب فروش",
-        "لیست دسته بندی",
-        "گواهی بازرسی",
-        "بارنامه",
-        "برگه باسکول",
-        "نامه رسمی شرکت زرسیم",
-      ].map((label, idx) => (
-        <div
-          className="w-full min-w-[500px] flex justify-between items-center gap-5"
-          key={label}
-        >
-          <label className="text-[22px] font-medium">{`آپلود ${label}:`}</label>
-          <FileUploader
-            ref={(el) => { if (el) fileUploaders.current[idx] = el; }}
-            orderNumber={faktorNumber}
-            subFolder={subFolder}
-          />
-        </div>
-      ))}
-
-      <button
-        type="button"
-        className="border-none rounded-lg min-w-[200px] p-2 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
-        onClick={uploadAllFiles}
-      >
-        آپلود فایل‌ها
-      </button>
     </div>
   );
 };
