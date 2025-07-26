@@ -25,7 +25,7 @@ const Carry = () => {
 
       {isModalOpen && (
         <div className="mx-auto my-auto w-full h-full fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 overflow-y-auto">
-          <div className="bg-white p-6 rounded-lg shadow-lg relative  w-[1200px] h-[800px] ">
+          <div className="bg-white p-6 rounded-lg shadow-lg relative  w-[1200px] h-[680px] ">
             <Button
               type="button"
               onClick={() => setIsModalOpen(false)}
