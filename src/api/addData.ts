@@ -1,48 +1,115 @@
 import { getDigest } from "@/utils/getDigest";
-import type { IOpenningState } from "@/utils/type";
+import type { ICustomerFactorUpdate } from "@/utils/type";
 import { BASE_URL } from "./base";
 
-
-export async function AddToOpenningDate(
-  state: IOpenningState,
-  faktorNumber: string
+export async function UpdateCustomerFactorItem(
+  faktorNumber: string,
+  data: Partial<ICustomerFactorUpdate>
 ): Promise<void> {
-  const listName = "LC_Openning";
-  const itemType = `SP.Data.LC_x005f_OpenningListItem`;
   const digest = await getDigest();
+  const listName = "customer_factor";
+  const itemType = "SP.Data.Customer_x005f_factorListItem";
 
-  const response = await fetch(
-    `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items`,
+  const getResponse = await fetch(
+    `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items?$filter=Title eq '${faktorNumber}'`,
     {
-      method: "POST",
       headers: {
         Accept: "application/json;odata=verbose",
-        "Content-Type": "application/json;odata=verbose",
-        "X-RequestDigest": digest,
       },
-      body: JSON.stringify({
-        __metadata: { type: itemType },
-        Title: faktorNumber,
-        LC_Number: String(state.LCNumber),
-        Total_Price: String(state.LCTotalPrice),
-        Settlement_Period: String(state.LCSettlementDate),
-        Origin_Openning_Date: String(state.LCOriginOpenningDate),
-        Opening_Date: String(state.LCOpenningDate),
-        Communication_Date: String(state.LCCommunicationDate),
-      }),
     }
   );
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error("خطا در ثبت آیتم: " + error);
-  }
+  const result = await getResponse.json();
+  const items = result.d?.results || [];
 
-  const data = await response.json();
-  console.log("آیتم با موفقیت ثبت شد:", data);
+  const payload = {
+    __metadata: { type: itemType },
+    ...data,
+  };
+
+  if (items.length > 0) {
+    const itemId = items[0].Id;
+
+    const updateResponse = await fetch(
+      `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items(${itemId})`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json;odata=verbose",
+          "Content-Type": "application/json;odata=verbose",
+          "X-RequestDigest": digest,
+          "X-HTTP-Method": "MERGE",
+          "IF-MATCH": "*",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (!updateResponse.ok) {
+      const error = await updateResponse.text();
+      throw new Error("خطا در به‌روزرسانی آیتم: " + error);
+    }
+  } else {
+    const createResponse = await fetch(
+      `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json;odata=verbose",
+          "Content-Type": "application/json;odata=verbose",
+          "X-RequestDigest": digest,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (!createResponse.ok) {
+      const error = await createResponse.text();
+      throw new Error("خطا در ایجاد آیتم: " + error);
+    }
+  }
 }
 
-export async function AddToCarryReceipt(item: {
+// export async function addToCustomerFactor(
+//   state: IOpenningState
+// ): Promise<void> {
+//   const listName = "customer_factor";
+//   const itemType = `SP.Data.Customer_x005f_factorListItem`;
+//   const digest = await getDigest();
+
+//   const response = await fetch(
+//     `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items`,
+//     {
+//       method: "POST",
+//       headers: {
+//         Accept: "application/json;odata=verbose",
+//         "Content-Type": "application/json;odata=verbose",
+//         "X-RequestDigest": digest,
+//         "X-HTTP-Method": "MERGE",
+//         "IF-MATCH": "*",
+//       },
+//       body: JSON.stringify({
+//         __metadata: { type: itemType },
+//         LCNumber: String(state.LCNumber),
+//         LCTotal: String(state.LCTotalPrice),
+//         tarikhmabnavalue: String(state.LCSettlementDate),
+//         mabnavalue: String(state.LCOriginOpenningDate),
+//         Opening_Date: String(state.LCOpenningDate),
+//         Communication_Date: String(state.LCCommunicationDate),
+//       }),
+//     }
+//   );
+
+//   if (!response.ok) {
+//     const error = await response.text();
+//     throw new Error("خطا در ثبت آیتم: " + error);
+//   }
+
+//   const data = await response.json();
+//   console.log("آیتم با موفقیت ثبت شد:", data);
+// }
+
+export async function addToCarryReceipt(item: {
   Title: string;
   GUID: string | null;
   TotalPrice: number;
@@ -83,5 +150,3 @@ export async function AddToCarryReceipt(item: {
   const data = await response.json();
   console.log("آیتم با موفقیت ثبت شد:", data);
 }
-
-

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useLayoutContext } from "@/providers/LayoutContext";
 import { useCustomerFactor } from "@/api/getData";
-import { AddToOpenningDate } from "@/api/addData";
+import { UpdateCustomerFactorItem } from "@/api/addData";
 import SectionHeader from "../ui/SectionHeader";
 import OpenningForm from "./openning-form/OpennigForm";
 
@@ -17,7 +17,15 @@ const Openning = () => {
     }
 
     try {
-      await AddToOpenningDate(formData, faktorNumber);
+      await UpdateCustomerFactorItem(faktorNumber, {
+        LCNumber: String(formData.LCNumber),
+        LCTotal: String(formData.LCTotalPrice),
+        tarikhmabnavalue: String(formData.LCSettlementDate),
+        mabnavalue: String(formData.LCOriginOpenningDate),
+        Opening_Date: String(formData.LCOpenningDate),
+        Communication_Date: String(formData.LCCommunicationDate),
+      });
+
       alert("اطلاعات با موفقیت ثبت شد.");
 
       if (sendRef.current) {

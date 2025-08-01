@@ -6,6 +6,16 @@ export interface LayoutContextType {
   faktorNumber: string;
 }
 
+export interface ICustomerFactorUpdate {
+  Title: string;
+  LCNumber?: string;
+  LCTotal?: string;
+  tarikhmabnavalue?: string;
+  mabnavalue?: string;
+  Opening_Date?: string;
+  Communication_Date?: string;
+}
+
 export interface IOpenningState {
   LCTotalPrice: number;
   LCNumber: string;
