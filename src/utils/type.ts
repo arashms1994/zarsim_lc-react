@@ -15,22 +15,48 @@ export interface IOpenningState {
   LCOriginOpenningDate: string;
 }
 
+export type IOpenningFormData = {
+  LCNumber: string;
+  LCTotalPrice: number;
+  LCOpenningDate: string;
+  LCCommunicationDate: string;
+  LCOriginOpenningDate: string;
+  LCSettlementDate: string;
+};
+
+export interface IOpenningFormProps {
+  onSubmit: (formData: any) => Promise<void>;
+  faktorData?: ICustomer;
+  fileRef: React.RefObject<any>;
+  faktorNumber: string;
+}
+
 export interface ICarryProps {
   faktorNumber: string;
 }
 
 export interface ICustomer {
   ID: number;
-  Title: string;
   Date: string;
+  Title: string;
   Customer: string;
+  mabnavalue: string;
+  tarikhmabnavalue: string;
+  BankAccountvalue: string | null;
   type_factor: string;
+  name_peyghirikonande: string;
+  FirstUser: string;
+  LCTotal: string | null;
+  LCNumber: string | null;
+  LCEnding: string | null;
+  total_mani: string;
+  tarikhgoshayesh: string | null;
+  tarikheblagh: string | null;
   MainTotalCu: number;
   MainTotakTICU: number;
-  total_SUM: number;
-  takhfif: number;
-  avarez: number;
-  total_mani: number;
+  takhfif: string;
+  avarez: string;
+  total_SUM: string;
 }
 
 export interface IFaktorProps {
