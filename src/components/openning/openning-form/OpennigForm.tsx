@@ -4,18 +4,19 @@ import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "@/utils/constants";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 import { openingFormSchema, type OpeningFormSchema } from "@/utils/validation";
 import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
-import SectionHeader from "@/components/ui/SectionHeader";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { IOpenningFormProps } from "@/utils/type";
 
 const OpenningForm = ({
   onSubmit,
+  faktorData,
   faktorNumber,
 }: IOpenningFormProps) => {
-
   const sendRef = useRef<any>(null);
   const subFolder = "eblaghiyeh";
+  const faktor = faktorData;
+  console.log(faktor);
 
   const {
     register,
@@ -28,13 +29,12 @@ const OpenningForm = ({
 
   return (
     <div>
-      <SectionHeader title="اطلاعات اعتبار اسنادی (ابلاغ)" />
       <form
         className="flex flex-col justify-center items-center gap-5 py-5"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="form-item">
-          <label>تاریخ گشایش:</label>
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">تاریخ گشایش:</label>
           <PersianDatePicker
             value=""
             onChange={(date) => setValue("LCOpenningDate", date)}
@@ -42,15 +42,21 @@ const OpenningForm = ({
           {errors.LCOpenningDate && <p>{errors.LCOpenningDate.message}</p>}
         </div>
 
-        <div className="form-item">
-          <label>شماره اعتبار اسنادی:</label>
-          <input {...register("LCNumber")} />
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">
+            شماره اعتبار اسنادی:
+          </label>
+          <input
+            className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
+            {...register("LCNumber")}
+          />
           {errors.LCNumber && <p>{errors.LCNumber.message}</p>}
         </div>
 
-        <div className="form-item">
-          <label>مبلغ اعتبار (ریال):</label>
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">مبلغ اعتبار (ریال):</label>
           <input
+            className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
             {...register("LCTotalPrice")}
             onChange={(e) =>
               setValue("LCTotalPrice", formatNumberWithComma(e.target.value))
@@ -59,8 +65,8 @@ const OpenningForm = ({
           {errors.LCTotalPrice && <p>{errors.LCTotalPrice.message}</p>}
         </div>
 
-        <div className="form-item">
-          <label>تاریخ ابلاغ:</label>
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">تاریخ ابلاغ:</label>
           <PersianDatePicker
             value=""
             onChange={(date) => setValue("LCCommunicationDate", date)}
@@ -70,36 +76,68 @@ const OpenningForm = ({
           )}
         </div>
 
-        <div className="form-item">
-          <label>مبدا زمان تسویه:</label>
-          <select {...register("LCOriginOpenningDate")}>
-            <option value="">انتخاب کنید</option>
-            {LC_OPENNING_DATES.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">مبدا زمان تسویه:</label>
+          {faktor?.mabnavalue ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.mabnavalue}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <select
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
+              {...register("LCOriginOpenningDate")}
+            >
+              <option value="">انتخاب کنید</option>
+              {LC_OPENNING_DATES.map(({ label, value }) => (
+                <option
+                  key={value}
+                  value={value}
+                  className="min-w-[230px] rounded-lg min-h-[30px] p-1 text-[18px] font-normal text-gray-800"
+                >
+                  {label}
+                </option>
+              ))}
+            </select>
+          )}
           {errors.LCOriginOpenningDate && (
             <p>{errors.LCOriginOpenningDate.message}</p>
           )}
         </div>
 
-        <div className="form-item">
-          <label>مدت زمان تسویه:</label>
-          <select {...register("LCSettlementDate")}>
-            <option value="">انتخاب کنید</option>
-            {LC_SETTLEMENT_DATES.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">مدت زمان تسویه:</label>
+          {faktor?.tarikhmabnavalue ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.tarikhmabnavalue}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <select
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
+              {...register("LCSettlementDate")}
+            >
+              <option value="">انتخاب کنید</option>
+              {LC_SETTLEMENT_DATES.map(({ label, value }) => (
+                <option
+                  key={value}
+                  value={value}
+                  className="min-w-[230px] rounded-lg min-h-[30px] p-1 text-[18px] font-normal text-gray-800"
+                >
+                  {label}
+                </option>
+              ))}
+            </select>
+          )}
           {errors.LCSettlementDate && <p>{errors.LCSettlementDate.message}</p>}
         </div>
 
-        <div className="form-item">
-          <label>آپلود ابلاغیه:</label>
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">آپلود ابلاغیه:</label>
           <FileUploader
             ref={sendRef}
             orderNumber={faktorNumber}
@@ -107,7 +145,10 @@ const OpenningForm = ({
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
+        >
           ثبت اطلاعات
         </button>
       </form>
