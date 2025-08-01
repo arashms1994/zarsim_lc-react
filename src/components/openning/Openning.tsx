@@ -1,40 +1,16 @@
-import React, { useRef, useState } from "react";
-import FileUploader from "../file-uploader/FileUploader";
-import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
-import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "../../utils/constants";
-import { AddToOpenningDate } from "../../api/addData";
-import PersianDatePicker from "../persian-date-picker/PersianDatePicker";
-import SectionHeader from "../ui/SectionHeader";
+import { useRef } from "react";
 import { useLayoutContext } from "@/providers/LayoutContext";
+import { useCustomerFactor } from "@/api/getData";
+import { AddToOpenningDate } from "@/api/addData";
+import SectionHeader from "../ui/SectionHeader";
+import OpenningForm from "./openning-form/OpennigForm";
 
 const Openning = () => {
   const sendRef = useRef<any>(null);
-
-  const [formData, setFormData] = useState({
-    LCTotalPrice: 0,
-    LCNumber: "",
-    LCOpenningDate: "",
-    LCCommunicationDate: "",
-    LCSettlementDate: "",
-    LCOriginOpenningDate: "",
-  });
-
   const { faktorNumber } = useLayoutContext();
-  const subFolder = "eblaghiyeh";
+  const faktor = useCustomerFactor(faktorNumber);
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "LCTotalPrice" ? Number(value.replace(/,/g, "")) : value,
-    }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleFormSubmit = async (formData: any) => {
     if (sendRef.current && !sendRef.current.getFile()) {
       alert("لطفا فایل ابلاغیه را انتخاب کنید.");
       return;
@@ -53,7 +29,7 @@ const Openning = () => {
     }
   };
 
-  if (!faktorNumber) {
+  if (faktor.isLoading) {
     return (
       <div className="mt-12 flex flex-col items-center justify-center gap-2">
         <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
@@ -66,150 +42,13 @@ const Openning = () => {
 
   return (
     <div>
-      <div>
-        <SectionHeader title="اطلاعات اعتبار اسنادی (ابلاغ)" />
-      </div>
-
-      <form
-        className="flex flex-col justify-center items-center gap-5 py-5"
-        onSubmit={handleSubmit}
-      >
-        <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium" htmlFor="LCOpenningDate">
-            تاریخ گشایش:
-          </label>
-          <PersianDatePicker
-            value={formData.LCOpenningDate}
-            onChange={(date: string) =>
-              setFormData((prev) => ({
-                ...prev,
-                LCOpenningDate: date,
-              }))
-            }
-          />
-        </div>
-
-        <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium" htmlFor="LCNumber">
-            شماره اعتبار اسنادی:
-          </label>
-          <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
-            type="text"
-            name="LCNumber"
-            value={formData.LCNumber}
-            onChange={handleChange}
-            id="LCNumber"
-          />
-        </div>
-
-        <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium" htmlFor="LCTotalPrice">
-            مبلغ اعتبار (ریال):
-          </label>
-          <input
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
-            type="text"
-            name="LCTotalPrice"
-            value={formatNumberWithComma(formData.LCTotalPrice)}
-            onChange={handleChange}
-            id="LCTotalPrice"
-          />
-        </div>
-
-        <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label
-            className="text-[22px] font-medium"
-            htmlFor="LCCommunicationDate"
-          >
-            تاریخ ابلاغ:
-          </label>
-          <PersianDatePicker
-            value={formData.LCOpenningDate}
-            onChange={(date: string) =>
-              setFormData((prev) => ({
-                ...prev,
-                LCCommunicationDate: date,
-              }))
-            }
-          />
-        </div>
-
-        <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label
-            className="text-[22px] font-medium"
-            htmlFor="LCOriginOpenningDate"
-          >
-            مبدا زمان تسویه:
-          </label>
-          <select
-            name="LCOriginOpenningDate"
-            id="LCOriginOpenningDate"
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
-            value={formData.LCOriginOpenningDate}
-            onChange={handleChange}
-          >
-            <option value="">یک گزینه انتخاب کنید</option>
-            {LC_OPENNING_DATES.map(({ value, label }) => (
-              <option
-                key={value || "empty"}
-                value={value}
-                className="min-w-[230px] rounded-lg min-h-[30px] p-1 text-[18px] font-normal text-gray-800"
-              >
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium" htmlFor="LCSettlementDate">
-            مدت زمان تسویه:
-          </label>
-          <select
-            name="LCSettlementDate"
-            id="LCSettlementDate"
-            className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
-            value={formData.LCSettlementDate}
-            onChange={handleChange}
-          >
-            <option value="">یک گزینه انتخاب کنید</option>
-            {LC_SETTLEMENT_DATES.map(({ value, label }) => (
-              <option
-                key={value || "empty"}
-                value={value}
-                className="min-w-[230px] rounded-lg min-h-[30px] p-1 text-[18px] font-normal text-gray-800"
-              >
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="w-full max-w-[400px] flex justify-between items-center gap-5">
-          <label
-            className="text-[22px] font-medium"
-            htmlFor="openningUploadFile"
-          >
-            آپلود ابلاغیه:
-          </label>
-          <FileUploader
-            ref={sendRef}
-            orderNumber={faktorNumber}
-            subFolder={subFolder}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
-        >
-          ثبت اطلاعات
-        </button>
-      </form>
-      <p className="text-red-600 text-center text-[16px] font-normal mt-4">
-        * آپلود ابلاغیه مهر و امضادار اجباری میباشد.
-      </p>
+      <SectionHeader title="اطلاعات اعتبار اسنادی (ابلاغ)" />
+      <OpenningForm
+        onSubmit={handleFormSubmit}
+        faktorData={faktor.data}
+        fileRef={sendRef}
+        faktorNumber={faktorNumber}
+      />
     </div>
   );
 };
