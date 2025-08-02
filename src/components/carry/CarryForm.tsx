@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AddToCarryReceipt } from "../../api/addData";
+import { addToCarryReceipt } from "../../api/addData";
 import { formatNumberWithComma } from "../../utils/formatNumberWithComma";
 import { useExitRequestsByOrderNumber, useLCNumberAndTotalPrice } from "@/api/getData";
 import { calculateExitSummary } from "@/utils/exitSummary";
@@ -31,7 +31,7 @@ const CarryForm = ({ faktorNumber }: { faktorNumber: string }) => {
           continue;
         }
 
-        await AddToCarryReceipt({
+        await addToCarryReceipt({
           Title: product.Title,
           GUID: localStorage.getItem("GUID") || "",
           TotalPrice: price * count,
