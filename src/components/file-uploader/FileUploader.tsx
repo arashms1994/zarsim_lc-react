@@ -9,7 +9,7 @@ import { getDigest } from "../../utils/getDigest";
 import type { IFileUploaderProps } from "@/utils/type";
 
 const FileUploader = forwardRef<unknown, IFileUploaderProps>(
-  ({ orderNumber, subFolder, docType }, ref) => {
+  ({ orderNumber, subFolder, docType, onUploadComplete }, ref) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [uploadStatus, setUploadStatus] = useState("");
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -90,6 +90,8 @@ const FileUploader = forwardRef<unknown, IFileUploaderProps>(
         if (uploadRes.ok) {
           setUploadStatus("فایل با موفقیت آپلود شد");
           setUploadProgress(100);
+          const uploadedUrl = `${BASE_URL}/${fullFolderPath}/${cleanFileName}`;
+          onUploadComplete?.(uploadedUrl);
           setSelectedFile(null);
           if (fileInputRef.current) fileInputRef.current.value = "";
         } else {
@@ -108,51 +110,63 @@ const FileUploader = forwardRef<unknown, IFileUploaderProps>(
     );
 
     return (
-      <div className="flex justify-around items-center min-w-[230px] h-[50px] gap-4 flex-wrap">
-        <label
-          htmlFor={inputId}
-          className="px-2 py-1 w-[95px] h-[30px] rounded-lg text-white bg-green-600 font-semibold flex justify-center items-center cursor-pointer hover:bg-green-800 transition-all duration-300"
-        >
-          انتخاب فایل
-        </label>
-        <input
-          className="hidden"
-          id={inputId}
-          type="file"
-          ref={fileInputRef}
-          onChange={(e) => {
-            const file = e.target.files && e.target.files[0];
-            if (file) {
-              setSelectedFile(file);
-              setUploadStatus("");
-              setUploadProgress(0);
-            }
-          }}
-        />
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-around items-center min-w-[230px] h-[50px] gap-4 flex-wrap">
+          <label
+            htmlFor={inputId}
+            className="px-2 py-1 w-[95px] h-[30px] rounded-lg text-white bg-green-600 font-semibold flex justify-center items-center cursor-pointer hover:bg-green-800 transition-all duration-300"
+          >
+            انتخاب فایل
+          </label>
+          <input
+            className="hidden"
+            id={inputId}
+            type="file"
+            ref={fileInputRef}
+            onChange={(e) => {
+              const file = e.target.files && e.target.files[0];
+              if (file) {
+                setSelectedFile(file);
+                setUploadStatus("");
+                setUploadProgress(0);
+              }
+            }}
+          />
 
-        {selectedFile ? (
-          <div className="flex items-center justify-center">
+          {selectedFile ? (
+            <div className="flex items-center justify-center">
+              <p className="text-[13px] font-bold text-gray-800 flex items-center">
+                {selectedFile.name}
+              </p>
+              <button
+                type="button"
+                onClick={clearFile}
+                aria-label="پاک کردن فایل"
+                className="ml-2 text-red-600 text-xl font-bold hover:text-red-400 transition-all duration-300 bg-transparent border-none"
+              >
+                ×
+              </button>
+            </div>
+          ) : (
             <p className="text-[13px] font-bold text-gray-800 flex items-center">
-              {selectedFile.name}
+              هنوز فایلی انتخاب نشده
             </p>
-            <button
-              type="button"
-              onClick={clearFile}
-              aria-label="پاک کردن فایل"
-              className="ml-2 text-red-600 text-xl font-bold hover:text-red-400 transition-all duration-300 bg-transparent border-none"
-            >
-              ×
-            </button>
-          </div>
-        ) : (
-          <p className="text-[13px] font-bold text-gray-800 flex items-center">
-            هنوز فایلی انتخاب نشده
-          </p>
+          )}
+        </div>
+
+        {selectedFile && (
+          <button
+            type="button"
+            onClick={uploadFile}
+            className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-semibold hover:bg-blue-800 transition duration-300 self-start"
+          >
+            آپلود فایل
+          </button>
         )}
 
         {uploadStatus && (
           <div
-            className={`font-bold ${
+            className={`font-bold text-sm mt-1 ${
               uploadProgress === 100 ? "text-green-700" : "text-red-600"
             }`}
           >

@@ -91,6 +91,7 @@ export interface IFileUploaderProps {
   orderNumber: string;
   subFolder: string;
   docType?: string;
+  onUploadComplete?: (fileUrl: string) => void;
 }
 
 export interface ISearchBarProps {
