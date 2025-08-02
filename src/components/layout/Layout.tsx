@@ -30,7 +30,7 @@ export const Layout: React.FC = () => {
 
   return (
     <LayoutContext.Provider value={{ faktorNumber }}>
-      <div className="flex flex-col justify-center items-center p-5 md:p-10 rtl">
+      <div className="flex flex-col justify-center items-center rtl">
         <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around">
           <Button
             type="button"
