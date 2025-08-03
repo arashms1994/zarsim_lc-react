@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Slide1 from "./Slide1";
 import Slide2 from "./Slide2";
 import Slide3 from "./Slide3";
@@ -10,7 +10,9 @@ import type { ICarrySliderProps } from "@/utils/type";
 
 const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber }) => {
   const [page, setPage] = useState(1);
-  const GUID = Guid();
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>({});
+
+  const GUID = useMemo(() => Guid(), []);
 
   const tabs = [
     { id: 1, label: "حمل" },
@@ -25,28 +27,70 @@ const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber }) => {
     switch (page) {
       case 1:
         return (
-          <Slide1 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+          <Slide1
+            setPage={setPage}
+            faktorNumber={faktorNumber}
+            GUID={GUID}
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+          />
         );
+
       case 2:
         return (
-          <Slide2 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+          <Slide2
+            setPage={setPage}
+            faktorNumber={faktorNumber}
+            GUID={GUID}
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+          />
         );
+
       case 3:
         return (
-          <Slide3 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+          <Slide3
+            setPage={setPage}
+            faktorNumber={faktorNumber}
+            GUID={GUID}
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+          />
         );
+
       case 4:
         return (
-          <Slide4 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+          <Slide4
+            setPage={setPage}
+            faktorNumber={faktorNumber}
+            GUID={GUID}
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+          />
         );
+
       case 5:
         return (
-          <Slide5 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+          <Slide5
+            setPage={setPage}
+            faktorNumber={faktorNumber}
+            GUID={GUID}
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+          />
         );
+
       case 6:
         return (
-          <Slide6 setPage={setPage} faktorNumber={faktorNumber} GUID={GUID} />
+          <Slide6
+            setPage={setPage}
+            faktorNumber={faktorNumber}
+            GUID={GUID}
+            uploadedFiles={uploadedFiles}
+            setUploadedFiles={setUploadedFiles}
+          />
         );
+
       default:
         return null;
     }

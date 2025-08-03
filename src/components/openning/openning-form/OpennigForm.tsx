@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "@/utils/constants";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
@@ -7,16 +7,17 @@ import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicke
 import FileUploader from "@/components/file-uploader/FileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { IOpenningFormProps } from "@/utils/type";
+import FileDownloadLink from "@/components/ui/FileDownloadLink";
 
 const OpenningForm = ({
   onSubmit,
   faktorData,
   faktorNumber,
 }: IOpenningFormProps) => {
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const sendRef = useRef<any>(null);
   const subFolder = "eblaghiyeh";
   const faktor = faktorData;
-  console.log(faktor);
 
   const {
     register,
@@ -136,15 +137,6 @@ const OpenningForm = ({
           {errors.LCSettlementDate && <p>{errors.LCSettlementDate.message}</p>}
         </div>
 
-        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium">آپلود ابلاغیه:</label>
-          <FileUploader
-            ref={sendRef}
-            orderNumber={faktorNumber}
-            subFolder={subFolder}
-          />
-        </div>
-
         <button
           type="submit"
           className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
@@ -152,6 +144,21 @@ const OpenningForm = ({
           ثبت اطلاعات
         </button>
       </form>
+
+      <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+        <label className="text-[22px] font-medium">آپلود ابلاغیه:</label>
+
+        {uploadedFileUrl ? (
+          <FileDownloadLink url={uploadedFileUrl} />
+        ) : (
+          <FileUploader
+            ref={sendRef}
+            orderNumber={faktorNumber}
+            subFolder={subFolder}
+            onUploadComplete={(url) => setUploadedFileUrl(url)}
+          />
+        )}
+      </div>
       <p className="text-red-600 text-center text-[16px] font-normal mt-4">
         * آپلود ابلاغیه مهر و امضادار اجباری میباشد.
       </p>

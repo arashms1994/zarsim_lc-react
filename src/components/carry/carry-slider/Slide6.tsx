@@ -1,9 +1,14 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import type { ICarrySlideProps } from "@/utils/type";
+import FileDownloadLink from "@/components/ui/FileDownloadLink";
 
-const Slide6: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
-  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
+const Slide6: React.FC<ICarrySlideProps> = ({
+  faktorNumber,
+  GUID,
+  uploadedFiles,
+  setUploadedFiles,
+}) => {
   const fileUploaderRef = useRef<any>(null);
 
   const label = "رسید واریز مبلغ";
@@ -11,8 +16,10 @@ const Slide6: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
   const docType = "residvariz";
 
   const handleUploadComplete = (url: string) => {
-    setUploadedFileUrl(url);
+    setUploadedFiles((prev) => ({ ...prev, [docType]: url }));
   };
+
+  const uploadedFileUrl = uploadedFiles[docType];
 
   return (
     <div className="flex flex-col justify-center items-center gap-5">
@@ -20,16 +27,7 @@ const Slide6: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
         <label className="text-[22px] font-medium">{`آپلود ${label}:`}</label>
 
         {uploadedFileUrl ? (
-          <div className="flex flex-col items-start gap-2 p-2 border border-green-500 rounded">
-            <a
-              href={uploadedFileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-700 font-semibold underline"
-            >
-              دانلود فایل
-            </a>
-          </div>
+          <FileDownloadLink url={uploadedFileUrl} />
         ) : (
           <FileUploader
             ref={fileUploaderRef}
