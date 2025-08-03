@@ -110,6 +110,10 @@ export interface ICarrySlideProps {
   GUID: string;
   faktorNumber: string;
   setPage: (value: number) => void;
+  uploadedFiles: Record<string, string>;
+  setUploadedFiles: React.Dispatch<
+    React.SetStateAction<Record<string, string>>
+  >;
 }
 
 export interface ICarrySliderProps {
@@ -135,4 +139,8 @@ export interface ISlideLayoutProps {
   disableNext?: boolean;
   disablePrev?: boolean;
   children: ReactNode;
+}
+
+export interface IFileDownloadLinkProps {
+  url: string;
 }

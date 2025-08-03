@@ -1,13 +1,14 @@
-import { useState } from "react";
 import type { ICarrySlideProps } from "@/utils/type";
 import { SECOND_SLIDE_DOCS } from "@/utils/constants";
 import FileUploader from "@/components/file-uploader/FileUploader";
+import FileDownloadLink from "@/components/ui/FileDownloadLink";
 
-const Slide2: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
-  const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>(
-    {}
-  );
-
+const Slide2: React.FC<ICarrySlideProps> = ({
+  faktorNumber,
+  GUID,
+  uploadedFiles,
+  setUploadedFiles,
+}) => {
   const subFolder = GUID;
 
   const handleUploadComplete = (docType: string, fileUrl: string) => {
@@ -27,16 +28,7 @@ const Slide2: React.FC<ICarrySlideProps> = ({ faktorNumber, GUID }) => {
           <label className="text-[22px] font-medium">{`آپلود ${d.label}:`}</label>
 
           {uploadedFiles[d.value] ? (
-            <div className="flex flex-col items-start gap-2 p-2 border border-green-500 rounded">
-              <a
-                href={uploadedFiles[d.value]}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-700 font-semibold underline"
-              >
-                دانلود فایل
-              </a>
-            </div>
+            <FileDownloadLink url={uploadedFiles[d.value]} />
           ) : (
             <FileUploader
               orderNumber={faktorNumber}
