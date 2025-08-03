@@ -155,6 +155,7 @@ const OpenningForm = ({
             ref={sendRef}
             orderNumber={faktorNumber}
             subFolder={subFolder}
+            docType={subFolder}
             onUploadComplete={(url) => setUploadedFileUrl(url)}
           />
         )}
