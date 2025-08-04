@@ -1,41 +1,28 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useLayoutContext } from "@/providers/LayoutContext";
 import { useCustomerFactor } from "@/api/getData";
-import { UpdateCustomerFactorItem } from "@/api/addData";
+import { updateCustomerFactorItem } from "@/api/addData";
+import { toast } from "react-toastify";
 import SectionHeader from "../ui/SectionHeader";
 import OpenningForm from "./openning-form/OpennigForm";
+import type { OpeningFormSchema } from "@/utils/validation";
+import type { IFileUploadRef } from "@/utils/type";
 
 const Openning = () => {
-  const sendRef = useRef<any>(null);
   const { faktorNumber } = useLayoutContext();
   const faktor = useCustomerFactor(faktorNumber);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const sendRef = useRef<{ uploadFile: () => Promise<void> }>(
+    null
+  ) as React.RefObject<IFileUploadRef>;
 
-  const handleFormSubmit = async (formData: any) => {
-    if (sendRef.current && !sendRef.current.getFile()) {
-      alert("لطفا فایل ابلاغیه را انتخاب کنید.");
-      return;
-    }
-
-    try {
-      await UpdateCustomerFactorItem(faktorNumber, {
-        LCNumber: String(formData.LCNumber),
-        LCTotal: String(formData.LCTotalPrice),
-        tarikhmabnavalue: String(formData.LCSettlementDate),
-        mabnavalue: String(formData.LCOriginOpenningDate),
-        Opening_Date: String(formData.LCOpenningDate),
-        Communication_Date: String(formData.LCCommunicationDate),
-      });
-
-      alert("اطلاعات با موفقیت ثبت شد.");
-
-      if (sendRef.current) {
-        await sendRef.current.uploadFile();
-      }
-    } catch (error) {
-      console.error("خطا در ثبت اطلاعات یا آپلود فایل:", error);
-      alert("خطایی در ثبت اطلاعات یا آپلود فایل رخ داد.");
-    }
-  };
+  if (!faktorNumber) {
+    return (
+      <div className="mt-12 text-center text-red-500">
+        شماره فاکتور یافت نشد
+      </div>
+    );
+  }
 
   if (faktor.isLoading) {
     return (
@@ -48,6 +35,38 @@ const Openning = () => {
     );
   }
 
+  if (faktor.error || !faktor.data) {
+    return (
+      <div className="mt-12 text-center text-red-500">
+        خطا در بارگذاری داده‌های فاکتور:{" "}
+        {faktor.error?.message || "داده‌ای یافت نشد"}
+      </div>
+    );
+  }
+
+  const handleFormSubmit = async (formData: OpeningFormSchema) => {
+    setIsSubmitting(true);
+    try {
+      await updateCustomerFactorItem(faktorNumber, {
+        LCNumber: String(formData.LCNumber),
+        LCTotal: String(formData.LCTotal),
+        tarikhmabnavalue: String(formData.tarikhmabnavalue),
+        mabnavalue: String(formData.mabnavalue),
+        tarikhgoshayesh: String(formData.tarikhgoshayesh),
+        tarikheblagh: String(formData.tarikheblagh),
+      });
+      toast.success("اطلاعات با موفقیت ثبت شد.");
+      if (sendRef.current) {
+        await sendRef.current.uploadFile();
+      }
+    } catch (error) {
+      console.error("خطا در ثبت اطلاعات یا آپلود فایل:", error);
+      toast.error("خطایی در ثبت اطلاعات یا آپلود فایل رخ داد.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div>
       <SectionHeader title="اطلاعات اعتبار اسنادی (ابلاغ)" />
@@ -56,6 +75,7 @@ const Openning = () => {
         faktorData={faktor.data}
         fileRef={sendRef}
         faktorNumber={faktorNumber}
+        isSubmitting={isSubmitting}
       />
     </div>
   );
