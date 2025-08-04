@@ -144,3 +144,39 @@ export interface ISlideLayoutProps {
 export interface IFileDownloadLinkProps {
   url: string;
 }
+
+export interface IFileItem {
+  Name: string;
+  ServerRelativeUrl: string;
+}
+
+export interface ISharePointFileResponse {
+  d: {
+    results: {
+      Name: string;
+      ServerRelativeUrl: string;
+    }[];
+  };
+}
+
+export interface IUseMultipleUploadedFilesResult {
+  [docType: string]: {
+    data: IFileItem[] | undefined;
+    isLoading: boolean;
+    isError: boolean;
+    error: unknown;
+  };
+}
+
+export interface IFileItem {
+  Name: string;
+  ServerRelativeUrl: string;
+}
+
+export interface IUploadSectionProps {
+  orderNumber: string;
+  subFolder: string;
+  docType: string;
+  label: string;
+  onUploadComplete: (url: string) => void;
+}
