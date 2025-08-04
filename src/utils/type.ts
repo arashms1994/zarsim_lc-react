@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { DateObject } from "react-multi-date-picker";
+import type { OpeningFormSchema } from "./validation";
 
 export interface LayoutContextType {
   searchQuery?: string;
@@ -12,8 +13,8 @@ export interface ICustomerFactorUpdate {
   LCTotal?: string;
   tarikhmabnavalue?: string;
   mabnavalue?: string;
-  Opening_Date?: string;
-  Communication_Date?: string;
+  tarikhgoshayesh?: string;
+  tarikheblagh?: string;
 }
 
 export interface IOpenningState {
@@ -34,11 +35,51 @@ export type IOpenningFormData = {
   LCSettlementDate: string;
 };
 
+export interface IFileDownloadLinkProps {
+  url: string;
+}
+
+export interface IFileItem {
+  Name: string;
+  ServerRelativeUrl: string;
+}
+
+export interface IFileUploadRef {
+  uploadFile: () => Promise<void>;
+}
+
+export interface ISharePointFileResponse {
+  d: {
+    results: {
+      Name: string;
+      ServerRelativeUrl: string;
+    }[];
+  };
+}
+
+export interface IUseMultipleUploadedFilesResult {
+  [docType: string]: {
+    data: IFileItem[] | undefined;
+    isLoading: boolean;
+    isError: boolean;
+    error: unknown;
+  };
+}
+
+export interface IUploadSectionProps {
+  orderNumber: string;
+  subFolder: string;
+  docType: string;
+  label: string;
+  onUploadComplete: (url: string) => void;
+}
+
 export interface IOpenningFormProps {
-  onSubmit: (formData: any) => Promise<void>;
+  onSubmit: (formData: OpeningFormSchema) => Promise<void>;
   faktorData?: ICustomer;
-  fileRef: React.RefObject<any>;
+  fileRef: React.RefObject<IFileUploadRef>;
   faktorNumber: string;
+  isSubmitting: boolean;
 }
 
 export interface ICarryProps {
@@ -139,44 +180,4 @@ export interface ISlideLayoutProps {
   disableNext?: boolean;
   disablePrev?: boolean;
   children: ReactNode;
-}
-
-export interface IFileDownloadLinkProps {
-  url: string;
-}
-
-export interface IFileItem {
-  Name: string;
-  ServerRelativeUrl: string;
-}
-
-export interface ISharePointFileResponse {
-  d: {
-    results: {
-      Name: string;
-      ServerRelativeUrl: string;
-    }[];
-  };
-}
-
-export interface IUseMultipleUploadedFilesResult {
-  [docType: string]: {
-    data: IFileItem[] | undefined;
-    isLoading: boolean;
-    isError: boolean;
-    error: unknown;
-  };
-}
-
-export interface IFileItem {
-  Name: string;
-  ServerRelativeUrl: string;
-}
-
-export interface IUploadSectionProps {
-  orderNumber: string;
-  subFolder: string;
-  docType: string;
-  label: string;
-  onUploadComplete: (url: string) => void;
 }

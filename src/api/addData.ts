@@ -2,112 +2,103 @@ import { getDigest } from "@/utils/getDigest";
 import type { ICustomerFactorUpdate } from "@/utils/type";
 import { BASE_URL } from "./base";
 
-export async function UpdateCustomerFactorItem(
+export async function updateCustomerFactorItem(
   faktorNumber: string,
   data: Partial<ICustomerFactorUpdate>
 ): Promise<void> {
   const digest = await getDigest();
   const listName = "customer_factor";
-  const itemType = "SP.Data.Customer_x005f_factorListItem";
 
-  const getResponse = await fetch(
-    `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items?$filter=Title eq '${faktorNumber}'`,
-    {
-      headers: {
-        Accept: "application/json;odata=verbose",
-      },
-    }
+  const metaRes = await fetch(
+    `${BASE_URL}/_api/web/lists/getbytitle('${listName}')?$select=ListItemEntityTypeFullName`,
+    { headers: { Accept: "application/json;odata=verbose" } }
   );
 
-  const result = await getResponse.json();
-  const items = result.d?.results || [];
+  if (!metaRes.ok) {
+    const err = await metaRes.text();
+    throw new Error(
+      `خطا در دریافت metadata: ${err} (وضعیت: ${metaRes.status})`
+    );
+  }
+
+  const metaJson = await metaRes.json();
+  const itemType = metaJson?.d?.ListItemEntityTypeFullName;
+  if (!itemType) throw new Error("نوع آیتم یافت نشد");
+
+  // جستجوی آیتم
+  const safeFaktorNumber = faktorNumber.replace(/'/g, "''");
+  const getRes = await fetch(
+    `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items?$filter=Title eq '${safeFaktorNumber}'&$top=1`,
+    { headers: { Accept: "application/json;odata=verbose" } }
+  );
+
+  if (!getRes.ok) {
+    const err = await getRes.text();
+    throw new Error(`خطا در گرفتن آیتم: ${err} (وضعیت: ${getRes.status})`);
+  }
+
+  const getJson = await getRes.json();
+  const items = getJson?.d?.results;
+  if (!Array.isArray(items)) {
+    throw new Error("فرمت پاسخ SharePoint نامعتبر است");
+  }
+
+  if (items.length > 1) {
+    throw new Error("چند آیتم با این شماره فاکتور یافت شد");
+  }
 
   const payload = {
     __metadata: { type: itemType },
     ...data,
   };
 
+  const baseHeaders: HeadersInit = {
+    Accept: "application/json;odata=verbose",
+    "Content-Type": "application/json;odata=verbose",
+    "X-RequestDigest": digest,
+  };
+
   if (items.length > 0) {
     const itemId = items[0].Id;
+    const updateHeaders = {
+      ...baseHeaders,
+      "X-HTTP-Method": "MERGE",
+      "IF-MATCH": items[0].__metadata?.etag || "*",
+    };
 
-    const updateResponse = await fetch(
+    const updateRes = await fetch(
       `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items(${itemId})`,
       {
         method: "POST",
-        headers: {
-          Accept: "application/json;odata=verbose",
-          "Content-Type": "application/json;odata=verbose",
-          "X-RequestDigest": digest,
-          "X-HTTP-Method": "MERGE",
-          "IF-MATCH": "*",
-        },
+        headers: updateHeaders,
         body: JSON.stringify(payload),
       }
     );
 
-    if (!updateResponse.ok) {
-      const error = await updateResponse.text();
-      throw new Error("خطا در به‌روزرسانی آیتم: " + error);
+    if (!updateRes.ok) {
+      const err = await updateRes.text();
+      throw new Error(
+        `خطا در به‌روزرسانی آیتم: ${err} (وضعیت: ${updateRes.status})`
+      );
     }
   } else {
-    const createResponse = await fetch(
+    const createRes = await fetch(
       `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items`,
       {
         method: "POST",
-        headers: {
-          Accept: "application/json;odata=verbose",
-          "Content-Type": "application/json;odata=verbose",
-          "X-RequestDigest": digest,
-        },
+        headers: baseHeaders,
         body: JSON.stringify(payload),
       }
     );
 
-    if (!createResponse.ok) {
-      const error = await createResponse.text();
-      throw new Error("خطا در ایجاد آیتم: " + error);
+    if (!createRes.ok) {
+      const err = await createRes.text();
+      throw new Error(
+        `خطا در ایجاد آیتم جدید: ${err} (وضعیت: ${createRes.status})`
+      );
     }
   }
 }
-
-// export async function addToCustomerFactor(
-//   state: IOpenningState
-// ): Promise<void> {
-//   const listName = "customer_factor";
-//   const itemType = `SP.Data.Customer_x005f_factorListItem`;
-//   const digest = await getDigest();
-
-//   const response = await fetch(
-//     `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items`,
-//     {
-//       method: "POST",
-//       headers: {
-//         Accept: "application/json;odata=verbose",
-//         "Content-Type": "application/json;odata=verbose",
-//         "X-RequestDigest": digest,
-//         "X-HTTP-Method": "MERGE",
-//         "IF-MATCH": "*",
-//       },
-//       body: JSON.stringify({
-//         __metadata: { type: itemType },
-//         LCNumber: String(state.LCNumber),
-//         LCTotal: String(state.LCTotalPrice),
-//         tarikhmabnavalue: String(state.LCSettlementDate),
-//         mabnavalue: String(state.LCOriginOpenningDate),
-//         Opening_Date: String(state.LCOpenningDate),
-//         Communication_Date: String(state.LCCommunicationDate),
-//       }),
-//     }
-//   );
-
-//   if (!response.ok) {
-//     const error = await response.text();
-//     throw new Error("خطا در ثبت آیتم: " + error);
-//   }
-
-//   const data = await response.json();
-//   console.log("آیتم با موفقیت ثبت شد:", data);
-// }
 
 export async function addToCarryReceipt(item: {
   Title: string;

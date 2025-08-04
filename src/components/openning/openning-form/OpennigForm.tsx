@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "@/utils/constants";
-import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 import { openingFormSchema, type OpeningFormSchema } from "@/utils/validation";
 import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { IOpenningFormProps } from "@/utils/type";
+import type { IFileUploadRef, IOpenningFormProps } from "@/utils/type";
 import FileDownloadLink from "@/components/ui/FileDownloadLink";
 import { useUploadedFiles } from "@/hooks/useUploadedFiles";
 import { BASE_URL } from "@/api/base";
@@ -15,9 +14,10 @@ const OpenningForm = ({
   onSubmit,
   faktorData,
   faktorNumber,
+  isSubmitting,
 }: IOpenningFormProps) => {
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
-  const sendRef = useRef<any>(null);
+  const sendRef = useRef<IFileUploadRef>(null);
   const subFolder = "eblaghiyeh";
   const faktor = faktorData;
 
@@ -29,6 +29,14 @@ const OpenningForm = ({
     formState: { errors },
   } = useForm<OpeningFormSchema>({
     resolver: zodResolver(openingFormSchema),
+    defaultValues: {
+      LCNumber: faktor?.LCNumber || "",
+      LCTotal: faktor?.LCTotal || "",
+      tarikhgoshayesh: faktor?.tarikhgoshayesh || "",
+      tarikheblagh: faktor?.tarikheblagh || "",
+      mabnavalue: faktor?.mabnavalue || "",
+      tarikhmabnavalue: faktor?.tarikhmabnavalue || "",
+    },
   });
 
   const { data: filesFromServer } = useUploadedFiles(
@@ -50,13 +58,34 @@ const OpenningForm = ({
 
   return (
     <div>
+      <div className="w-full max-w-[500px] flex justify-between items-center gap-5 my-5">
+        <label className="text-[22px] font-medium">آپلود ابلاغیه:</label>
+        {uploadedFileUrl ? (
+          <FileDownloadLink url={uploadedFileUrl} />
+        ) : (
+          <FileUploader
+            ref={sendRef}
+            orderNumber={faktorNumber}
+            subFolder={subFolder}
+            docType={subFolder}
+            onUploadComplete={(url) => setUploadedFileUrl(url)}
+          />
+        )}
+      </div>
+      <p className="text-red-600 text-center text-[16px] font-normal">
+        * آپلود ابلاغیه مهر و امضادار اجباری میباشد.
+      </p>
+
       <form
         className="flex flex-col justify-center items-center gap-5 py-5"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          handleSubmit((data) => {
+            onSubmit(data);
+          })(e);
+        }}
       >
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">تاریخ گشایش:</label>
-
           {faktor?.tarikhgoshayesh &&
           !isNaN(new Date(faktor.tarikhgoshayesh).getTime()) ? (
             <input
@@ -66,16 +95,17 @@ const OpenningForm = ({
               className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
             />
           ) : (
-            <PersianDatePicker
-              value={watch("LCOpenningDate") || ""}
-              onChange={(date) => setValue("LCOpenningDate", date)}
-            />
-          )}
-
-          {errors.LCOpenningDate && (
-            <p className="text-red-500 text-sm">
-              {errors.LCOpenningDate.message}
-            </p>
+            <>
+              <PersianDatePicker
+                value={watch("tarikhgoshayesh") || null}
+                onChange={(date) => setValue("tarikhgoshayesh", date)}
+              />
+              {errors.tarikhgoshayesh && (
+                <p className="text-red-500 text-sm">
+                  {errors.tarikhgoshayesh.message}
+                </p>
+              )}
+            </>
           )}
         </div>
 
@@ -96,7 +126,11 @@ const OpenningForm = ({
                 className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
                 {...register("LCNumber")}
               />
-              {errors.LCNumber && <p>{errors.LCNumber.message}</p>}
+              {errors.LCNumber && (
+                <p className="text-red-500 text-sm">
+                  {errors.LCNumber.message}
+                </p>
+              )}
             </>
           )}
         </div>
@@ -114,22 +148,17 @@ const OpenningForm = ({
             <>
               <input
                 className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
-                {...register("LCTotalPrice")}
-                onChange={(e) =>
-                  setValue(
-                    "LCTotalPrice",
-                    formatNumberWithComma(e.target.value)
-                  )
-                }
+                {...register("LCTotal")}
               />
-              {errors.LCTotalPrice && <p>{errors.LCTotalPrice.message}</p>}
+              {errors.LCTotal && (
+                <p className="text-red-500 text-sm">{errors.LCTotal.message}</p>
+              )}
             </>
           )}
         </div>
 
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">تاریخ ابلاغ:</label>
-
           {faktor?.tarikheblagh &&
           !isNaN(new Date(faktor.tarikheblagh).getTime()) ? (
             <input
@@ -139,16 +168,17 @@ const OpenningForm = ({
               className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
             />
           ) : (
-            <PersianDatePicker
-              value={watch("LCCommunicationDate") || ""}
-              onChange={(date) => setValue("LCCommunicationDate", date)}
-            />
-          )}
-
-          {errors.LCCommunicationDate && (
-            <p className="text-red-500 text-sm">
-              {errors.LCCommunicationDate.message}
-            </p>
+            <>
+              <PersianDatePicker
+                value={watch("tarikheblagh") || null}
+                onChange={(date) => setValue("tarikheblagh", date)}
+              />
+              {errors.tarikheblagh && (
+                <p className="text-red-500 text-sm">
+                  {errors.tarikheblagh.message}
+                </p>
+              )}
+            </>
           )}
         </div>
 
@@ -165,7 +195,7 @@ const OpenningForm = ({
             <>
               <select
                 className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
-                {...register("LCOriginOpenningDate")}
+                {...register("mabnavalue")}
               >
                 <option value="">انتخاب کنید</option>
                 {LC_OPENNING_DATES.map(({ label, value }) => (
@@ -178,8 +208,10 @@ const OpenningForm = ({
                   </option>
                 ))}
               </select>
-              {errors.LCOriginOpenningDate && (
-                <p>{errors.LCOriginOpenningDate.message}</p>
+              {errors.mabnavalue && (
+                <p className="text-red-500 text-sm">
+                  {errors.mabnavalue.message}
+                </p>
               )}
             </>
           )}
@@ -198,7 +230,7 @@ const OpenningForm = ({
             <>
               <select
                 className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
-                {...register("LCSettlementDate")}
+                {...register("tarikhmabnavalue")}
               >
                 <option value="">انتخاب کنید</option>
                 {LC_SETTLEMENT_DATES.map(({ label, value }) => (
@@ -211,8 +243,10 @@ const OpenningForm = ({
                   </option>
                 ))}
               </select>
-              {errors.LCSettlementDate && (
-                <p>{errors.LCSettlementDate.message}</p>
+              {errors.tarikhmabnavalue && (
+                <p className="text-red-500 text-sm">
+                  {errors.tarikhmabnavalue.message}
+                </p>
               )}
             </>
           )}
@@ -221,29 +255,14 @@ const OpenningForm = ({
         <button
           type="submit"
           className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
+          disabled={isSubmitting}
+          onClick={() =>
+            console.log("Submit button clicked, isSubmitting:", isSubmitting)
+          }
         >
-          ثبت اطلاعات
+          {isSubmitting ? "در حال ثبت..." : "ثبت اطلاعات"}
         </button>
       </form>
-
-      <div className="w-full max-w-[500px] flex justify-between items-center gap-5 my-5">
-        <label className="text-[22px] font-medium">آپلود ابلاغیه:</label>
-
-        {uploadedFileUrl ? (
-          <FileDownloadLink url={uploadedFileUrl} />
-        ) : (
-          <FileUploader
-            ref={sendRef}
-            orderNumber={faktorNumber}
-            subFolder={subFolder}
-            docType={subFolder}
-            onUploadComplete={(url) => setUploadedFileUrl(url)}
-          />
-        )}
-      </div>
-      <p className="text-red-600 text-center text-[16px] font-normal">
-        * آپلود ابلاغیه مهر و امضادار اجباری میباشد.
-      </p>
     </div>
   );
 };
