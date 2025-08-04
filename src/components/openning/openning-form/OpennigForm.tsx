@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "@/utils/constants";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
@@ -8,7 +8,8 @@ import FileUploader from "@/components/file-uploader/FileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { IOpenningFormProps } from "@/utils/type";
 import FileDownloadLink from "@/components/ui/FileDownloadLink";
-
+import { useUploadedFiles } from "@/hooks/useUploadedFiles";
+import { BASE_URL } from "@/api/base";
 const OpenningForm = ({
   onSubmit,
   faktorData,
@@ -27,6 +28,23 @@ const OpenningForm = ({
   } = useForm<OpeningFormSchema>({
     resolver: zodResolver(openingFormSchema),
   });
+
+  const { data: filesFromServer } = useUploadedFiles(
+    faktorNumber,
+    subFolder,
+    subFolder
+  );
+
+  const fileFromServer = filesFromServer?.[0];
+  const fileUrl = fileFromServer
+    ? `${BASE_URL}${fileFromServer.ServerRelativeUrl}`
+    : null;
+
+  useEffect(() => {
+    if (fileUrl && uploadedFileUrl !== fileUrl) {
+      setUploadedFileUrl(fileUrl);
+    }
+  }, [fileUrl, uploadedFileUrl]);
 
   return (
     <div>
