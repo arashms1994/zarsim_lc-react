@@ -54,10 +54,19 @@ const OpenningForm = ({
       >
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">تاریخ گشایش:</label>
-          <PersianDatePicker
-            value=""
-            onChange={(date) => setValue("LCOpenningDate", date)}
-          />
+          {faktor?.tarikhgoshayesh ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.tarikhgoshayesh}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <PersianDatePicker
+              value=""
+              onChange={(date) => setValue("LCOpenningDate", date)}
+            />
+          )}
           {errors.LCOpenningDate && <p>{errors.LCOpenningDate.message}</p>}
         </div>
 
@@ -65,31 +74,58 @@ const OpenningForm = ({
           <label className="text-[22px] font-medium">
             شماره اعتبار اسنادی:
           </label>
-          <input
-            className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
-            {...register("LCNumber")}
-          />
+          {faktor?.LCNumber ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.LCNumber}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <input
+              className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
+              {...register("LCNumber")}
+            />
+          )}
           {errors.LCNumber && <p>{errors.LCNumber.message}</p>}
         </div>
 
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">مبلغ اعتبار (ریال):</label>
-          <input
-            className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
-            {...register("LCTotalPrice")}
-            onChange={(e) =>
-              setValue("LCTotalPrice", formatNumberWithComma(e.target.value))
-            }
-          />
+          {faktor?.LCTotal ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.LCTotal}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <input
+              className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
+              {...register("LCTotalPrice")}
+              onChange={(e) =>
+                setValue("LCTotalPrice", formatNumberWithComma(e.target.value))
+              }
+            />
+          )}
           {errors.LCTotalPrice && <p>{errors.LCTotalPrice.message}</p>}
         </div>
 
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">تاریخ ابلاغ:</label>
-          <PersianDatePicker
-            value=""
-            onChange={(date) => setValue("LCCommunicationDate", date)}
-          />
+          {faktor?.tarikheblagh ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.tarikheblagh}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <PersianDatePicker
+              value=""
+              onChange={(date) => setValue("LCCommunicationDate", date)}
+            />
+          )}
           {errors.LCCommunicationDate && (
             <p>{errors.LCCommunicationDate.message}</p>
           )}
@@ -163,7 +199,7 @@ const OpenningForm = ({
         </button>
       </form>
 
-      <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+      <div className="w-full max-w-[500px] flex justify-between items-center gap-5 my-5">
         <label className="text-[22px] font-medium">آپلود ابلاغیه:</label>
 
         {uploadedFileUrl ? (
@@ -178,7 +214,7 @@ const OpenningForm = ({
           />
         )}
       </div>
-      <p className="text-red-600 text-center text-[16px] font-normal mt-4">
+      <p className="text-red-600 text-center text-[16px] font-normal">
         * آپلود ابلاغیه مهر و امضادار اجباری میباشد.
       </p>
     </div>
