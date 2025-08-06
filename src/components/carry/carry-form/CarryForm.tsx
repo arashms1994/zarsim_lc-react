@@ -3,6 +3,7 @@ import { CarryFormSchema } from "@/utils/validation";
 import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ICarryForm } from "@/utils/type";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const CarryForm = ({ onSubmit, isSubmitting }: ICarryForm) => {
   const {
@@ -16,7 +17,9 @@ const CarryForm = ({ onSubmit, isSubmitting }: ICarryForm) => {
   });
 
   return (
-    <div className="w-full max-w-[500px] flex justify-between items-center gap-5 my-5">
+    <div className="w-full flex flex-col justify-between items-center gap-5 my-5">
+      <SectionHeader title="ثبت مرحله حمل (فاکتور از مالی)" />
+
       <form
         className="flex flex-col justify-center items-center gap-5 py-5"
         onSubmit={(e) => {

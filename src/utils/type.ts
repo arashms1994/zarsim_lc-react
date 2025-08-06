@@ -199,3 +199,7 @@ export interface ISlideLayoutProps {
   disablePrev?: boolean;
   children: ReactNode;
 }
+
+export interface ICarryTableProps {
+  carryReceipt?: ICarryReceipt[];
+}

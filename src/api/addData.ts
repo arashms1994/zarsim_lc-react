@@ -98,16 +98,14 @@ export async function updateCustomerFactorItem(
     }
   }
 }
-
 export async function addCarryReceipt(
   formData: Partial<ICarryReceipt>
 ): Promise<void> {
-  const listName = "LC_carry_receipt";
-  const itemType = `SP.Data.${listName}ListItem`;
+  const itemType = `SP.Data.LC_x005f_carry_x005f_receiptListItem`;
   const digest = await getDigest();
 
   const response = await fetch(
-    `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items`,
+    `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items`,
     {
       method: "POST",
       headers: {
@@ -115,6 +113,7 @@ export async function addCarryReceipt(
         "Content-Type": "application/json;odata=verbose",
         "X-RequestDigest": digest,
       },
+      credentials: "include",
       body: JSON.stringify({
         __metadata: { type: itemType },
         ...formData,

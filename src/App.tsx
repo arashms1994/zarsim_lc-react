@@ -1,29 +1,3 @@
-// import { useRoutes } from "react-router";
-// import { Layout } from "./components/layout/Layout";
-// import PreInvoice from "./components/pre-invoice/PreInvoice";
-// import Openning from "./components/openning/Openning";
-// import Carry from "./components/carry/Carry";
-// import Payment from "./components/payment/Payment";
-
-// const App: React.FC = () => {
-//   const routes = useRoutes([
-//     {
-//       path: "/",
-//       element: <Layout />,
-//       children: [
-//         { path: "/", element: <PreInvoice /> },
-//         { path: "/openning", element: <Openning /> },
-//         { path: "/carry", element: <Carry /> },
-//         { path: "/payment", element: <Payment /> },
-//       ],
-//     },
-//   ]);
-
-//   return routes;
-// };
-
-// export default App;
-
 import { useRoutes } from "react-router";
 import { Layout } from "./components/layout/Layout";
 import PreInvoice from "./components/pre-invoice/PreInvoice";
@@ -47,7 +21,6 @@ const App: React.FC = () => {
     },
   ]);
 
-  // بررسی و رندر مجدد در صورت تغییر تب‌های SharePoint
   useEffect(() => {
     const handleTabChange = () => {
       const rootElement = document.getElementById("root");
@@ -57,7 +30,6 @@ const App: React.FC = () => {
       }
     };
 
-    // فرض می‌کنیم تب‌های SharePoint یک رویداد خاص (مثل tabChange) دارند
     document.addEventListener("tabChange", handleTabChange);
     return () => document.removeEventListener("tabChange", handleTabChange);
   }, []);
