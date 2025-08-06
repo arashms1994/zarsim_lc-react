@@ -5,7 +5,7 @@ import { updateCustomerFactorItem } from "@/api/addData";
 import { toast } from "react-toastify";
 import SectionHeader from "../ui/SectionHeader";
 import OpenningForm from "./openning-form/OpennigForm";
-import type { OpeningFormSchema } from "@/utils/validation";
+import type { OpenningFormSchema } from "@/utils/validation";
 import type { IFileUploadRef } from "@/utils/type";
 
 const Openning = () => {
@@ -44,7 +44,7 @@ const Openning = () => {
     );
   }
 
-  const handleFormSubmit = async (formData: OpeningFormSchema) => {
+  const handleFormSubmit = async (formData: OpenningFormSchema) => {
     setIsSubmitting(true);
     try {
       await updateCustomerFactorItem(faktorNumber, {
