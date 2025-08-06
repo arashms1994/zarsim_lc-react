@@ -10,10 +10,12 @@ export const Layout: React.FC = () => {
   const [faktorNumber, setFaktorNumber] = useState<string>("");
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const faktor = params.get("Factor_ID") ?? "";
-    setFaktorNumber(faktor);
-  }, [location.search]);
+    if (faktor !== faktorNumber) {
+      setFaktorNumber(faktor);
+    }
+  }, [location.search, faktorNumber]);
 
   const getButtonClass = (targetPath: string) =>
     classNames(
