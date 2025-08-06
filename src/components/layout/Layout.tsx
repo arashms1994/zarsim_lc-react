@@ -19,7 +19,7 @@ export const Layout: React.FC = () => {
   const getActiveTab = () => {
     switch (location.pathname) {
       case "/":
-        return "prefactor";
+        return "preinvoice";
       case "/openning":
         return "openning";
       case "/carry":
@@ -27,7 +27,7 @@ export const Layout: React.FC = () => {
       case "/payment":
         return "payment";
       default:
-        return "prefactor";
+        return "preinvoice";
     }
   };
 
@@ -51,7 +51,7 @@ export const Layout: React.FC = () => {
           >
             <TabsList className="flex flex-row-reverse justify-around bg-transparent">
               <TabsTrigger
-                value="prefactor"
+                value="preinvoice"
                 className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
               >
                 اطلاعات پیش فاکتور
