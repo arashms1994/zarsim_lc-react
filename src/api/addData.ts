@@ -1,5 +1,5 @@
 import { getDigest } from "@/utils/getDigest";
-import type { ICustomerFactorUpdate } from "@/utils/type";
+import type { ICarryReceipt, ICustomerFactorUpdate } from "@/utils/type";
 import { BASE_URL } from "./base";
 
 export async function updateCustomerFactorItem(
@@ -25,7 +25,6 @@ export async function updateCustomerFactorItem(
   const itemType = metaJson?.d?.ListItemEntityTypeFullName;
   if (!itemType) throw new Error("نوع آیتم یافت نشد");
 
-  // جستجوی آیتم
   const safeFaktorNumber = faktorNumber.replace(/'/g, "''");
   const getRes = await fetch(
     `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items?$filter=Title eq '${safeFaktorNumber}'&$top=1`,
@@ -100,14 +99,9 @@ export async function updateCustomerFactorItem(
   }
 }
 
-export async function addToCarryReceipt(item: {
-  Title: string;
-  GUID: string | null;
-  TotalPrice: number;
-  LCNumber: string;
-  Price: number;
-  Count: number;
-}) {
+export async function addCarryReceipt(
+  formData: Partial<ICarryReceipt>
+): Promise<void> {
   const listName = "LC_carry_receipt";
   const itemType = `SP.Data.${listName}ListItem`;
   const digest = await getDigest();
@@ -123,12 +117,7 @@ export async function addToCarryReceipt(item: {
       },
       body: JSON.stringify({
         __metadata: { type: itemType },
-        Title: item.Title,
-        GUID: item.GUID,
-        TotalPrice: item.TotalPrice,
-        LCNumber: item.LCNumber,
-        Price: item.Price,
-        Count: item.Count,
+        ...formData,
       }),
     }
   );
