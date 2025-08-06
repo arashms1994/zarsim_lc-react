@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Outlet, useNavigate } from "react-router-dom";
-import classNames from "classnames";
-import { Button } from "../ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutContext } from "@/providers/LayoutContext";
 
 export const Layout: React.FC = () => {
@@ -17,60 +16,66 @@ export const Layout: React.FC = () => {
     }
   }, [location.search, faktorNumber]);
 
-  const getButtonClass = (targetPath: string) =>
-    classNames(
-      "text-xl min-w-0 font-medium cursor-pointer transition-all duration-300 p-3 rounded-full flex justify-center items-center border-none",
-      location.pathname === targetPath
-        ? "bg-[#009E08] text-white"
-        : "bg-[#c5c5c5] text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
-    );
+  const getActiveTab = () => {
+    switch (location.pathname) {
+      case "/":
+        return "prefactor";
+      case "/openning":
+        return "openning";
+      case "/carry":
+        return "carry";
+      case "/payment":
+        return "payment";
+      default:
+        return "prefactor";
+    }
+  };
 
-  const handleNavigate = (targetPath: string) => {
+  const handleTabChange = (value: string) => {
     const params = new URLSearchParams(location.search);
+    let targetPath = "/";
+    if (value === "openning") targetPath = "/openning";
+    else if (value === "carry") targetPath = "/carry";
+    else if (value === "payment") targetPath = "/payment";
     navigate(`${targetPath}?${params.toString()}`);
   };
 
   return (
     <LayoutContext.Provider value={{ faktorNumber }}>
       <div className="flex flex-col justify-center items-center rtl">
-        <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around">
-          <Button
-            type="button"
-            onClick={() => handleNavigate("/")}
-            className={getButtonClass("/")}
+        <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right">
+          <Tabs
+            value={getActiveTab()}
+            onValueChange={handleTabChange}
+            className="w-full"
           >
-            اطلاعات پیش فاکتور
-          </Button>
-
-          <div className="w-24 h-[2px] bg-muted-foreground"></div>
-
-          <Button
-            type="button"
-            onClick={() => handleNavigate("/openning")}
-            className={getButtonClass("/openning")}
-          >
-            اطلاعات اعتبار اسنادی (ابلاغ)
-          </Button>
-
-          <div className="w-24 h-[2px] bg-muted-foreground"></div>
-
-          <Button
-            type="button"
-            onClick={() => handleNavigate("/carry")}
-            className={getButtonClass("/carry")}
-          >
-            حمل و پرداخت
-          </Button>
-
-          <div className="w-24 h-[2px] bg-muted-foreground"></div>
-
-          <Button
-            type="button"
-            onClick={() => handleNavigate("/payment")}
-            className={getButtonClass("/payment")}
-          >
-            اختتامیه اعتبار اسنادی
-          </Button>
+            <TabsList className="flex flex-row-reverse justify-around bg-transparent">
+              <TabsTrigger
+                value="prefactor"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+              >
+                اطلاعات پیش فاکتور
+              </TabsTrigger>
+              <TabsTrigger
+                value="openning"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+              >
+                اطلاعات اعتبار اسنادی (ابلاغ)
+              </TabsTrigger>
+              <TabsTrigger
+                value="carry"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+              >
+                حمل و پرداخت
+              </TabsTrigger>
+              <TabsTrigger
+                value="payment"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+              >
+                اختتامیه اعتبار اسنادی
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </header>
 
         <main>

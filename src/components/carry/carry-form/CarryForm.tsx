@@ -13,12 +13,6 @@ const CarryForm = ({ onSubmit, isSubmitting }: ICarryForm) => {
     formState: { errors },
   } = useForm<CarryFormSchema>({
     resolver: zodResolver(CarryFormSchema),
-    defaultValues: {
-      Count: "",
-      Total: "",
-      Title: "",
-      Date: "",
-    },
   });
 
   return (
