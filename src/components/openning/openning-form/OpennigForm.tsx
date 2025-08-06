@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "@/utils/constants";
-import { openingFormSchema, type OpeningFormSchema } from "@/utils/validation";
+import {
+  openningFormSchema,
+  type OpenningFormSchema,
+} from "@/utils/validation";
 import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,8 +30,8 @@ const OpenningForm = ({
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<OpeningFormSchema>({
-    resolver: zodResolver(openingFormSchema),
+  } = useForm<OpenningFormSchema>({
+    resolver: zodResolver(openningFormSchema),
     defaultValues: {
       LCNumber: faktor?.LCNumber || "",
       LCTotal: faktor?.LCTotal || "",
