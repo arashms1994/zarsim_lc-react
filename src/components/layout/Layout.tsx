@@ -43,7 +43,7 @@ export const Layout: React.FC = () => {
   return (
     <LayoutContext.Provider value={{ faktorNumber }}>
       <div className="flex flex-col justify-center items-center rtl">
-        <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right">
+        <header className="bg-[#dddFC9] w-full m-w-[1200px] p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right">
           <Tabs
             value={getActiveTab()}
             onValueChange={handleTabChange}
