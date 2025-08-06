@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { DateObject } from "react-multi-date-picker";
-import type { OpeningFormSchema } from "./validation";
+import type { CarryFormSchema, OpenningFormSchema } from "./validation";
 
 export interface LayoutContextType {
   searchQuery?: string;
@@ -15,6 +15,19 @@ export interface ICustomerFactorUpdate {
   mabnavalue?: string;
   tarikhgoshayesh?: string;
   tarikheblagh?: string;
+}
+
+export interface ICarryReceipt {
+  Id?: number;
+  Title?: string;
+  Order_Number?: string;
+  Count?: string;
+  Total?: string;
+  LC_Number?: string;
+  GUID?: string;
+  Bank_Confirm?: string;
+  Date?: string;
+  Status?: string;
 }
 
 export interface IOpenningState {
@@ -75,11 +88,16 @@ export interface IUploadSectionProps {
 }
 
 export interface IOpenningFormProps {
-  onSubmit: (formData: OpeningFormSchema) => Promise<void>;
+  onSubmit: (formData: OpenningFormSchema) => Promise<void>;
   faktorData?: ICustomer;
   fileRef: React.RefObject<IFileUploadRef>;
   faktorNumber: string;
   isSubmitting: boolean;
+}
+
+export interface ICarryForm {
+  isSubmitting: boolean;
+  onSubmit: (formData: CarryFormSchema) => Promise<void>;
 }
 
 export interface ICarryProps {
