@@ -8,7 +8,7 @@ import Slide6 from "./Slide6";
 import Guid from "@/utils/createGUID";
 import type { ICarrySliderProps } from "@/utils/type";
 
-const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber }) => {
+const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber, selectedReceipt }) => {
   const [page, setPage] = useState(1);
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>({});
 
@@ -16,83 +16,42 @@ const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber }) => {
 
   const tabs = [
     { id: 1, label: "حمل" },
-    { id: 2, label: "آماده سازی اسناد" },
+    { id: 2, label: "آماده‌سازی اسناد" },
     { id: 3, label: "ارسال اسناد به بانک" },
     { id: 4, label: "رسید بانک" },
-    { id: 5, label: "تایید اسناد" },
+    { id: 5, label: "تأیید اسناد" },
     { id: 6, label: "واریز مبلغ" },
   ];
 
   const renderSlide = () => {
+    const slideProps = {
+      setPage,
+      faktorNumber,
+      GUID,
+      uploadedFiles,
+      setUploadedFiles,
+      selectedReceipt,
+    };
+
     switch (page) {
       case 1:
-        return (
-          <Slide1
-            setPage={setPage}
-            faktorNumber={faktorNumber}
-            GUID={GUID}
-            uploadedFiles={uploadedFiles}
-            setUploadedFiles={setUploadedFiles}
-          />
-        );
-
+        return <Slide1 {...slideProps} />;
       case 2:
-        return (
-          <Slide2
-            setPage={setPage}
-            faktorNumber={faktorNumber}
-            GUID={GUID}
-            uploadedFiles={uploadedFiles}
-            setUploadedFiles={setUploadedFiles}
-          />
-        );
-
+        return <Slide2 {...slideProps} />;
       case 3:
-        return (
-          <Slide3
-            setPage={setPage}
-            faktorNumber={faktorNumber}
-            GUID={GUID}
-            uploadedFiles={uploadedFiles}
-            setUploadedFiles={setUploadedFiles}
-          />
-        );
-
+        return <Slide3 {...slideProps} />;
       case 4:
-        return (
-          <Slide4
-            setPage={setPage}
-            faktorNumber={faktorNumber}
-            GUID={GUID}
-            uploadedFiles={uploadedFiles}
-            setUploadedFiles={setUploadedFiles}
-          />
-        );
-
+        return <Slide4 {...slideProps} />;
       case 5:
-        return (
-          <Slide5
-            setPage={setPage}
-            faktorNumber={faktorNumber}
-            GUID={GUID}
-            uploadedFiles={uploadedFiles}
-            setUploadedFiles={setUploadedFiles}
-          />
-        );
-
+        return <Slide5 {...slideProps} />;
       case 6:
-        return (
-          <Slide6
-            setPage={setPage}
-            faktorNumber={faktorNumber}
-            GUID={GUID}
-            uploadedFiles={uploadedFiles}
-            setUploadedFiles={setUploadedFiles}
-          />
-        );
-
+        return <Slide6 {...slideProps} />;
       default:
-        return null;
+        return (
+          <div className="text-center text-gray-500">
+            هیچ اسلایدی انتخاب نشده است
+          </div>
+        );
     }
   };
 
