@@ -7,12 +7,12 @@ import UploadSection from "@/components/ui/UploadSection";
 
 const Slide6: React.FC<ICarrySlideProps> = ({
   faktorNumber,
-  GUID,
   uploadedFiles,
   setUploadedFiles,
+  selectedReceipt,
 }) => {
   const label = "رسید واریز مبلغ";
-  const subFolder = GUID;
+  const subFolder = selectedReceipt?.Title || "";
   const docType = "residvariz";
   const queryClient = useQueryClient();
 

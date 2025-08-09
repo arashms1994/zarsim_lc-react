@@ -16,7 +16,9 @@ const Carry = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCarryFormModalOpen, setCarryFormModalOpen] = useState(false);
-  const [selectedReceipt, setSelectedReceipt] = useState<ICarryReceipt | null>(null); // state جدید برای آیتم انتخاب‌شده
+  const [selectedReceipt, setSelectedReceipt] = useState<ICarryReceipt | null>(
+    null
+  ); // state جدید برای آیتم انتخاب‌شده
   const GUID = Guid();
 
   const { faktorNumber } = useLayoutContext();
@@ -76,9 +78,9 @@ const Carry = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center gap-5">
+    <div className="w-full h-full flex flex-col justify-center items-center gap-5 relative">
       <div>
-        <SectionHeader title="حمل و پرداخت" />
+        <SectionHeader className="" title="حمل و پرداخت" />
       </div>
 
       <button
@@ -86,12 +88,15 @@ const Carry = () => {
         onClick={() => {
           if (!isModalOpen) setCarryFormModalOpen(true);
         }}
-        className="bg-green-600 text-white px-4 py-2 rounded"
+        className="bg-green-600 absolute top-6 right-0 text-white px-4 py-2 rounded"
       >
         افزودن مرحله حمل
       </button>
 
-      <CarryTable carryReceipt={carryReceipt ?? []} onReceiptClick={handleReceiptClick} />
+      <CarryTable
+        carryReceipt={carryReceipt ?? []}
+        onReceiptClick={handleReceiptClick}
+      />
 
       {isModalOpen && (
         <div className="mx-auto my-auto w-full h-full fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 overflow-y-auto">
@@ -107,7 +112,10 @@ const Carry = () => {
               X
             </Button>
 
-            <Slider faktorNumber={faktorNumber} selectedReceipt={selectedReceipt} />
+            <Slider
+              faktorNumber={faktorNumber}
+              selectedReceipt={selectedReceipt}
+            />
           </div>
         </div>
       )}
