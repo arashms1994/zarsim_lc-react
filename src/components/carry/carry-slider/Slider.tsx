@@ -8,9 +8,14 @@ import Slide6 from "./Slide6";
 import Guid from "@/utils/createGUID";
 import type { ICarrySliderProps } from "@/utils/type";
 
-const Slider: React.FC<ICarrySliderProps> = ({ faktorNumber, selectedReceipt }) => {
+const Slider: React.FC<ICarrySliderProps> = ({
+  faktorNumber,
+  selectedReceipt,
+}) => {
   const [page, setPage] = useState(1);
-  const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>({});
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>(
+    {}
+  );
 
   const GUID = useMemo(() => Guid(), []);
 

@@ -8,11 +8,11 @@ import UploadSection from "@/components/ui/UploadSection";
 
 const Slide1: React.FC<ICarrySlideProps> = ({
   faktorNumber,
-  GUID,
   uploadedFiles,
   setUploadedFiles,
+  selectedReceipt,
 }) => {
-  const subFolder = GUID;
+  const subFolder = selectedReceipt?.Title || "";
   const docTypes = FIRST_SLIDE_DOCS.map((d) => d.value);
   const queryClient = useQueryClient();
 

@@ -7,12 +7,12 @@ import UploadSection from "@/components/ui/UploadSection";
 
 const Slide5: React.FC<ICarrySlideProps> = ({
   faktorNumber,
-  GUID,
   uploadedFiles,
   setUploadedFiles,
+  selectedReceipt,
 }) => {
   const label = "رسید تایید اسناد توسط بانک";
-  const subFolder = GUID;
+  const subFolder = selectedReceipt?.Title || "";
   const docType = "taeidasnad";
   const queryClient = useQueryClient();
 

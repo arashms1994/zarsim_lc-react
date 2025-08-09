@@ -170,6 +170,7 @@ export interface ICarrySlideProps {
   faktorNumber: string;
   setPage: (value: number) => void;
   uploadedFiles: Record<string, string>;
+  selectedReceipt: ICarryReceipt | null;
   setUploadedFiles: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
