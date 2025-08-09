@@ -8,41 +8,86 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const CarryTable: React.FC<ICarryTableProps> = ({ carryReceipt = [] }) => {
+const CarryTable: React.FC<ICarryTableProps> = ({
+  carryReceipt = [],
+  onReceiptClick,
+}) => {
   return (
-    <Table>
-      <TableCaption>همه مراحل حمل</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>شماره فاکتور</TableHead>
-          <TableHead>تاریخ</TableHead>
-          <TableHead>متراژ</TableHead>
-          <TableHead>مبلغ کل</TableHead>
-          <TableHead>شماره پیش فاکتور</TableHead>
-          <TableHead>شماره LC</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {carryReceipt.map((invoice) => (
-          <TableRow key={invoice.Title}>
-            <TableCell className="font-medium">{invoice.Title}</TableCell>
-            <TableCell className="font-medium">{invoice.Date}</TableCell>
-            <TableCell>{invoice.Count}</TableCell>
-            <TableCell>{invoice.Total}</TableCell>
-            <TableCell className="text-right">{invoice.Order_Number}</TableCell>
-            <TableCell className="text-right">{invoice.LC_Number}</TableCell>
+    <TooltipProvider>
+      <Table className="w-full border-collapse">
+        <TableCaption className="text-gray-500 mb-4">
+          همه مراحل حمل
+        </TableCaption>
+        <TableHeader>
+          <TableRow className="bg-gray-200">
+            <TableHead>شماره فاکتور</TableHead>
+            <TableHead>تاریخ</TableHead>
+            <TableHead>متراژ</TableHead>
+            <TableHead>مبلغ کل</TableHead>
+            <TableHead>شماره پیش‌فاکتور</TableHead>
+            <TableHead>شماره LC</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-      {/* <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter> */}
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {carryReceipt.length > 0 ? (
+            carryReceipt.map((invoice) => (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <TableRow
+                    key={invoice.Title}
+                    onClick={() => onReceiptClick(invoice)}
+                    className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
+                  >
+                    <TableCell className="font-medium text-right">
+                      {invoice.Title}
+                    </TableCell>
+                    <TableCell className="text-right">{invoice.Date}</TableCell>
+                    <TableCell className="text-right">
+                      {invoice.Count}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {invoice.Total}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {invoice.Order_Number}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {invoice.LC_Number}
+                    </TableCell>
+                  </TableRow>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>برای تکمیل کلیک کنید.</p>
+                </TooltipContent>
+              </Tooltip>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center py-4 text-gray-500">
+                هیچ مرحله‌ای ثبت نشده است
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </TooltipProvider>
   );
 };
 
 export default CarryTable;
+
+{
+  /* <TableFooter>
+  <TableRow>
+    <TableCell colSpan={3}>Total</TableCell>
+    <TableCell className="text-right">$2,500.00</TableCell>
+  </TableRow>
+</TableFooter> */
+}

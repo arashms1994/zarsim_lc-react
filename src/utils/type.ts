@@ -177,6 +177,7 @@ export interface ICarrySlideProps {
 
 export interface ICarrySliderProps {
   faktorNumber: string;
+  selectedReceipt: ICarryReceipt | null;
 }
 
 export interface ISliderControlsProps {
@@ -202,4 +203,5 @@ export interface ISlideLayoutProps {
 
 export interface ICarryTableProps {
   carryReceipt?: ICarryReceipt[];
+  onReceiptClick: (receipt: ICarryReceipt) => void;
 }
