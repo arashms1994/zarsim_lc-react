@@ -4,7 +4,7 @@ import Slider from "./carry-slider/Slider";
 import SectionHeader from "../ui/SectionHeader";
 import { useLayoutContext } from "@/providers/LayoutContext";
 import CarryForm from "./carry-form/CarryForm";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import type { CarryFormSchema } from "@/utils/validation";
 import { addCarryReceipt } from "@/api/addData";
 import { useCarryReceipts, useCustomerFactor } from "@/api/getData";
@@ -18,7 +18,7 @@ const Carry = () => {
   const [isCarryFormModalOpen, setCarryFormModalOpen] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState<ICarryReceipt | null>(
     null
-  ); // state جدید برای آیتم انتخاب‌شده
+  );
   const GUID = Guid();
 
   const { faktorNumber } = useLayoutContext();
@@ -62,11 +62,31 @@ const Carry = () => {
         GUID: GUID,
         LC_Number: LCNumber || "",
       });
-      toast.success("اطلاعات با موفقیت ثبت شد.");
+      toast.success("اطلاعات با موفقیت ثبت شد!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
       setCarryFormModalOpen(false);
     } catch (error) {
       console.error("خطا در ثبت اطلاعات یا آپلود فایل:", error);
-      toast.error("خطایی در ثبت اطلاعات یا آپلود فایل رخ داد.");
+      toast.error("خطایی در ثبت اطلاعات رخ داد!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -88,7 +108,7 @@ const Carry = () => {
         onClick={() => {
           if (!isModalOpen) setCarryFormModalOpen(true);
         }}
-        className="bg-green-600 absolute top-6 right-0 text-white px-4 py-2 rounded"
+        className="bg-green-600 border-none absolute top-6 right-0 text-white px-4 py-2 rounded-xl transition-all duration-300"
       >
         افزودن مرحله حمل
       </button>

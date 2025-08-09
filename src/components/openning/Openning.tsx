@@ -2,11 +2,11 @@ import { useRef, useState } from "react";
 import { useLayoutContext } from "@/providers/LayoutContext";
 import { useCustomerFactor } from "@/api/getData";
 import { updateCustomerFactorItem } from "@/api/addData";
-import { toast } from "react-toastify";
 import SectionHeader from "../ui/SectionHeader";
 import OpenningForm from "./openning-form/OpennigForm";
 import type { OpenningFormSchema } from "@/utils/validation";
 import type { IFileUploadRef } from "@/utils/type";
+import { Bounce, toast } from "react-toastify";
 
 const Openning = () => {
   const { faktorNumber } = useLayoutContext();
@@ -55,13 +55,33 @@ const Openning = () => {
         tarikhgoshayesh: String(formData.tarikhgoshayesh),
         tarikheblagh: String(formData.tarikheblagh),
       });
-      toast.success("اطلاعات با موفقیت ثبت شد.");
+      toast.success("اطلاعات با موفقیت ثبت شد!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
       if (sendRef.current) {
         await sendRef.current.uploadFile();
       }
     } catch (error) {
       console.error("خطا در ثبت اطلاعات یا آپلود فایل:", error);
-      toast.error("خطایی در ثبت اطلاعات یا آپلود فایل رخ داد.");
+      toast.error("خطایی در ثبت اطلاعات رخ داد!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsSubmitting(false);
     }
