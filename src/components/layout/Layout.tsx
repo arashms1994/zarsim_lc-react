@@ -24,8 +24,8 @@ export const Layout: React.FC = () => {
         return "openning";
       case "/carry":
         return "carry";
-      case "/payment":
-        return "payment";
+      case "/LCEnding":
+        return "LCEnding";
       default:
         return "preinvoice";
     }
@@ -36,7 +36,7 @@ export const Layout: React.FC = () => {
     let targetPath = "/";
     if (value === "openning") targetPath = "/openning";
     else if (value === "carry") targetPath = "/carry";
-    else if (value === "payment") targetPath = "/payment";
+    else if (value === "LCEnding") targetPath = "/LCEnding";
     navigate(`${targetPath}?${params.toString()}`);
   };
 
@@ -69,7 +69,7 @@ export const Layout: React.FC = () => {
                 حمل و پرداخت
               </TabsTrigger>
               <TabsTrigger
-                value="payment"
+                value="LCEnding"
                 className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
               >
                 اختتامیه اعتبار اسنادی

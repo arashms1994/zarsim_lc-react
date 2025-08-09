@@ -98,6 +98,86 @@ export async function updateCustomerFactorItem(
     }
   }
 }
+
+export const updateLCEnding = async (faktorNumber: string) => {
+  try {
+    const digest = await getDigest();
+    const listName = "customer_factor";
+
+    const metaRes = await fetch(
+      `${BASE_URL}/_api/web/lists/getbytitle('${listName}')?$select=ListItemEntityTypeFullName`,
+      {
+        headers: {
+          Accept: "application/json;odata=verbose",
+        },
+      }
+    );
+    if (!metaRes.ok) {
+      throw new Error("خطا در دریافت متادیتای لیست");
+    }
+    const metaData = await metaRes.json();
+    const listItemEntityTypeFullName = metaData.d.ListItemEntityTypeFullName;
+
+    const queryRes = await fetch(
+      `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items?$filter=Title eq '${faktorNumber}'`,
+      {
+        headers: {
+          Accept: "application/json;odata=verbose",
+        },
+      }
+    );
+    if (!queryRes.ok) {
+      throw new Error("خطا در پیدا کردن ردیف");
+    }
+    const queryData = await queryRes.json();
+    const items = queryData.d.results;
+
+    if (items.length === 0) {
+      throw new Error(`ردیفی با شماره فاکتور ${faktorNumber} یافت نشد`);
+    }
+    if (items.length > 1) {
+      throw new Error(`چند ردیف با شماره فاکتور ${faktorNumber} یافت شد`);
+    }
+
+    const itemId = items[0].Id;
+
+    const updateRes = await fetch(
+      `${BASE_URL}/_api/web/lists/getbytitle('${listName}')/items(${itemId})`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json;odata=verbose",
+          "Content-Type": "application/json;odata=verbose",
+          "X-RequestDigest": digest,
+          "X-HTTP-Method": "MERGE",
+          "IF-MATCH": "*",
+        },
+        body: JSON.stringify({
+          __metadata: {
+            type: listItemEntityTypeFullName,
+          },
+          LCEnding: "1",
+        }),
+      }
+    );
+
+    if (!updateRes.ok) {
+      throw new Error("خطا در به‌روزرسانی اختتامیه اعتبار اسنادی");
+    }
+
+    return {
+      success: true,
+      message: "اختتامیه اعتبار اسنادی با موفقیت ثبت شد!",
+    };
+  } catch (error) {
+    console.error("Error updating LCEnding:", error);
+    return {
+      success: false,
+      message: `خطایی در ثبت اختتامیه رخ داد: ${error}`,
+    };
+  }
+};
+
 export async function addCarryReceipt(
   formData: Partial<ICarryReceipt>
 ): Promise<void> {
