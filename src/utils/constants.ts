@@ -3,6 +3,7 @@ export const LC_OPENNING_DATES = [
   { value: "از تاریخ ابلاغ", label: "از تاریخ ابلاغ" },
   { value: "از تاریخ حمل/بارنامه", label: "از تاریخ حمل/بارنامه" },
   { value: "از تاریخ فاکتور", label: "از تاریخ فاکتور" },
+  { value: "از تاریخ ارائه اسناد به بانک/ معامله اسناد/ رسید دریافت بانک", label: "از تاریخ ارائه اسناد به بانک/ معامله اسناد/ رسید دریافت بانک" },
 ];
 
 export const LC_SETTLEMENT_DATES = [
@@ -10,6 +11,13 @@ export const LC_SETTLEMENT_DATES = [
   { value: "45", label: "45" },
   { value: "60", label: "60" },
   { value: "75", label: "75" },
+  { value: "90", label: "90" },
+  { value: "120", label: "120" },
+  { value: "180", label: "180" },
+];
+
+export const LC_VALIDATION_DATES = [
+  { value: "60", label: "60" },
   { value: "90", label: "90" },
   { value: "120", label: "120" },
   { value: "180", label: "180" },
