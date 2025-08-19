@@ -50,6 +50,7 @@ const Openning = () => {
       await updateCustomerFactorItem(faktorNumber, {
         LCNumber: String(formData.LCNumber),
         LCTotal: String(formData.LCTotal),
+        LCValidation: String(formData.LCValidation),
         tarikhmabnavalue: String(formData.tarikhmabnavalue),
         mabnavalue: String(formData.mabnavalue),
         tarikhgoshayesh: String(formData.tarikhgoshayesh),

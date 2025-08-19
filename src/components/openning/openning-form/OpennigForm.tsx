@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES } from "@/utils/constants";
+import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES, LC_VALIDATION_DATES } from "@/utils/constants";
 import {
   openningFormSchema,
   type OpenningFormSchema,
@@ -35,6 +35,7 @@ const OpenningForm = ({
     defaultValues: {
       LCNumber: faktor?.LCNumber || "",
       LCTotal: faktor?.LCTotal || "",
+      LCValidation: faktor?.LCValidation || "",
       tarikhgoshayesh: faktor?.tarikhgoshayesh || "",
       tarikheblagh: faktor?.tarikheblagh || "",
       mabnavalue: faktor?.mabnavalue || "",
@@ -249,6 +250,41 @@ const OpenningForm = ({
               {errors.tarikhmabnavalue && (
                 <p className="text-red-500 text-sm">
                   {errors.tarikhmabnavalue.message}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+
+         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">مدت اعتبار اسنادی:</label>
+          {faktor?.LCValidation ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.LCValidation}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <>
+              <select
+                className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2"
+                {...register("LCValidation")}
+              >
+                <option value="">انتخاب کنید</option>
+                {LC_VALIDATION_DATES.map(({ label, value }) => (
+                  <option
+                    key={value}
+                    value={value}
+                    className="text-[18px] font-normal text-gray-800"
+                  >
+                    {label}
+                  </option>
+                ))}
+              </select>
+              {errors.LCValidation && (
+                <p className="text-red-500 text-sm">
+                  {errors.LCValidation.message}
                 </p>
               )}
             </>

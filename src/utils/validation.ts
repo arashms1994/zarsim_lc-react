@@ -9,6 +9,7 @@ export const openningFormSchema = z.object({
   tarikheblagh: z.string().min(1, "تاریخ ابلاغ الزامی است"),
   mabnavalue: z.string().min(1, "مبدا زمان تسویه الزامی است"),
   tarikhmabnavalue: z.string().min(1, "مدت زمان تسویه الزامی است"),
+  LCValidation: z.string().min(1, "مدت اعتبار LC الزامی است"),
 });
 
 export type OpenningFormSchema = z.infer<typeof openningFormSchema>;

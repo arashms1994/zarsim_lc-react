@@ -10,6 +10,7 @@ export interface LayoutContextType {
 export interface ICustomerFactorUpdate {
   Title: string;
   LCNumber?: string;
+  LCValidation?: string;
   LCTotal?: string;
   tarikhmabnavalue?: string;
   mabnavalue?: string;
@@ -118,6 +119,7 @@ export interface ICustomer {
   LCTotal: string | null;
   LCNumber: string | null;
   LCEnding: string | null;
+  LCValidation: string | null;
   total_mani: string;
   tarikhgoshayesh: string | null;
   tarikheblagh: string | null;
