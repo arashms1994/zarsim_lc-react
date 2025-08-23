@@ -16,6 +16,8 @@ export interface ICustomerFactorUpdate {
   mabnavalue?: string;
   tarikhgoshayesh?: string;
   tarikheblagh?: string;
+  tolerance_manfi?: string;
+  tolerance_mosbat?: string;
 }
 
 export interface ICarryReceipt {
@@ -128,6 +130,8 @@ export interface ICustomer {
   takhfif: string;
   avarez: string;
   total_SUM: string;
+  tolerance_mosbat: string;
+  tolerance_manfi: string;
 }
 
 export interface IFaktorProps {

@@ -10,6 +10,8 @@ export const openningFormSchema = z.object({
   mabnavalue: z.string().min(1, "مبدا زمان تسویه الزامی است"),
   tarikhmabnavalue: z.string().min(1, "مدت زمان تسویه الزامی است"),
   LCValidation: z.string().min(1, "مدت اعتبار LC الزامی است"),
+  tolerance_manfi: z.string().min(1, "مقدار تلرانس منفی الزامیست."),
+  tolerance_mosbat: z.string().min(1, "مقدار تلرانس مثبت الزامیست."),
 });
 
 export type OpenningFormSchema = z.infer<typeof openningFormSchema>;
