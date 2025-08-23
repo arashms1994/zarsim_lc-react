@@ -18,7 +18,7 @@ const CarryForm = ({ onSubmit, isSubmitting }: ICarryForm) => {
 
   return (
     <div className="w-full flex flex-col justify-between items-center gap-5 my-5">
-      <SectionHeader title="ثبت مرحله حمل (فاکتور از مالی)" />
+      <SectionHeader title="ثبت اطلاعات فاکتور" />
 
       <form
         className="flex flex-col justify-center items-center gap-5 py-5"
