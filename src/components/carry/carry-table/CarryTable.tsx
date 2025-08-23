@@ -1,4 +1,4 @@
-import type { ICarryTableProps } from "@/utils/type";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -14,64 +14,111 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
+import type { ICarryTableProps, ICarryReceipt } from "@/utils/type";
+import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 
-const CarryTable: React.FC<ICarryTableProps> = ({
+interface CarryTableProps extends ICarryTableProps {
+  onSelectionChange?: (selectedReceipts: ICarryReceipt[]) => void;
+}
+
+const CarryTable: React.FC<CarryTableProps> = ({
   carryReceipt = [],
   onReceiptClick,
+  onSelectionChange,
 }) => {
+  const [selectedReceipts, setSelectedReceipts] = useState<ICarryReceipt[]>([]);
+
+  const columns = [
+    { label: "", key: "" },
+    { label: "شماره فاکتور", key: "Title" },
+    { label: "تاریخ", key: "Date" },
+    { label: "متراژ", key: "Count" },
+    { label: "مبلغ کل", key: "Total" },
+    { label: "شماره پیش‌فاکتور", key: "Order_Number" },
+    { label: "شماره LC", key: "LC_Number" },
+  ];
+
+  const handleSelectReceipt = (receipt: ICarryReceipt) => {
+    setSelectedReceipts((prev) => {
+      const isSelected = prev.some((item) => item.GUID === receipt.GUID);
+      const updatedSelection = isSelected
+        ? prev.filter((item) => item.GUID !== receipt.GUID)
+        : [...prev, receipt];
+
+      onSelectionChange?.(updatedSelection);
+      return updatedSelection;
+    });
+  };
+
+  // const handleSelectAll = () => {
+  //   if (selectedReceipts.length === carryReceipt.length) {
+  //     setSelectedReceipts([]);
+  //     onSelectionChange?.([]);
+  //   } else {
+  //     setSelectedReceipts(carryReceipt);
+  //     onSelectionChange?.(carryReceipt);
+  //   }
+  // };
+
+  const renderRow = (invoice: ICarryReceipt) => (
+    <Tooltip key={invoice.GUID}>
+      <TooltipTrigger asChild>
+        <TableRow
+          onClick={() => onReceiptClick(invoice)}
+          className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
+        >
+          <TableCell className="text-center">
+            <Checkbox
+              className="min-w-0"
+              id={`checkbox-${invoice.GUID}`}
+              checked={selectedReceipts.some(
+                (item) => item.GUID === invoice.GUID
+              )}
+              onCheckedChange={() => handleSelectReceipt(invoice)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </TableCell>
+          <TableCell className="font-medium text-right">
+            {invoice.Title}
+          </TableCell>
+          <TableCell className="text-right">{invoice.Date}</TableCell>
+          <TableCell className="text-right">
+            {formatNumberWithComma(invoice.Count)}
+          </TableCell>
+          <TableCell className="text-right">
+            {formatNumberWithComma(invoice.Total)}
+          </TableCell>
+          <TableCell className="text-right">{invoice.Order_Number}</TableCell>
+          <TableCell className="text-right">{invoice.LC_Number}</TableCell>
+        </TableRow>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>برای افزودن به مرحل حمل کلیک کنید.</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+
   return (
     <TooltipProvider>
       <Table className="w-full border-collapse">
-        <TableCaption className="text-gray-500 mb-4">
-          همه مراحل حمل
-        </TableCaption>
+        <TableCaption className="text-gray-500 mb-4">همه فاکتورها</TableCaption>
         <TableHeader>
           <TableRow className="bg-gray-200">
-            <TableHead>شماره فاکتور</TableHead>
-            <TableHead>تاریخ</TableHead>
-            <TableHead>متراژ</TableHead>
-            <TableHead>مبلغ کل</TableHead>
-            <TableHead>شماره پیش‌فاکتور</TableHead>
-            <TableHead>شماره LC</TableHead>
+            {columns.map((column) => (
+              <TableHead key={column.key} className="text-right">
+                {column.label}
+              </TableHead>
+            ))}
           </TableRow>
         </TableHeader>
         <TableBody>
           {carryReceipt.length > 0 ? (
-            carryReceipt.map((invoice) => (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <TableRow
-                    key={invoice.Title}
-                    onClick={() => onReceiptClick(invoice)}
-                    className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
-                  >
-                    <TableCell className="font-medium text-right">
-                      {invoice.Title}
-                    </TableCell>
-                    <TableCell className="text-right">{invoice.Date}</TableCell>
-                    <TableCell className="text-right">
-                      {invoice.Count}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {invoice.Total}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {invoice.Order_Number}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {invoice.LC_Number}
-                    </TableCell>
-                  </TableRow>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>برای تکمیل کلیک کنید.</p>
-                </TooltipContent>
-              </Tooltip>
-            ))
+            carryReceipt.map(renderRow)
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="text-center py-4 text-gray-500">
-                هیچ مرحله‌ای ثبت نشده است
+              <TableCell colSpan={7} className="text-center py-4 text-gray-500">
+                هیچ فاکتوری وجود ندارد
               </TableCell>
             </TableRow>
           )}
@@ -82,12 +129,3 @@ const CarryTable: React.FC<ICarryTableProps> = ({
 };
 
 export default CarryTable;
-
-{
-  /* <TableFooter>
-  <TableRow>
-    <TableCell colSpan={3}>Total</TableCell>
-    <TableCell className="text-right">$2,500.00</TableCell>
-  </TableRow>
-</TableFooter> */
-}
