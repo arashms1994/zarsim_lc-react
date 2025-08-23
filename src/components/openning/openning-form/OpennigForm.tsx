@@ -257,7 +257,7 @@ const OpenningForm = ({
         </div>
 
          <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
-          <label className="text-[22px] font-medium">مدت اعتبار اسنادی:</label>
+          <label className="text-[22px] font-medium">مدت اعتبار LC:</label>
           {faktor?.LCValidation ? (
             <input
               type="text"
