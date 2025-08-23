@@ -3,3 +3,7 @@
   margin: 0 auto;
   text-align: center;
 }
+
+button {
+  min-width: 0;
+}
