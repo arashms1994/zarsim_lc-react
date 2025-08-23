@@ -46,6 +46,7 @@ const Openning = () => {
 
   const handleFormSubmit = async (formData: OpenningFormSchema) => {
     setIsSubmitting(true);
+
     try {
       await updateCustomerFactorItem(faktorNumber, {
         LCNumber: String(formData.LCNumber),
@@ -55,7 +56,10 @@ const Openning = () => {
         mabnavalue: String(formData.mabnavalue),
         tarikhgoshayesh: String(formData.tarikhgoshayesh),
         tarikheblagh: String(formData.tarikheblagh),
+        tolerance_manfi: String(formData.tolerance_manfi),
+        tolerance_mosbat: String(formData.tolerance_mosbat),
       });
+      
       toast.success("اطلاعات با موفقیت ثبت شد!", {
         position: "top-center",
         autoClose: 5000,
@@ -67,11 +71,13 @@ const Openning = () => {
         theme: "colored",
         transition: Bounce,
       });
+
       if (sendRef.current) {
         await sendRef.current.uploadFile();
       }
     } catch (error) {
       console.error("خطا در ثبت اطلاعات یا آپلود فایل:", error);
+      
       toast.error("خطایی در ثبت اطلاعات رخ داد!", {
         position: "top-center",
         autoClose: 5000,

@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { LC_OPENNING_DATES, LC_SETTLEMENT_DATES, LC_VALIDATION_DATES } from "@/utils/constants";
+import {
+  LC_OPENNING_DATES,
+  LC_SETTLEMENT_DATES,
+  LC_VALIDATION_DATES,
+} from "@/utils/constants";
 import {
   openningFormSchema,
   type OpenningFormSchema,
@@ -256,7 +260,7 @@ const OpenningForm = ({
           )}
         </div>
 
-         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">مدت اعتبار LC:</label>
           {faktor?.LCValidation ? (
             <input
@@ -285,6 +289,54 @@ const OpenningForm = ({
               {errors.LCValidation && (
                 <p className="text-red-500 text-sm">
                   {errors.LCValidation.message}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">تلرانس منفی:</label>
+          {faktor?.tolerance_manfi ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.tolerance_manfi}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <>
+              <input
+                className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
+                {...register("tolerance_manfi")}
+              />
+              {errors.tolerance_manfi && (
+                <p className="text-red-500 text-sm">
+                  {errors.tolerance_manfi.message}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">تلرانس مثبت:</label>
+          {faktor?.tolerance_mosbat ? (
+            <input
+              type="text"
+              readOnly
+              value={faktor.tolerance_mosbat}
+              className="min-w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 bg-gray-100"
+            />
+          ) : (
+            <>
+              <input
+                className="w-[230px] min-h-[30px] px-1 py-[2px] text-[18px] font-normal text-gray-700 rounded-lg border-2 border-[#ababab]"
+                {...register("tolerance_mosbat")}
+              />
+              {errors.tolerance_mosbat && (
+                <p className="text-red-500 text-sm">
+                  {errors.tolerance_mosbat.message}
                 </p>
               )}
             </>
