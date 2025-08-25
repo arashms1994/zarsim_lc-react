@@ -18,6 +18,7 @@ import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 
 const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
   carryReceipt = [],
+  onPhaseClick,
 }) => {
   const groupedReceipts = carryReceipt.reduce((acc, invoice) => {
     if (invoice.Carry_Phase_GUID) {
@@ -80,7 +81,9 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
               <Tooltip key={phase.carryPhaseGUID}>
                 <TooltipTrigger asChild>
                   <TableRow
-                    onClick={() => console.log(phase)}
+                    onClick={() =>
+                      onPhaseClick?.(phase.receipts, phase.carryPhaseGUID)
+                    }
                     className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
                   >
                     <TableCell className="font-medium text-right">
@@ -103,7 +106,7 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
                   </TableRow>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>برای تکمیل مرحله حمل کلیک کنید.</p>
+                  <p>برای ثبت جزئیات مرحله حمل کلیک کنید.</p>
                 </TooltipContent>
               </Tooltip>
             ))

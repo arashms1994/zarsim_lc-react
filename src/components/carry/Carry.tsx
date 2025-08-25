@@ -102,7 +102,6 @@ const Carry = () => {
       setCarryPhaseGUID(phaseNumber);
       await refetchCarryReceipts();
       setSelectedReceipts([]);
-      setIsModalOpen(true);
       toast.success(
         `${selectedReceipts.length} فاکتور برای ${phaseNumber} ثبت شد!`,
         TOAST_CONFIG
@@ -112,6 +111,15 @@ const Carry = () => {
       toast.error("خطایی در ثبت مرحله حمل رخ داد!", TOAST_CONFIG);
     }
   }, [selectedReceipts, carryReceipt, refetchCarryReceipts]);
+
+  const handlePhaseClick = useCallback(
+    (receipts: ICarryReceipt[], phaseGUID: string) => {
+      setSelectedReceipts(receipts);
+      setCarryPhaseGUID(phaseGUID);
+      setIsModalOpen(true);
+    },
+    []
+  );
 
   const renderSliderModal = () =>
     isModalOpen && (
@@ -183,7 +191,10 @@ const Carry = () => {
         selectedReceipts={selectedReceipts}
         setSelectedReceipts={setSelectedReceipts}
       />
-      <CarryPhaseTable carryReceipt={carryReceipt} />
+      <CarryPhaseTable
+        carryReceipt={carryReceipt}
+        onPhaseClick={handlePhaseClick}
+      />
 
       {renderSliderModal()}
       {renderFormModal()}
