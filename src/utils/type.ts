@@ -31,6 +31,7 @@ export interface ICarryReceipt {
   Bank_Confirm?: string;
   Date?: string;
   Status?: string;
+  Carry_Phase_GUID?: string | null;
 }
 
 export interface IOpenningState {
@@ -172,11 +173,11 @@ export interface IPersianDatePickerProps {
 export type ContextType = { faktorNumber: string };
 
 export interface ICarrySlideProps {
-  GUID: string;
+  carryPhaseGUID: string | null;
   faktorNumber: string;
   setPage: (value: number) => void;
   uploadedFiles: Record<string, string>;
-  selectedReceipt: ICarryReceipt | null;
+  selectedReceipts: ICarryReceipt[] | null;
   setUploadedFiles: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
@@ -184,7 +185,8 @@ export interface ICarrySlideProps {
 
 export interface ICarrySliderProps {
   faktorNumber: string;
-  selectedReceipt: ICarryReceipt | null;
+  selectedReceipts: ICarryReceipt[] | null;
+  carryPhaseGUID: string | null;
 }
 
 export interface ISliderControlsProps {
@@ -210,5 +212,8 @@ export interface ISlideLayoutProps {
 
 export interface ICarryTableProps {
   carryReceipt?: ICarryReceipt[];
-  onReceiptClick: (receipt: ICarryReceipt) => void;
+}
+
+export interface CarryTableProps extends ICarryTableProps {
+  onSelectionChange?: (selectedReceipts: ICarryReceipt[]) => void;
 }

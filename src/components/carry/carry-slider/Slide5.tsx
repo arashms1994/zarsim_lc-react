@@ -9,10 +9,10 @@ const Slide5: React.FC<ICarrySlideProps> = ({
   faktorNumber,
   uploadedFiles,
   setUploadedFiles,
-  selectedReceipt,
+  carryPhaseGUID,
 }) => {
   const label = "رسید تایید اسناد توسط بانک";
-  const subFolder = selectedReceipt?.Title || "";
+  const subFolder = carryPhaseGUID || "";
   const docType = "taeidasnad";
   const queryClient = useQueryClient();
 

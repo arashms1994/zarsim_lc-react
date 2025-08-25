@@ -209,3 +209,40 @@ export async function addCarryReceipt(
   const data = await response.json();
   console.log("آیتم با موفقیت ثبت شد:", data);
 }
+
+export async function addCarryPhaseGUID(
+  receipts: ICarryReceipt[],
+  carryPhaseGUID: string
+): Promise<void> {
+  const itemType = `SP.Data.LC_x005f_carry_x005f_receiptListItem`;
+  const digest = await getDigest();
+
+  const updatePromises = receipts.map(async (receipt) => {
+    const response = await fetch(
+      `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items(${receipt.Id})`,
+      {
+        method: "MERGE",
+        headers: {
+          Accept: "application/json;odata=verbose",
+          "Content-Type": "application/json;odata=verbose",
+          "X-RequestDigest": digest,
+          "IF-MATCH": "*", // برای مدیریت هم‌زمانی
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          __metadata: { type: itemType },
+          Carry_Phase_GUID: carryPhaseGUID,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`خطا در به‌روزرسانی رسید ${receipt.Id}: ${error}`);
+    }
+
+    console.log(`رسید ${receipt.Id} با موفقیت به‌روزرسانی شد.`);
+  });
+
+  await Promise.all(updatePromises);
+}

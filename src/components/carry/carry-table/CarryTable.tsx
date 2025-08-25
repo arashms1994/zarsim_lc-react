@@ -15,16 +15,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { ICarryTableProps, ICarryReceipt } from "@/utils/type";
+import type { CarryTableProps, ICarryReceipt } from "@/utils/type";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
-
-interface CarryTableProps extends ICarryTableProps {
-  onSelectionChange?: (selectedReceipts: ICarryReceipt[]) => void;
-}
 
 const CarryTable: React.FC<CarryTableProps> = ({
   carryReceipt = [],
-  onReceiptClick,
   onSelectionChange,
 }) => {
   const [selectedReceipts, setSelectedReceipts] = useState<ICarryReceipt[]>([]);
@@ -51,33 +46,29 @@ const CarryTable: React.FC<CarryTableProps> = ({
     });
   };
 
-  // const handleSelectAll = () => {
-  //   if (selectedReceipts.length === carryReceipt.length) {
-  //     setSelectedReceipts([]);
-  //     onSelectionChange?.([]);
-  //   } else {
-  //     setSelectedReceipts(carryReceipt);
-  //     onSelectionChange?.(carryReceipt);
-  //   }
-  // };
-
   const renderRow = (invoice: ICarryReceipt) => (
     <Tooltip key={invoice.GUID}>
       <TooltipTrigger asChild>
         <TableRow
-          onClick={() => onReceiptClick(invoice)}
+          onClick={() => console.log(invoice)}
           className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
         >
           <TableCell className="text-center">
-            <Checkbox
-              className="min-w-0"
-              id={`checkbox-${invoice.GUID}`}
-              checked={selectedReceipts.some(
-                (item) => item.GUID === invoice.GUID
-              )}
-              onCheckedChange={() => handleSelectReceipt(invoice)}
-              onClick={(e) => e.stopPropagation()}
-            />
+            {invoice.Carry_Phase_GUID ? (
+              <span className="text-gray-500 text-sm">
+                فاکتور قبلا انتخاب شده است
+              </span>
+            ) : (
+              <Checkbox
+                className="min-w-0"
+                id={`checkbox-${invoice.GUID}`}
+                checked={selectedReceipts.some(
+                  (item) => item.GUID === invoice.GUID
+                )}
+                onCheckedChange={() => handleSelectReceipt(invoice)}
+                onClick={(e) => e.stopPropagation()}
+              />
+            )}
           </TableCell>
           <TableCell className="font-medium text-right">
             {invoice.Title}
@@ -94,7 +85,11 @@ const CarryTable: React.FC<CarryTableProps> = ({
         </TableRow>
       </TooltipTrigger>
       <TooltipContent>
-        <p>برای افزودن به مرحل حمل کلیک کنید.</p>
+        <p>
+          {invoice.Carry_Phase_GUID
+            ? `این فاکتور در مرحله حمل ${invoice.Carry_Phase_GUID} قرار دارد.`
+            : "برای افزودن به مرحله حمل کلیک کنید."}
+        </p>
       </TooltipContent>
     </Tooltip>
   );

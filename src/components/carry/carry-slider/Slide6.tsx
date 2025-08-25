@@ -9,10 +9,10 @@ const Slide6: React.FC<ICarrySlideProps> = ({
   faktorNumber,
   uploadedFiles,
   setUploadedFiles,
-  selectedReceipt,
+  carryPhaseGUID,
 }) => {
   const label = "رسید واریز مبلغ";
-  const subFolder = selectedReceipt?.Title || "";
+  const subFolder = carryPhaseGUID || "";
   const docType = "residvariz";
   const queryClient = useQueryClient();
 

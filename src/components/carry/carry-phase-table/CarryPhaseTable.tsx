@@ -15,10 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const CarryPhaseTable: React.FC<ICarryTableProps> = ({
-  carryReceipt = [],
-  onReceiptClick,
-}) => {
+const CarryPhaseTable: React.FC<ICarryTableProps> = ({ carryReceipt = [] }) => {
   return (
     <TooltipProvider>
       <Table className="w-full border-collapse">
@@ -42,7 +39,7 @@ const CarryPhaseTable: React.FC<ICarryTableProps> = ({
                 <TooltipTrigger asChild>
                   <TableRow
                     key={invoice.Title}
-                    onClick={() => onReceiptClick(invoice)}
+                    onClick={() => console.log(invoice)}
                     className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
                   >
                     <TableCell className="font-medium text-right">
