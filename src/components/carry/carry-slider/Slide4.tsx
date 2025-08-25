@@ -9,10 +9,10 @@ const Slide4: React.FC<ICarrySlideProps> = ({
   faktorNumber,
   uploadedFiles,
   setUploadedFiles,
-  selectedReceipt,
+  carryPhaseGUID,
 }) => {
   const label = "رسید بانک";
-  const subFolder = selectedReceipt?.Title || "";
+  const subFolder = carryPhaseGUID || "";
   const docType = "residebank";
   const queryClient = useQueryClient();
 

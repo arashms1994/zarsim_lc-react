@@ -1,23 +1,21 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import Slide1 from "./Slide1";
 import Slide2 from "./Slide2";
 import Slide3 from "./Slide3";
 import Slide4 from "./Slide4";
 import Slide5 from "./Slide5";
 import Slide6 from "./Slide6";
-import Guid from "@/utils/createGUID";
 import type { ICarrySliderProps } from "@/utils/type";
 
 const Slider: React.FC<ICarrySliderProps> = ({
   faktorNumber,
-  selectedReceipt,
+  selectedReceipts,
+  carryPhaseGUID,
 }) => {
   const [page, setPage] = useState(1);
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>(
     {}
   );
-
-  const GUID = useMemo(() => Guid(), []);
 
   const tabs = [
     { id: 1, label: "حمل" },
@@ -32,10 +30,10 @@ const Slider: React.FC<ICarrySliderProps> = ({
     const slideProps = {
       setPage,
       faktorNumber,
-      GUID,
+      carryPhaseGUID,
       uploadedFiles,
       setUploadedFiles,
-      selectedReceipt,
+      selectedReceipts,
     };
 
     switch (page) {
@@ -60,6 +58,7 @@ const Slider: React.FC<ICarrySliderProps> = ({
     }
   };
 
+  console.log(selectedReceipts);
   return (
     <div className="my-auto mx-auto flex flex-col justify-center items-center p-5 md:p-10 rtl">
       <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around mb-6">
@@ -83,7 +82,25 @@ const Slider: React.FC<ICarrySliderProps> = ({
         ))}
       </header>
 
-      <main className="w-full max-w-3xl">{renderSlide()}</main>
+      <main className="w-full max-w-3xl">
+        {selectedReceipts && selectedReceipts.length > 0 ? (
+          <div className="mb-4">
+            <h3 className="text-lg font-medium">رسیدهای انتخاب‌شده:</h3>
+            <ul className="list-disc pr-5">
+              {selectedReceipts.map((receipt) => (
+                <li key={receipt.GUID}>
+                  {receipt.Title} - تعداد: {receipt.Count} - مبلغ:{" "}
+                  {receipt.Total}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2">GUID مرحله حمل: {carryPhaseGUID}</p>
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">هیچ رسیری انتخاب نشده است</p>
+        )}
+        {renderSlide()}
+      </main>
     </div>
   );
 };

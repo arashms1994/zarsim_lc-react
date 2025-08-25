@@ -9,9 +9,9 @@ const Slide3: React.FC<ICarrySlideProps> = ({
   faktorNumber,
   uploadedFiles,
   setUploadedFiles,
-  selectedReceipt,
+  carryPhaseGUID,
 }) => {
-  const subFolder = selectedReceipt?.Title || "";
+  const subFolder = carryPhaseGUID || "";
   const docType = "namehpoosheshi";
   const label = "نامه پوششی";
   const queryClient = useQueryClient();

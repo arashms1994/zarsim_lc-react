@@ -44,6 +44,8 @@ const OpenningForm = ({
       tarikheblagh: faktor?.tarikheblagh || "",
       mabnavalue: faktor?.mabnavalue || "",
       tarikhmabnavalue: faktor?.tarikhmabnavalue || "",
+      tolerance_manfi: faktor?.tolerance_manfi || "",
+      tolerance_mosbat: faktor?.tolerance_mosbat || "",
     },
   });
 
@@ -64,6 +66,9 @@ const OpenningForm = ({
     }
   }, [fileUrl, uploadedFileUrl]);
 
+  // بررسی اینکه آیا فایل آپلود شده است یا خیر
+  const isSubmitDisabled = !uploadedFileUrl || isSubmitting;
+
   return (
     <div>
       <div className="w-full max-w-[500px] flex justify-between items-center gap-5 my-5">
@@ -81,16 +86,16 @@ const OpenningForm = ({
         )}
       </div>
       <p className="text-red-600 text-center text-[16px] font-normal">
-        * آپلود ابلاغیه مهر و امضادار اجباری میباشد.
+        * آپلود ابلاغیه مهر و امضادار اجباری می‌باشد.
       </p>
 
       <form
         className="flex flex-col justify-center items-center gap-5 py-5"
-        onSubmit={(e) => {
-          handleSubmit((data) => {
+        onSubmit={handleSubmit((data) => {
+          if (uploadedFileUrl) {
             onSubmit(data);
-          })(e);
-        }}
+          }
+        })}
       >
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">تاریخ گشایش:</label>
@@ -345,10 +350,12 @@ const OpenningForm = ({
 
         <button
           type="submit"
-          className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
-          disabled={isSubmitting}
+          className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold text-white transition-all duration-300 cursor-pointer ${
+            isSubmitDisabled ? "bg-gray-600 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-900"
+          }`}
+          disabled={isSubmitDisabled}
           onClick={() =>
-            console.log("Submit button clicked, isSubmitting:", isSubmitting)
+            console.log("Submit button clicked, isSubmitting:", isSubmitting, "uploadedFileUrl:", uploadedFileUrl)
           }
         >
           {isSubmitting ? "در حال ثبت..." : "ثبت اطلاعات"}

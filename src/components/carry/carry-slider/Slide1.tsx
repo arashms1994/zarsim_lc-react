@@ -10,9 +10,9 @@ const Slide1: React.FC<ICarrySlideProps> = ({
   faktorNumber,
   uploadedFiles,
   setUploadedFiles,
-  selectedReceipt,
+  carryPhaseGUID,
 }) => {
-  const subFolder = selectedReceipt?.Title || "";
+  const subFolder = carryPhaseGUID || "";
   const docTypes = FIRST_SLIDE_DOCS.map((d) => d.value);
   const queryClient = useQueryClient();
 
