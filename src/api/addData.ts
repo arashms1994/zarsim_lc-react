@@ -1,6 +1,7 @@
 import { getDigest } from "@/utils/getDigest";
 import type { ICarryReceipt, ICustomerFactorUpdate } from "@/utils/type";
 import { BASE_URL } from "./base";
+import { generatePhaseNumber } from "@/utils/generatePhaseNumber";
 
 export async function updateCustomerFactorItem(
   faktorNumber: string,
@@ -210,14 +211,21 @@ export async function addCarryReceipt(
   console.log("آیتم با موفقیت ثبت شد:", data);
 }
 
-export async function addCarryPhaseGUID(
+export async function addCarryPhaseGuid(
   receipts: ICarryReceipt[],
-  carryPhaseGUID: string
-): Promise<void> {
+  existingReceipts: ICarryReceipt[]
+): Promise<string> {
   const itemType = `SP.Data.LC_x005f_carry_x005f_receiptListItem`;
   const digest = await getDigest();
+  const phaseNumber = generatePhaseNumber(existingReceipts);
 
-  const updatePromises = receipts.map(async (receipt) => {
+  const validReceipts = receipts.filter((receipt) => !receipt.Carry_Phase_GUID);
+
+  if (validReceipts.length === 0) {
+    throw new Error("هیچ رسید معتبری برای افزودن به مرحله حمل یافت نشد.");
+  }
+
+  const updatePromises = validReceipts.map(async (receipt) => {
     const response = await fetch(
       `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items(${receipt.Id})`,
       {
@@ -226,12 +234,12 @@ export async function addCarryPhaseGUID(
           Accept: "application/json;odata=verbose",
           "Content-Type": "application/json;odata=verbose",
           "X-RequestDigest": digest,
-          "IF-MATCH": "*", // برای مدیریت هم‌زمانی
+          "IF-MATCH": "*",
         },
         credentials: "include",
         body: JSON.stringify({
           __metadata: { type: itemType },
-          Carry_Phase_GUID: carryPhaseGUID,
+          Carry_Phase_GUID: phaseNumber,
         }),
       }
     );
@@ -245,4 +253,5 @@ export async function addCarryPhaseGUID(
   });
 
   await Promise.all(updatePromises);
+  return phaseNumber;
 }

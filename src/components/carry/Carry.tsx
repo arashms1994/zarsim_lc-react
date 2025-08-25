@@ -8,8 +8,7 @@ import CarryPhaseTable from "./carry-phase-table/CarryPhaseTable";
 import Slider from "./carry-slider/Slider";
 import { useLayoutContext } from "@/providers/LayoutContext";
 import { useCarryReceipts, useCustomerFactor } from "@/api/getData";
-import { addCarryPhaseGUID, addCarryReceipt } from "@/api/addData";
-import Guid from "@/utils/createGUID";
+import { addCarryReceipt, addCarryPhaseGuid } from "@/api/addData";
 import type { CarryFormSchema } from "@/utils/validation";
 import type { ICarryReceipt } from "@/utils/type";
 import { MODAL_CLASSES, TOAST_CONFIG } from "@/utils/constants";
@@ -31,6 +30,7 @@ const Carry = () => {
     data: carryReceipt = [],
     isLoading: carryReceiptLoading,
     isError: carryReceiptError,
+    refetch: refetchCarryReceipts,
   } = useCarryReceipts(faktorNumber);
 
   const renderLoadingOrError = () => {
@@ -68,6 +68,7 @@ const Carry = () => {
           Bank_Confirm: "0",
           LC_Number: faktor?.LCNumber || "",
         });
+        await refetchCarryReceipts();
         toast.success("اطلاعات با موفقیت ثبت شد!", TOAST_CONFIG);
         setCarryFormModalOpen(false);
       } catch (error) {
@@ -77,11 +78,14 @@ const Carry = () => {
         setIsSubmitting(false);
       }
     },
-    [faktorNumber, faktor?.LCNumber]
+    [faktorNumber, faktor?.LCNumber, refetchCarryReceipts]
   );
 
   const handleSelectionChange = useCallback((receipts: ICarryReceipt[]) => {
-    setSelectedReceipts(receipts);
+    const validReceipts = receipts.filter(
+      (receipt) => !receipt.Carry_Phase_GUID
+    );
+    setSelectedReceipts(validReceipts);
   }, []);
 
   const handleBulkCarryPhase = useCallback(async () => {
@@ -89,20 +93,25 @@ const Carry = () => {
       toast.warn("هیچ فاکتوری انتخاب نشده است!", TOAST_CONFIG);
       return;
     }
-    const phaseGUID = Guid();
-    setCarryPhaseGUID(phaseGUID);
+
     try {
-      await addCarryPhaseGUID(selectedReceipts, phaseGUID);
+      const phaseNumber = await addCarryPhaseGuid(
+        selectedReceipts,
+        carryReceipt
+      );
+      setCarryPhaseGUID(phaseNumber);
+      await refetchCarryReceipts();
+      setSelectedReceipts([]);
       setIsModalOpen(true);
       toast.success(
-        `${selectedReceipts.length} فاکتور برای مرحله حمل ثبت شد!`,
+        `${selectedReceipts.length} فاکتور برای ${phaseNumber} ثبت شد!`,
         TOAST_CONFIG
       );
     } catch (error) {
       console.error("خطا در ثبت مرحله حمل:", error);
       toast.error("خطایی در ثبت مرحله حمل رخ داد!", TOAST_CONFIG);
     }
-  }, [selectedReceipts]);
+  }, [selectedReceipts, carryReceipt, refetchCarryReceipts]);
 
   const renderSliderModal = () =>
     isModalOpen && (
@@ -113,6 +122,7 @@ const Carry = () => {
             onClick={() => {
               setIsModalOpen(false);
               setCarryPhaseGUID(null);
+              setSelectedReceipts([]);
             }}
             className={MODAL_CLASSES.closeButton}
           >
@@ -170,6 +180,8 @@ const Carry = () => {
       <CarryTable
         carryReceipt={carryReceipt}
         onSelectionChange={handleSelectionChange}
+        selectedReceipts={selectedReceipts}
+        setSelectedReceipts={setSelectedReceipts}
       />
       <CarryPhaseTable carryReceipt={carryReceipt} />
 

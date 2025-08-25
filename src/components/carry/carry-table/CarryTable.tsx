@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -15,15 +14,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { CarryTableProps, ICarryReceipt } from "@/utils/type";
+import type { ICarryTableProps, ICarryReceipt } from "@/utils/type";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 
-const CarryTable: React.FC<CarryTableProps> = ({
+const CarryTable: React.FC<ICarryTableProps> = ({
   carryReceipt = [],
   onSelectionChange,
+  selectedReceipts,
+  setSelectedReceipts,
 }) => {
-  const [selectedReceipts, setSelectedReceipts] = useState<ICarryReceipt[]>([]);
-
   const columns = [
     { label: "", key: "" },
     { label: "شماره فاکتور", key: "Title" },
@@ -35,15 +34,15 @@ const CarryTable: React.FC<CarryTableProps> = ({
   ];
 
   const handleSelectReceipt = (receipt: ICarryReceipt) => {
-    setSelectedReceipts((prev) => {
-      const isSelected = prev.some((item) => item.GUID === receipt.GUID);
-      const updatedSelection = isSelected
-        ? prev.filter((item) => item.GUID !== receipt.GUID)
-        : [...prev, receipt];
+    const isSelected = selectedReceipts.some(
+      (item) => item.GUID === receipt.GUID
+    );
+    const updatedSelection = isSelected
+      ? selectedReceipts.filter((item) => item.GUID !== receipt.GUID)
+      : [...selectedReceipts, receipt];
 
-      onSelectionChange?.(updatedSelection);
-      return updatedSelection;
-    });
+    setSelectedReceipts(updatedSelection);
+    onSelectionChange?.(updatedSelection);
   };
 
   const renderRow = (invoice: ICarryReceipt) => (
@@ -87,7 +86,7 @@ const CarryTable: React.FC<CarryTableProps> = ({
       <TooltipContent>
         <p>
           {invoice.Carry_Phase_GUID
-            ? `این فاکتور در مرحله حمل ${invoice.Carry_Phase_GUID} قرار دارد.`
+            ? `این فاکتور در ${invoice.Carry_Phase_GUID} حمل قرار دارد.`
             : "برای افزودن به مرحله حمل کلیک کنید."}
         </p>
       </TooltipContent>
