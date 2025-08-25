@@ -212,6 +212,7 @@ export interface ISlideLayoutProps {
 
 export interface ICarryPhaseTableProps {
   carryReceipt?: ICarryReceipt[];
+  onPhaseClick?: (receipts: ICarryReceipt[], carryPhaseGUID: string) => void;
 }
 
 export interface ICarryTableProps extends ICarryPhaseTableProps {
