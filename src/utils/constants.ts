@@ -35,7 +35,7 @@ export const FIRST_SLIDE_DOCS = [
 ];
 
 export const SECOND_SLIDE_DOCS = [
-  { label: "پکینگ", value: "paching" },
+  { label: "پکینگ", value: "packing" },
   { label: "گواهی بازرسی", value: "govahibazrasi" },
   { label: "صورت مجلس تحویل و تحول", value: "tahvilotahavol" },
 ];
