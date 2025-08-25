@@ -210,10 +210,13 @@ export interface ISlideLayoutProps {
   children: ReactNode;
 }
 
-export interface ICarryTableProps {
+export interface ICarryPhaseTableProps {
   carryReceipt?: ICarryReceipt[];
 }
 
-export interface CarryTableProps extends ICarryTableProps {
-  onSelectionChange?: (selectedReceipts: ICarryReceipt[]) => void;
+export interface ICarryTableProps extends ICarryPhaseTableProps {
+  carryReceipt?: ICarryReceipt[];
+  onSelectionChange?: (receipts: ICarryReceipt[]) => void;
+  selectedReceipts: ICarryReceipt[];
+  setSelectedReceipts: React.Dispatch<React.SetStateAction<ICarryReceipt[]>>;
 }
