@@ -5,7 +5,7 @@ import Openning from "./components/openning/Openning";
 import Carry from "./components/carry/Carry";
 import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import LCEnding from "./components/LCending/LCEnding";
+import LCEnding from "./components/ending/LCEnding";
 
 const App: React.FC = () => {
   const routes = useRoutes([
