@@ -240,6 +240,7 @@ export async function addCarryPhaseGuid(
         body: JSON.stringify({
           __metadata: { type: itemType },
           Carry_Phase_GUID: phaseNumber,
+          Status: "1",
         }),
       }
     );
