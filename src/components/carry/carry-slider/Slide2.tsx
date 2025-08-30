@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import type { ICarrySlideProps } from "@/utils/type";
-import { SECOND_SLIDE_DOCS } from "@/utils/constants";
+import { SECOND_SLIDE_DOCS, TOAST_CONFIG } from "@/utils/constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
 import { updateCarryReceiptStatus } from "@/api/addData";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 const Slide2: React.FC<ICarrySlideProps> = ({
@@ -55,26 +55,12 @@ const Slide2: React.FC<ICarrySlideProps> = ({
   const handleSubmit = async () => {
     const allUploaded = docTypes.every((docType) => uploadedFiles[docType]);
     if (!allUploaded) {
-      toast.error("لطفاً همه فایل‌ها را آپلود کنید.", {
-        position: "top-center",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error("لطفاً همه فایل‌ها را آپلود کنید.", TOAST_CONFIG);
       return;
     }
 
     if (itemIds.length === 0) {
-      toast.error("آیتم‌های رسید حمل مشخص نشده‌اند!", {
-        position: "top-center",
-        autoClose: 4000,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error("آیتم‌های رسید حمل مشخص نشده‌اند!", TOAST_CONFIG);
       return;
     }
 
@@ -88,25 +74,10 @@ const Slide2: React.FC<ICarrySlideProps> = ({
         }))
       );
 
-      toast.success("وضعیت رسید حمل با موفقیت بروزرسانی شد!", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.success("وضعیت رسید حمل با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
       console.error(error);
-      toast.error("خطا در آپدیت وضعیت رسید حمل!", {
-        position: "top-center",
-        autoClose: 4000,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error("خطا در آپدیت وضعیت رسید حمل!", TOAST_CONFIG);
     }
   };
 
