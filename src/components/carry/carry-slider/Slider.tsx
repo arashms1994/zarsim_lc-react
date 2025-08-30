@@ -15,11 +15,10 @@ const Slider: React.FC<ICarrySliderProps> = ({
   carryPhaseGUID,
 }) => {
   const [page, setPage] = useState(1);
+  const [userName, setUserName] = useState<string>("");
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>(
     {}
   );
-
-  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
     if (typeof _spPageContextInfo !== "undefined") {
@@ -46,7 +45,7 @@ const Slider: React.FC<ICarrySliderProps> = ({
       uploadedFiles,
       setUploadedFiles,
       selectedReceipts,
-      userName
+      userName,
     };
 
     switch (page) {
