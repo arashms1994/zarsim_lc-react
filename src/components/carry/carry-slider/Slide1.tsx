@@ -73,7 +73,7 @@ const Slide1: React.FC<ICarrySlideProps> = ({
         }))
       );
 
-      toast.success("وضعیت رسید حمل با موفقیت بروزرسانی شد!", TOAST_CONFIG);
+      toast.success("وضعیت با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
       console.error(error);
       toast.error("خطا در آپدیت وضعیت رسید حمل!", TOAST_CONFIG);
