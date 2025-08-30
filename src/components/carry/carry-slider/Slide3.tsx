@@ -92,7 +92,7 @@ const Slide3: React.FC<ICarrySlideProps> = ({
 
       await addNotificationItem({
         Title: "پیگیری رسید بانک",
-        dont_show: "false",
+        dont_show: "0",
         From_Date: fromDateFormatted,
         deadline: deadlineFormatted,
         assign: String(userName),
