@@ -9,15 +9,19 @@ import DateObject from "react-date-object";
 import persian_fa from "react-date-object/locales/persian_fa";
 import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
+import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
+import { addNotificationItem, updateCarryReceiptStatus } from "@/api/addData";
+import { Bounce, toast } from "react-toastify";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const Slide3: React.FC<ICarrySlideProps> = ({
   faktorNumber,
   uploadedFiles,
   setUploadedFiles,
   carryPhaseGUID,
+  selectedReceipts,
 }) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
   const subFolder = carryPhaseGUID || "";
   const docType = "namehpoosheshi";
   const label = "نامه پوششی";
@@ -28,6 +32,10 @@ const Slide3: React.FC<ICarrySlideProps> = ({
   const fileUrl = fileFromServer
     ? `${BASE_URL}${fileFromServer.ServerRelativeUrl}`
     : null;
+
+  const firstItem = selectedReceipts?.[0];
+  const firstItemId = firstItem?.Id;
+  const isCompleted = firstItem && firstItem.Status !== undefined ? firstItem.Status >= "4" : false;
 
   useEffect(() => {
     if (fileUrl && uploadedFiles[docType] !== fileUrl) {
@@ -41,9 +49,38 @@ const Slide3: React.FC<ICarrySlideProps> = ({
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (selectedDate) {
+  const handleSubmit = async () => {
+    if (!uploadedFiles[docType]) {
+      toast.error("لطفاً فایل را آپلود کنید.", {
+        position: "top-center",
+        autoClose: 4000,
+        theme: "colored",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    if (!selectedDate) {
+      toast.error("تاریخی انتخاب نشده است", {
+        position: "top-center",
+        autoClose: 4000,
+        theme: "colored",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    if (!firstItemId) {
+      toast.error("آیتم Carry Receipt مشخص نشده است!", {
+        position: "top-center",
+        autoClose: 4000,
+        theme: "colored",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    try {
       const dateObject = new DateObject({
         date: selectedDate,
         calendar: persian,
@@ -51,12 +88,49 @@ const Slide3: React.FC<ICarrySlideProps> = ({
       });
 
       const gregorianDateObject = dateObject.convert(gregorian, gregorian_en);
-      const gregorianDate = gregorianDateObject.format("M/D/YYYY");
+      const fromDate = gregorianDateObject.toDate();
 
-      console.log("تاریخ شمسی:", selectedDate);
-      console.log("تاریخ میلادی:", gregorianDate);
-    } else {
-      console.log("تاریخی انتخاب نشده است");
+      const deadlineDate = new Date(fromDate);
+      deadlineDate.setDate(deadlineDate.getDate() + 3);
+
+      const fromDateFormatted = gregorianDateObject.format("M/D/YYYY");
+      const deadlineFormatted = `${
+        deadlineDate.getMonth() + 1
+      }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+
+      await addNotificationItem({
+        Title: "پیگیری رسید بانک",
+        dont_show: "false",
+        From_Date: fromDateFormatted,
+        deadline: deadlineFormatted,
+        assign: "user1",
+        massage: "لطفا رسید بانک را آپلود کنید.",
+        Item_URL: "https://example.com/item/123",
+      });
+
+      await updateCarryReceiptStatus([firstItemId], "4");
+
+      setSelectedDate(null);
+
+      toast.success("اطلاعات با موفقیت ثبت شد و وضعیت آیتم بروزرسانی شد!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("خطا در ثبت اطلاعات!", {
+        position: "top-center",
+        autoClose: 4000,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
 
@@ -71,21 +145,39 @@ const Slide3: React.FC<ICarrySlideProps> = ({
           onUploadComplete={handleUploadComplete}
         />
       </div>
-      <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
-        <label className="text-[22px] font-medium">تاریخ گشایش:</label>
-        <PersianDatePicker
-          value={selectedDate}
-          onChange={(date: string) => setSelectedDate(date)}
-        />
-      </div>
-      <div className="flex justify-center items-center py-5">
-        <button
-          type="submit"
-          className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
-          onClick={handleSubmit}
-        >
-          ثبت اختتامیه اعتبار اسنادی
-        </button>
+
+      <div className="py-5">
+        <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
+          <label className="text-[22px] font-medium">
+            تاریخ ارسال اسناد به بانک:
+          </label>
+          <PersianDatePicker
+            value={selectedDate}
+            onChange={(date: string) => setSelectedDate(date)}
+          />
+        </div>
+
+        <div className="flex justify-center items-center">
+          {isCompleted ? (
+            <SectionHeader
+              title={"این مرحله تکمیل شده است، لطفا به مرحله بعد مراجعه کنید."}
+            />
+          ) : (
+            <button
+              type="button"
+              disabled={!uploadedFiles[docType]}
+              className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
+                ${
+                  uploadedFiles[docType]
+                    ? "bg-blue-600 text-white hover:bg-blue-900"
+                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                }`}
+              onClick={handleSubmit}
+            >
+              ثبت تاریخ و آپدیت وضعیت
+            </button>
+          )}
+        </div>
       </div>
     </>
   );

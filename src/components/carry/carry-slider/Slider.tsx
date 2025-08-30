@@ -58,7 +58,6 @@ const Slider: React.FC<ICarrySliderProps> = ({
     }
   };
 
-  console.log(selectedReceipts);
   return (
     <div className="my-auto mx-auto flex flex-col justify-center items-center p-5 md:p-10 rtl">
       <header className="bg-[#dddFC9] w-full p-5 md:p-5 text-[#cacaca] rounded-[40px] text-right flex items-center justify-around mb-6">
