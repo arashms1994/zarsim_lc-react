@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slide1 from "./Slide1";
 import Slide2 from "./Slide2";
 import Slide3 from "./Slide3";
@@ -6,6 +6,8 @@ import Slide4 from "./Slide4";
 import Slide5 from "./Slide5";
 import Slide6 from "./Slide6";
 import type { ICarrySliderProps } from "@/utils/type";
+
+declare const _spPageContextInfo: any;
 
 const Slider: React.FC<ICarrySliderProps> = ({
   faktorNumber,
@@ -16,6 +18,16 @@ const Slider: React.FC<ICarrySliderProps> = ({
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, string>>(
     {}
   );
+
+  const [userName, setUserName] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof _spPageContextInfo !== "undefined") {
+      const fullLoginName = _spPageContextInfo.userLoginName;
+      const shortName = fullLoginName.split("\\").pop();
+      setUserName(shortName || "");
+    }
+  }, []);
 
   const tabs = [
     { id: 1, label: "حمل" },
@@ -34,6 +46,7 @@ const Slider: React.FC<ICarrySliderProps> = ({
       uploadedFiles,
       setUploadedFiles,
       selectedReceipts,
+      userName
     };
 
     switch (page) {

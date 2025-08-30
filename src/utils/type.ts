@@ -173,6 +173,7 @@ export interface IPersianDatePickerProps {
 export type ContextType = { faktorNumber: string };
 
 export interface ICarrySlideProps {
+  userName: string;
   carryPhaseGUID: string | null;
   faktorNumber: string;
   setPage: (value: number) => void;
