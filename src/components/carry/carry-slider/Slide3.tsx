@@ -11,8 +11,9 @@ import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import { addNotificationItem, updateCarryReceiptStatus } from "@/api/addData";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { TOAST_CONFIG } from "@/utils/constants";
 
 const Slide3: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -57,32 +58,17 @@ const Slide3: React.FC<ICarrySlideProps> = ({
 
   const handleSubmit = async () => {
     if (!uploadedFiles[docType]) {
-      toast.error("لطفاً فایل را آپلود کنید.", {
-        position: "top-center",
-        autoClose: 4000,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error("لطفاً فایل را آپلود کنید.", TOAST_CONFIG);
       return;
     }
 
     if (!selectedDate) {
-      toast.error("تاریخی انتخاب نشده است", {
-        position: "top-center",
-        autoClose: 4000,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error("تاریخی انتخاب نشده است", TOAST_CONFIG);
       return;
     }
 
     if (itemIds.length === 0) {
-      toast.error("آیتم‌های Carry Receipt مشخص نشده‌اند!", {
-        position: "top-center",
-        autoClose: 4000,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error("آیتم‌های Carry Receipt مشخص نشده‌اند!", TOAST_CONFIG);
       return;
     }
 
@@ -121,26 +107,11 @@ const Slide3: React.FC<ICarrySlideProps> = ({
 
       toast.success(
         "اطلاعات با موفقیت ثبت شد و وضعیت همه آیتم‌ها بروزرسانی شد!",
-        {
-          position: "top-center",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Bounce,
-        }
+        TOAST_CONFIG
       );
     } catch (error) {
       console.error(error);
-      toast.error("خطا در ثبت اطلاعات!", {
-        position: "top-center",
-        autoClose: 4000,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error("خطا در ثبت اطلاعات!", TOAST_CONFIG);
     }
   };
 
