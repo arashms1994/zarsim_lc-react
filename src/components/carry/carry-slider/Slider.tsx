@@ -82,25 +82,7 @@ const Slider: React.FC<ICarrySliderProps> = ({
         ))}
       </header>
 
-      <main className="w-full max-w-3xl">
-        {selectedReceipts && selectedReceipts.length > 0 ? (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium">رسیدهای انتخاب‌شده:</h3>
-            <ul className="list-disc pr-5">
-              {selectedReceipts.map((receipt) => (
-                <li key={receipt.GUID}>
-                  {receipt.Title} - تعداد: {receipt.Count} - مبلغ:{" "}
-                  {receipt.Total}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2">GUID مرحله حمل: {carryPhaseGUID}</p>
-          </div>
-        ) : (
-          <p className="text-center text-gray-500">هیچ رسیری انتخاب نشده است</p>
-        )}
-        {renderSlide()}
-      </main>
+      <main className="w-full max-w-3xl">{renderSlide()}</main>
     </div>
   );
 };

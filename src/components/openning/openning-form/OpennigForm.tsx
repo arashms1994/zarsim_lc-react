@@ -66,7 +66,6 @@ const OpenningForm = ({
     }
   }, [fileUrl, uploadedFileUrl]);
 
-  // بررسی اینکه آیا فایل آپلود شده است یا خیر
   const isSubmitDisabled = !uploadedFileUrl || isSubmitting;
 
   return (
