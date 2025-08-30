@@ -221,3 +221,16 @@ export interface ICarryTableProps extends ICarryPhaseTableProps {
   selectedReceipts: ICarryReceipt[];
   setSelectedReceipts: React.Dispatch<React.SetStateAction<ICarryReceipt[]>>;
 }
+
+export interface INotificationItem {
+  Title: string;
+  dont_show?: string;
+  deadline?: string;
+  assign?: string;
+  from_list?: string;
+  item_id?: string;
+  massage?: string;
+  From_Date?: string;
+  Item_URL?: string;
+  Snooze?: string;
+}
