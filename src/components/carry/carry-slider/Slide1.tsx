@@ -18,7 +18,7 @@ const Slide1: React.FC<ICarrySlideProps> = ({
 }) => {
   const [localReceipts, setLocalReceipts] = useState(selectedReceipts || []);
   const allStatusTwo = localReceipts.every((r) => Number(r.Status) >= 2);
-  
+
   const subFolder = carryPhaseGUID || "";
   const docTypes = FIRST_SLIDE_DOCS.map((d) => d.value);
   const queryClient = useQueryClient();
