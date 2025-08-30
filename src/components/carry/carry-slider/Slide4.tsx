@@ -20,23 +20,28 @@ const Slide4: React.FC<ICarrySlideProps> = ({
   setUploadedFiles,
   carryPhaseGUID,
   selectedReceipts,
+  userName,
 }) => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [localStatus, setLocalStatus] = useState<string[]>(
+    selectedReceipts?.map((r) => r.Status ?? "0") || []
+  );
 
   const label = "رسید بانک";
   const subFolder = carryPhaseGUID || "";
   const docType = "residebank";
   const queryClient = useQueryClient();
 
-  const firstItem = selectedReceipts?.[0];
-  const firstItemId = firstItem?.Id;
-  const isCompleted = firstItem && firstItem.Status !== undefined ? firstItem.Status >= "5" : false;
-
   const { data: files } = useUploadedFiles(faktorNumber, subFolder, docType);
   const fileFromServer = files?.[0];
   const fileUrl = fileFromServer
     ? `${BASE_URL}${fileFromServer.ServerRelativeUrl}`
     : null;
+
+  const itemIds =
+    selectedReceipts?.map((r) => r.Id).filter((id): id is number => !!id) || [];
+
+  const isCompleted = localStatus.every((status) => status >= "5");
 
   useEffect(() => {
     if (fileUrl && uploadedFiles[docType] !== fileUrl) {
@@ -71,8 +76,8 @@ const Slide4: React.FC<ICarrySlideProps> = ({
       return;
     }
 
-    if (!firstItemId) {
-      toast.error("آیتم Carry Receipt مشخص نشده است!", {
+    if (itemIds.length === 0) {
+      toast.error("آیتم‌های Carry Receipt مشخص نشده‌اند!", {
         position: "top-center",
         autoClose: 4000,
         theme: "colored",
@@ -104,26 +109,30 @@ const Slide4: React.FC<ICarrySlideProps> = ({
         dont_show: "false",
         From_Date: fromDateFormatted,
         deadline: deadlineFormatted,
-        assign: "user1",
+        assign: String(userName),
         massage: "لطفا تایید اسناد توسط بانک را پیگیری کنید.",
         Item_URL: "https://example.com/item/123",
       });
 
-      await updateCarryReceiptStatus([firstItemId], "5");
+      await updateCarryReceiptStatus(itemIds, "5");
 
       setSelectedDate(null);
+      setLocalStatus(itemIds.map(() => "5"));
 
-      toast.success("اطلاعات با موفقیت ثبت شد و وضعیت آیتم بروزرسانی شد!", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.success(
+        "اطلاعات با موفقیت ثبت شد و وضعیت همه آیتم‌ها بروزرسانی شد!",
+        {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
+        }
+      );
     } catch (error) {
       console.error(error);
       toast.error("خطا در ثبت اطلاعات!", {
