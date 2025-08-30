@@ -106,7 +106,7 @@ const Slide4: React.FC<ICarrySlideProps> = ({
       setLocalStatus(itemIds.map(() => "5"));
 
       toast.success(
-        "اطلاعات با موفقیت ثبت شد و وضعیت همه آیتم‌ها بروزرسانی شد!",
+        "اطلاعات با موفقیت ثبت شد و وضعیت بروزرسانی شد!",
         TOAST_CONFIG
       );
     } catch (error) {
