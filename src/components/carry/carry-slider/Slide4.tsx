@@ -153,7 +153,7 @@ const Slide4: React.FC<ICarrySlideProps> = ({
                 }`}
               onClick={handleSubmit}
             >
-              ثبت تاریخ و آپدیت وضعیت
+              ثبت تاریخ و پایان مرحله
             </button>
           )}
         </div>
