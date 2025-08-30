@@ -1,5 +1,9 @@
 import { getDigest } from "@/utils/getDigest";
-import type { ICarryReceipt, ICustomerFactorUpdate } from "@/utils/type";
+import type {
+  ICarryReceipt,
+  ICustomerFactorUpdate,
+  INotificationItem,
+} from "@/utils/type";
 import { BASE_URL } from "./base";
 import { generatePhaseNumber } from "@/utils/generatePhaseNumber";
 
@@ -249,10 +253,75 @@ export async function addCarryPhaseGuid(
       const error = await response.text();
       throw new Error(`خطا در به‌روزرسانی رسید ${receipt.Id}: ${error}`);
     }
-
-    console.log(`رسید ${receipt.Id} با موفقیت به‌روزرسانی شد.`);
   });
 
   await Promise.all(updatePromises);
   return phaseNumber;
+}
+
+export async function addNotificationItem(
+  data: INotificationItem
+): Promise<void> {
+  const digest = await getDigest();
+
+  const itemType = "SP.Data.NotificationListItem";
+
+  const response = await fetch(
+    `${BASE_URL}/_api/web/lists/getbytitle('Notification')/items`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json;odata=verbose",
+        "Content-Type": "application/json;odata=verbose",
+        "X-RequestDigest": digest,
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        __metadata: { type: itemType },
+        ...data,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error("خطا در ثبت نوتیفیکیشن: " + error);
+  }
+}
+
+export async function updateCarryReceiptStatus(
+  itemIds: number[],
+  status: string
+): Promise<void> {
+  const itemType = "SP.Data.LC_x005f_carry_x005f_receiptListItem";
+  const digest = await getDigest();
+
+  await Promise.all(
+    itemIds.map(async (itemId) => {
+      const response = await fetch(
+        `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items(${itemId})`,
+        {
+          method: "PATCH",
+          headers: {
+            Accept: "application/json;odata=verbose",
+            "Content-Type": "application/json;odata=verbose",
+            "X-RequestDigest": digest,
+            "IF-MATCH": "*",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            __metadata: { type: itemType },
+            Status: status,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`خطا در آپدیت Status آیتم ${itemId}: ${errorText}`);
+      }
+
+      console.log(`Status آیتم ${itemId} با موفقیت آپدیت شد.`);
+    })
+  );
 }
