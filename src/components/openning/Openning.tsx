@@ -6,7 +6,8 @@ import SectionHeader from "../ui/SectionHeader";
 import OpenningForm from "./openning-form/OpennigForm";
 import type { OpenningFormSchema } from "@/utils/validation";
 import type { IFileUploadRef } from "@/utils/type";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import { TOAST_CONFIG } from "@/utils/constants";
 
 const Openning = () => {
   const { faktorNumber } = useLayoutContext();
@@ -59,36 +60,16 @@ const Openning = () => {
         tolerance_manfi: String(formData.tolerance_manfi),
         tolerance_mosbat: String(formData.tolerance_mosbat),
       });
-      
-      toast.success("اطلاعات با موفقیت ثبت شد!", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+
+      toast.success("اطلاعات با موفقیت ثبت شد!", TOAST_CONFIG);
 
       if (sendRef.current) {
         await sendRef.current.uploadFile();
       }
     } catch (error) {
       console.error("خطا در ثبت اطلاعات یا آپلود فایل:", error);
-      
-      toast.error("خطایی در ثبت اطلاعات رخ داد!", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+
+      toast.error("خطایی در ثبت اطلاعات رخ داد!", TOAST_CONFIG);
     } finally {
       setIsSubmitting(false);
     }

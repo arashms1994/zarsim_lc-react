@@ -3,7 +3,8 @@ import SectionHeader from "../ui/SectionHeader";
 import { useLayoutContext } from "@/providers/LayoutContext";
 import { updateLCEnding } from "@/api/addData";
 import { useState } from "react";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import { TOAST_CONFIG } from "@/utils/constants";
 
 const LCEnding = () => {
   const { faktorNumber } = useLayoutContext();
@@ -16,29 +17,9 @@ const LCEnding = () => {
     setIsLoading(false);
 
     if (result.success) {
-      toast.success(result.message, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.success(result.message, TOAST_CONFIG);
     } else {
-      toast.error(result.message, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        transition: Bounce,
-      });
+      toast.error(result.message, TOAST_CONFIG);
     }
   };
 
