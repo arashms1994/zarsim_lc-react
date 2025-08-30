@@ -235,3 +235,13 @@ export interface INotificationItem {
   Item_URL?: string;
   Snooze?: string;
 }
+
+export interface ISPPageContextInfo {
+  userLoginName: string;
+  userId: number;
+  webAbsoluteUrl: string;
+  webTitle: string;
+  siteAbsoluteUrl: string;
+  siteId: string;
+  webId: string;
+}

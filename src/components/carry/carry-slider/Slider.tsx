@@ -5,9 +5,9 @@ import Slide3 from "./Slide3";
 import Slide4 from "./Slide4";
 import Slide5 from "./Slide5";
 import Slide6 from "./Slide6";
-import type { ICarrySliderProps } from "@/utils/type";
+import type { ICarrySliderProps, ISPPageContextInfo } from "@/utils/type";
 
-declare const _spPageContextInfo: any;
+declare const _spPageContextInfo: ISPPageContextInfo;
 
 const Slider: React.FC<ICarrySliderProps> = ({
   faktorNumber,
