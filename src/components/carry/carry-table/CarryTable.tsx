@@ -23,7 +23,6 @@ const CarryTable: React.FC<ICarryTableProps> = ({
   selectedReceipts,
   setSelectedReceipts,
 }) => {
-  console.log("carryReceipt:", carryReceipt);
 
   const columns = [
     { label: "", key: "" },
