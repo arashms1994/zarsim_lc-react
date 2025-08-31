@@ -8,7 +8,10 @@ import { MODAL_CLASSES, TOAST_CONFIG } from "@/utils/constants";
 import { Button } from "@/components/ui/button";
 import BankRejectionModal from "@/components/ui/BankRejectionModal";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { updateCarryReceiptStatus } from "@/api/addData";
+import {
+  updateCarryBankConfirmation,
+  updateCarryReceiptStatus,
+} from "@/api/addData";
 import { toast } from "react-toastify";
 
 const Slide5: React.FC<ICarrySlideProps> = ({
@@ -65,6 +68,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
     try {
       await updateCarryReceiptStatus(itemIds, "6");
       setLocalStatus(itemIds.map(() => "6"));
+      await updateCarryBankConfirmation(itemIds, "0");
 
       toast.success("وضعیت همه آیتم‌ها با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
@@ -87,11 +91,6 @@ const Slide5: React.FC<ICarrySlideProps> = ({
         <div className="flex gap-4 justify-between items-center">
           {isCompleted ? (
             <SectionHeader title="این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید." />
-          ) : selectedReceipts?.some((r) => r.Bank_Confirm === "1") ? (
-            <SectionHeader
-              className="bg-red-600 text-white"
-              title="اسناد توسط بانک رد شده است، لطفا در اسرع وقت نسبت به اصلاح و ارسال اسناد اقدام نمایید."
-            />
           ) : (
             <>
               <button
@@ -117,6 +116,14 @@ const Slide5: React.FC<ICarrySlideProps> = ({
               </button>
             </>
           )}
+        </div>
+        <div className="flex justify-center items-center w-full">
+          {selectedReceipts?.some((r) => r.Bank_Confirm === "1") ? (
+            <SectionHeader
+              className="bg-red-600 text-white"
+              title="اسناد توسط بانک رد شده است، لطفا در اسرع وقت نسبت به اصلاح و ارسال اسناد اقدام نمایید."
+            />
+          ) : null}
         </div>
       </div>
 
