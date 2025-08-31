@@ -50,8 +50,17 @@ const Slide5: React.FC<ICarrySlideProps> = ({
         />
 
         <div className="flex gap-4 justify-between items-center">
-          <button type="button">تایید اسناد توسط بانک</button>
-          <button type="button" onClick={() => setModalOpen(true)}>
+          <button
+            type="button"
+            className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-green-600 text-white transition-all duration-300 cursor-pointer hover:bg-green-900"
+          >
+            تایید اسناد توسط بانک
+          </button>
+          <button
+            type="button"
+            className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-red-600 text-white transition-all duration-300 cursor-pointer hover:bg-red-900"
+            onClick={() => setModalOpen(true)}
+          >
             رد اسناد توسط بانک
           </button>
         </div>
@@ -59,7 +68,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
 
       {modalOpen && (
         <div className={MODAL_CLASSES.overlay}>
-          <div className={`${MODAL_CLASSES.container} w-[300px] h-[200px]`}>
+          <div className={`${MODAL_CLASSES.container} w-[350px] h-[300px]`}>
             <Button
               type="button"
               onClick={() => {
