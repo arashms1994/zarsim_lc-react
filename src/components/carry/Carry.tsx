@@ -124,7 +124,9 @@ const Carry = () => {
   const renderSliderModal = () =>
     isModalOpen && (
       <div className={MODAL_CLASSES.overlay}>
-        <div className={`${MODAL_CLASSES.container} w-[1200px] h-[680px] overflow-y-scroll`}>
+        <div
+          className={`${MODAL_CLASSES.container} w-[1200px] h-[680px] overflow-y-scroll`}
+        >
           <Button
             type="button"
             onClick={() => {
