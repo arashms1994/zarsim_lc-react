@@ -97,16 +97,17 @@ const Slide1: React.FC<ICarrySlideProps> = ({
         />
       ))}
 
-      {FIRST_SLIDE_DOCS_VERSION2.map((doc) => (
-        <UploadSection
-          key={doc.value}
-          orderNumber={faktorNumber}
-          subFolder={subFolder}
-          docType={doc.value}
-          label={doc.label}
-          onUploadComplete={() => handleUploadComplete(doc.value)}
-        />
-      ))}
+      {isRejected &&
+        FIRST_SLIDE_DOCS_VERSION2.map((doc) => (
+          <UploadSection
+            key={doc.value}
+            orderNumber={faktorNumber}
+            subFolder={subFolder}
+            docType={doc.value}
+            label={doc.label}
+            onUploadComplete={() => handleUploadComplete(doc.value)}
+          />
+        ))}
 
       <div>
         {allStatusTwo ? (
