@@ -291,7 +291,7 @@ export async function addNotificationItem(
 
 export async function updateCarryReceiptStatus(
   itemIds: number[],
-  status: string,
+  status: string
 ): Promise<void> {
   const itemType = "SP.Data.LC_x005f_carry_x005f_receiptListItem";
   const digest = await getDigest();
@@ -373,6 +373,28 @@ export async function updateCarryBankConfirmation(
       const response = await fetch(
         `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items(${itemId})`,
         {
+          method: "GET",
+          headers: {
+            Accept: "application/json;odata=verbose",
+            "Content-Type": "application/json;odata=verbose",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`خطا در دریافت اطلاعات آیتم ${itemId}: ${errorText}`);
+      }
+
+      const itemData = await response.json();
+      const currentRejectVersion = itemData.d.Reject_Version
+        ? Number(itemData.d.Reject_Version) + 1
+        : 1;
+
+      const updateResponse = await fetch(
+        `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items(${itemId})`,
+        {
           method: "PATCH",
           headers: {
             Accept: "application/json;odata=verbose",
@@ -384,13 +406,14 @@ export async function updateCarryBankConfirmation(
           body: JSON.stringify({
             __metadata: { type: itemType },
             Bank_Confirm: bankConfirm,
+            Reject_Version: String(currentRejectVersion),
           }),
         }
       );
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`خطا در آپدیت Status آیتم ${itemId}: ${errorText}`);
+      if (!updateResponse.ok) {
+        const errorText = await updateResponse.text();
+        throw new Error(`خطا در آپدیت آیتم ${itemId}: ${errorText}`);
       }
     })
   );
