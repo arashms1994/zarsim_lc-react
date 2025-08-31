@@ -97,7 +97,7 @@ const Slide3: React.FC<ICarrySlideProps> = ({
         deadline: deadlineFormatted,
         assign: String(userName),
         massage: "لطفا رسید بانک را آپلود کنید.",
-        Item_URL: "https://example.com/item/123",
+        Item_URL:`https://portal.zarsim.com/SitePages/lcdocuments.aspx/carry?Factor_ID=${faktorNumber}`,
       });
 
       await updateCarryReceiptStatus(itemIds, "4");
