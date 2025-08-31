@@ -236,6 +236,12 @@ export interface INotificationItem {
   Snooze?: string;
 }
 
+export interface IBankRejectionModalProps {
+  itemIds: number[];
+  onClose: () => void;
+  onRejected: () => void;
+}
+
 export interface ISPPageContextInfo {
   userLoginName: string;
   userId: number;
