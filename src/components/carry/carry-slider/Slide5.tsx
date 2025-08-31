@@ -86,7 +86,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
 
         <div className="flex gap-4 justify-between items-center">
           {isCompleted ? (
-            <SectionHeader title="این قسمت تکمیل شده است، لطفا به مرحله بعد مراجعه کنید." />
+            <SectionHeader title="این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید." />
           ) : selectedReceipts?.some((r) => r.Bank_Confirm === "1") ? (
             <SectionHeader
               className="bg-red-600 text-white"

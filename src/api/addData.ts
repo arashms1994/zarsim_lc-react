@@ -346,7 +346,7 @@ export async function updateCarryReceiptBankRejectionStatus(
           credentials: "include",
           body: JSON.stringify({
             __metadata: { type: itemType },
-            Status: "2",
+            Status: "1",
             Bank_Confirm: "1",
             Description: Description,
           }),
