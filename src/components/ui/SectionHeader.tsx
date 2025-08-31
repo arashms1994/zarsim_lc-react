@@ -8,7 +8,9 @@ const SectionHeader: React.FC<ISectionHeaderProps> = ({ title, className }) => {
         className ?? ""
       }`}
     >
-      <span className="text-2xl text-[#0e7216]">{title}</span>
+      <span className={`text-2xl text-[#0e7216] ${className ?? ""}`}>
+        {title}
+      </span>
     </div>
   );
 };
