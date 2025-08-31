@@ -23,6 +23,8 @@ const CarryTable: React.FC<ICarryTableProps> = ({
   selectedReceipts,
   setSelectedReceipts,
 }) => {
+  console.log("carryReceipt:", carryReceipt);
+
   const columns = [
     { label: "", key: "" },
     { label: "شماره فاکتور", key: "Title" },
@@ -48,10 +50,7 @@ const CarryTable: React.FC<ICarryTableProps> = ({
   const renderRow = (invoice: ICarryReceipt) => (
     <Tooltip key={invoice.GUID}>
       <TooltipTrigger asChild>
-        <TableRow
-          onClick={() => console.log(invoice)}
-          className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
-        >
+        <TableRow className="cursor-pointer hover:bg-gray-100 transition-all duration-300">
           <TableCell className="text-center">
             {invoice.Carry_Phase_GUID ? (
               <span className="text-gray-500 text-sm">
@@ -74,10 +73,11 @@ const CarryTable: React.FC<ICarryTableProps> = ({
           </TableCell>
           <TableCell className="text-right">{invoice.Date}</TableCell>
           <TableCell className="text-right">
-            {formatNumberWithComma(invoice.Count)}
+            {formatNumberWithComma(invoice.Count ?? "0")}
           </TableCell>
+
           <TableCell className="text-right">
-            {formatNumberWithComma(invoice.Total)}
+            {formatNumberWithComma(invoice.Total ?? "0")}
           </TableCell>
           <TableCell className="text-right">{invoice.Order_Number}</TableCell>
           <TableCell className="text-right">{invoice.LC_Number}</TableCell>
