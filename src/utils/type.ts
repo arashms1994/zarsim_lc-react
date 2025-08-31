@@ -33,6 +33,7 @@ export interface ICarryReceipt {
   Status?: string;
   Carry_Phase_GUID?: string | null;
   Description: string;
+  Show_Upload?: string;
 }
 
 export interface IOpenningState {
