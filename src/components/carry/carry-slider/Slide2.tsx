@@ -97,7 +97,7 @@ const Slide2: React.FC<ICarrySlideProps> = ({
       <div>
         {allStatusTwo ? (
           <SectionHeader
-            title={"این مرحله تکمیل شده است، لطفا به مرحله بعد مراجعه کنید."}
+            title={"این قسمت تکمیل شده است، لطفا به مرحله بعد مراجعه کنید."}
           />
         ) : (
           <button

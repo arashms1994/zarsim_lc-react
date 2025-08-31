@@ -86,15 +86,24 @@ const Slide5: React.FC<ICarrySlideProps> = ({
 
         <div className="flex gap-4 justify-between items-center">
           {isCompleted ? (
+            <SectionHeader title="این قسمت تکمیل شده است، لطفا به مرحله بعد مراجعه کنید." />
+          ) : selectedReceipts?.some((r) => r.Bank_Confirm === "1") ? (
             <SectionHeader
-              title={"این مرحله تکمیل شده است، لطفا به مرحله بعد مراجعه کنید."}
+              className="bg-red-600 text-white"
+              title="اسناد توسط بانک رد شده است، لطفا در اسرع وقت نسبت به اصلاح و ارسال اسناد اقدام نمایید."
             />
           ) : (
             <>
               <button
                 type="button"
-                className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-green-600 text-white transition-all duration-300 cursor-pointer hover:bg-green-900"
                 onClick={handleSubmit}
+                disabled={!uploadedFiles[docType]}
+                className={`border-none mt-5 rounded-lg min-w-[200px] p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
+        ${
+          uploadedFiles[docType]
+            ? "bg-blue-600 text-white hover:bg-blue-900"
+            : "bg-gray-400 text-gray-200 cursor-not-allowed"
+        }`}
               >
                 تایید اسناد توسط بانک
               </button>

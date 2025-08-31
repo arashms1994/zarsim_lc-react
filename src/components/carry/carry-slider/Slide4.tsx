@@ -139,7 +139,7 @@ const Slide4: React.FC<ICarrySlideProps> = ({
         <div className="flex justify-center items-center">
           {isCompleted ? (
             <SectionHeader
-              title={"این مرحله تکمیل شده است، لطفا به مرحله بعد مراجعه کنید."}
+              title={"این قسمت تکمیل شده است، لطفا به مرحله بعد مراجعه کنید."}
             />
           ) : (
             <button
