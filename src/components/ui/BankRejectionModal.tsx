@@ -10,7 +10,12 @@ const BankRejectionModal = () => {
           name="Description"
           id="Description"
         />
-        <Button type="button">ثبت توضیحات</Button>
+        <Button
+          type="button"
+          className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-blue-600 text-white transition-all duration-300 cursor-pointer hover:bg-blue-900"
+        >
+          ثبت توضیحات
+        </Button>
       </div>
     </div>
   );
