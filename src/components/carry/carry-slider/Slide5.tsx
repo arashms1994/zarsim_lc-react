@@ -21,7 +21,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
   carryPhaseGUID,
   selectedReceipts,
 }) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [rejectModalOpen, setrejectModalOpen] = useState(false);
   const label = "رسید تایید اسناد توسط بانک";
   const subFolder = carryPhaseGUID || "";
   const docType = "taeidasnad";
@@ -110,7 +110,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
               <button
                 type="button"
                 className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-red-600 text-white transition-all duration-300 cursor-pointer hover:bg-red-900"
-                onClick={() => setModalOpen(true)}
+                onClick={() => setrejectModalOpen(true)}
               >
                 رد اسناد توسط بانک
               </button>
@@ -127,13 +127,13 @@ const Slide5: React.FC<ICarrySlideProps> = ({
         </div>
       </div>
 
-      {modalOpen && (
+      {rejectModalOpen && (
         <div className={MODAL_CLASSES.overlay}>
           <div className={`${MODAL_CLASSES.container} w-[350px] h-[300px]`}>
             <Button
               type="button"
               onClick={() => {
-                setModalOpen(false);
+                setrejectModalOpen(false);
               }}
               className={MODAL_CLASSES.closeButton}
             >
@@ -141,7 +141,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
             </Button>
             <BankRejectionModal
               itemIds={itemIds}
-              onClose={() => setModalOpen(false)}
+              onClose={() => setrejectModalOpen(false)}
               onRejected={() => {
                 setLocalStatus(itemIds.map(() => "2"));
                 queryClient.invalidateQueries({
