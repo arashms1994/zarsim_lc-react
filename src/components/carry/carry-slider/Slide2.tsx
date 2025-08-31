@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ICarrySlideProps } from "@/utils/type";
-import { SECOND_SLIDE_DOCS, TOAST_CONFIG } from "@/utils/constants";
+import {
+  SECOND_SLIDE_DOCS,
+  SECOND_SLIDE_DOCS_VERSION2,
+  TOAST_CONFIG,
+} from "@/utils/constants";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import { BASE_URL } from "@/api/base";
@@ -22,8 +26,10 @@ const Slide2: React.FC<ICarrySlideProps> = ({
     false;
 
   const subFolder = carryPhaseGUID || "";
-  const docTypes = SECOND_SLIDE_DOCS.map((d) => d.value);
+  const docTypes = SECOND_SLIDE_DOCS.slice(0, 2).map((d) => d.value);
+  const docTypes2 = SECOND_SLIDE_DOCS_VERSION2.slice(0, 2).map((d) => d.value);
   const queryClient = useQueryClient();
+  const isRejected = localReceipts.some((r) => r.Bank_Confirm === "1");
 
   const uploadedData = useMultipleUploadedFiles(
     faktorNumber,
@@ -44,7 +50,24 @@ const Slide2: React.FC<ICarrySlideProps> = ({
         setUploadedFiles((prev) => ({ ...prev, [docType]: fileUrl }));
       }
     });
-  }, [docTypes, setUploadedFiles, uploadedData, uploadedFiles]);
+
+    if (isRejected) {
+      docTypes2.forEach((docType2) => {
+        const file = uploadedData[docType2]?.data?.[0];
+        const fileUrl = file ? `${BASE_URL}${file.ServerRelativeUrl}` : null;
+        if (fileUrl && uploadedFiles[docType2] !== fileUrl) {
+          setUploadedFiles((prev) => ({ ...prev, [docType2]: fileUrl }));
+        }
+      });
+    }
+  }, [
+    docTypes,
+    docTypes2,
+    uploadedData,
+    uploadedFiles,
+    setUploadedFiles,
+    isRejected,
+  ]);
 
   const handleUploadComplete = (docType: string) => {
     queryClient.invalidateQueries({
@@ -94,28 +117,42 @@ const Slide2: React.FC<ICarrySlideProps> = ({
         />
       ))}
 
+      {isRejected &&
+        SECOND_SLIDE_DOCS_VERSION2.map((doc) => (
+          <UploadSection
+            key={doc.value}
+            orderNumber={faktorNumber}
+            subFolder={subFolder}
+            docType={doc.value}
+            label={doc.label}
+            onUploadComplete={() => handleUploadComplete(doc.value)}
+          />
+        ))}
+
       <div>
         {allStatusTwo ? (
           <SectionHeader
-            title={"این قسمت تکمیل شده است، لطفا به مرحله بعد مراجعه کنید."}
+            title={"این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید."}
           />
         ) : (
           <button
             type="button"
             disabled={
-              !docTypes.every((docType) => uploadedFiles[docType]) ||
-              allStatusTwo
+              allStatusTwo ||
+              (isRejected
+                ? !docTypes2.every((docType2) => uploadedFiles[docType2])
+                : !docTypes.every((docType) => uploadedFiles[docType]))
             }
             className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-              ${
-                !allStatusTwo &&
-                docTypes.every((docType) => uploadedFiles[docType])
-                  ? "bg-blue-600 text-white hover:bg-blue-900"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
-              }`}
-            onClick={() => {
-              handleSubmit();
-            }}
+    ${
+      !allStatusTwo &&
+      (isRejected
+        ? docTypes2.every((docType2) => uploadedFiles[docType2])
+        : docTypes.every((docType) => uploadedFiles[docType]))
+        ? "bg-blue-600 text-white hover:bg-blue-900"
+        : "bg-gray-400 text-gray-200 cursor-not-allowed"
+    }`}
+            onClick={handleSubmit}
           >
             پایان آپلود فایل‌های مرتبط با آماده سازی اسناد
           </button>

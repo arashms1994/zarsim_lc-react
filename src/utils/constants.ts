@@ -34,10 +34,22 @@ export const FIRST_SLIDE_DOCS = [
   { label: "برگه باسکول", value: "baskool" },
 ];
 
+export const FIRST_SLIDE_DOCS_VERSION2 = [
+  { label: "فاکتور فروش اصلاحیه", value: "faktor2" },
+  { label: "بارنامه اصلاحیه", value: "barnameh2" },
+  { label: "برگه باسکول اصلاحیه", value: "baskool2" },
+];
+
 export const SECOND_SLIDE_DOCS = [
   { label: "پکینگ", value: "packing" },
   { label: "گواهی بازرسی", value: "govahibazrasi" },
   { label: "صورت مجلس تحویل و تحول", value: "tahvilotahavol" },
+];
+
+export const SECOND_SLIDE_DOCS_VERSION2 = [
+  { label: "پکینگ اصلاحیه", value: "packing2" },
+  { label: "گواهی بازرسی اصلاحیه", value: "govahibazrasi2" },
+  { label: "صورت مجلس تحویل و تحول اصلاحیه", value: "tahvilotahavol2" },
 ];
 
 export const TOAST_CONFIG = {
