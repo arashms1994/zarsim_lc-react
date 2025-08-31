@@ -66,6 +66,7 @@ const Carry = () => {
           Order_Number: faktorNumber,
           Status: "0",
           Bank_Confirm: "0",
+          Reject_Version: "0",
           LC_Number: faktor?.LCNumber || "",
         });
         await refetchCarryReceipts();
