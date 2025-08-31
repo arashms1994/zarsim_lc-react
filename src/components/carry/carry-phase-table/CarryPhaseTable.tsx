@@ -44,6 +44,7 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
       const date = receipts[0].Date;
       const orderNumber = receipts[0].Order_Number;
       const lcNumber = receipts[0].LC_Number;
+      const description = receipts[0].Description || "";
 
       return {
         carryPhaseGUID,
@@ -53,6 +54,7 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
         date,
         orderNumber,
         lcNumber,
+        description,
         receipts,
       };
     }
@@ -73,6 +75,9 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
             <TableHead className="text-right">ارزش کل بار</TableHead>
             <TableHead className="text-right">شماره پیش‌فاکتور</TableHead>
             <TableHead className="text-right">شماره LC</TableHead>
+            <TableHead className="text-right">
+              دلیل رد اسناد توسط بانک
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -103,6 +108,9 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
                     <TableCell className="text-right">
                       {phase.lcNumber}
                     </TableCell>
+                    <TableCell className="text-right">
+                      {phase.description}
+                    </TableCell>
                   </TableRow>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -112,7 +120,7 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-4 text-gray-500">
+              <TableCell colSpan={8} className="text-center py-4 text-gray-500">
                 هیچ مرحله‌ای ثبت نشده است
               </TableCell>
             </TableRow>

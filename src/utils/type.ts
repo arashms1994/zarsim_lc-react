@@ -32,6 +32,7 @@ export interface ICarryReceipt {
   Date?: string;
   Status?: string;
   Carry_Phase_GUID?: string | null;
+  Description: string;
 }
 
 export interface IOpenningState {
