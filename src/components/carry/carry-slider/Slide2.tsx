@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ICarrySlideProps } from "@/utils/type";
 import {
   SECOND_SLIDE_DOCS,
@@ -21,20 +21,40 @@ const Slide2: React.FC<ICarrySlideProps> = ({
   selectedReceipts,
 }) => {
   const [localReceipts, setLocalReceipts] = useState(selectedReceipts || []);
-  const allStatusTwo =
-    localReceipts.every((r) => r.Status !== undefined && r.Status >= "3") ??
-    false;
-
+  const allStatusThree = localReceipts.every((r) => Number(r.Status) >= 3);
   const subFolder = carryPhaseGUID || "";
-  const docTypes = SECOND_SLIDE_DOCS.slice(0, 2).map((d) => d.value);
-  const docTypes2 = SECOND_SLIDE_DOCS_VERSION2.slice(0, 2).map((d) => d.value);
-  const queryClient = useQueryClient();
-  const isRejected = localReceipts.some((r) => r.Bank_Confirm === "1");
 
+  const rejectVersion = useMemo(
+    () => Number(selectedReceipts?.[0]?.Reject_Version || 0),
+    [selectedReceipts]
+  );
+
+  const baseDocTypes = useMemo(() => SECOND_SLIDE_DOCS.map((d) => d.value), []);
+  const dynamicDocTypes = useMemo(() => {
+    if (rejectVersion <= 0) return [];
+    return Array.from({ length: rejectVersion }, (_, i) =>
+      SECOND_SLIDE_DOCS_VERSION2.map((d) => `${d.value}_v${i + 1}`)
+    ).flat();
+  }, [rejectVersion]);
+
+  const allDocTypes = useMemo(
+    () => [...baseDocTypes, ...dynamicDocTypes],
+    [baseDocTypes, dynamicDocTypes]
+  );
+
+  const lastDocTypes = useMemo(
+    () =>
+      rejectVersion > 0
+        ? dynamicDocTypes.filter((d) => d.endsWith(`_v${rejectVersion}`))
+        : baseDocTypes,
+    [rejectVersion, baseDocTypes, dynamicDocTypes]
+  );
+
+  const queryClient = useQueryClient();
   const uploadedData = useMultipleUploadedFiles(
     faktorNumber,
     subFolder,
-    docTypes
+    allDocTypes
   );
 
   const itemIds =
@@ -42,32 +62,18 @@ const Slide2: React.FC<ICarrySlideProps> = ({
       ?.map((r) => r.Id)
       .filter((id): id is number => typeof id === "number") || [];
 
+  // بروزرسانی فایل‌های آپلود شده
   useEffect(() => {
-    docTypes.forEach((docType) => {
+    if (!allDocTypes.length) return;
+
+    allDocTypes.forEach((docType) => {
       const file = uploadedData[docType]?.data?.[0];
       const fileUrl = file ? `${BASE_URL}${file.ServerRelativeUrl}` : null;
       if (fileUrl && uploadedFiles[docType] !== fileUrl) {
         setUploadedFiles((prev) => ({ ...prev, [docType]: fileUrl }));
       }
     });
-
-    if (isRejected) {
-      docTypes2.forEach((docType2) => {
-        const file = uploadedData[docType2]?.data?.[0];
-        const fileUrl = file ? `${BASE_URL}${file.ServerRelativeUrl}` : null;
-        if (fileUrl && uploadedFiles[docType2] !== fileUrl) {
-          setUploadedFiles((prev) => ({ ...prev, [docType2]: fileUrl }));
-        }
-      });
-    }
-  }, [
-    docTypes,
-    docTypes2,
-    uploadedData,
-    uploadedFiles,
-    setUploadedFiles,
-    isRejected,
-  ]);
+  }, [allDocTypes, uploadedData, uploadedFiles, setUploadedFiles]);
 
   const handleUploadComplete = (docType: string) => {
     queryClient.invalidateQueries({
@@ -76,27 +82,23 @@ const Slide2: React.FC<ICarrySlideProps> = ({
   };
 
   const handleSubmit = async () => {
-    const allUploaded = docTypes.every((docType) => uploadedFiles[docType]);
+    const allUploaded = lastDocTypes.every((doc) => !!uploadedFiles[doc]);
     if (!allUploaded) {
       toast.error("لطفاً همه فایل‌ها را آپلود کنید.", TOAST_CONFIG);
       return;
     }
-
-    if (itemIds.length === 0) {
+    if (!itemIds.length) {
       toast.error("آیتم‌های رسید حمل مشخص نشده‌اند!", TOAST_CONFIG);
       return;
     }
-
     try {
       await updateCarryReceiptStatus(itemIds, "3");
-
       setLocalReceipts((prev) =>
         prev.map((r) => ({
           ...r,
-          Status: Number(r.Status) >= 2 ? r.Status : "3",
+          Status: Number(r.Status) >= 3 ? r.Status : "3",
         }))
       );
-
       toast.success("وضعیت با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
       console.error(error);
@@ -106,52 +108,43 @@ const Slide2: React.FC<ICarrySlideProps> = ({
 
   return (
     <div className="flex flex-col justify-center items-center gap-5">
-      {SECOND_SLIDE_DOCS.map((doc) => (
-        <UploadSection
-          key={doc.value}
-          orderNumber={faktorNumber}
-          subFolder={subFolder}
-          docType={doc.value}
-          label={doc.label}
-          onUploadComplete={() => handleUploadComplete(doc.value)}
-        />
-      ))}
+      {allDocTypes.map((doc) => {
+        const isRevision = doc.includes("_v");
+        const baseValue = isRevision ? doc.split("_v")[0] : doc;
+        const versionNumber = isRevision ? doc.split("_v")[1] : null;
 
-      {isRejected &&
-        SECOND_SLIDE_DOCS_VERSION2.map((doc) => (
+        const docLabel = isRevision
+          ? `${
+              SECOND_SLIDE_DOCS_VERSION2.find((d) => d.value === baseValue)
+                ?.label || baseValue
+            } نسخه ${versionNumber}`
+          : SECOND_SLIDE_DOCS.find((d) => d.value === doc)?.label || doc;
+
+        return (
           <UploadSection
-            key={doc.value}
+            key={doc}
             orderNumber={faktorNumber}
             subFolder={subFolder}
-            docType={doc.value}
-            label={doc.label}
-            onUploadComplete={() => handleUploadComplete(doc.value)}
+            docType={doc}
+            label={docLabel}
+            onUploadComplete={() => handleUploadComplete(doc)}
           />
-        ))}
+        );
+      })}
 
       <div>
-        {allStatusTwo ? (
-          <SectionHeader
-            title={"این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید."}
-          />
+        {allStatusThree ? (
+          <SectionHeader title="این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید." />
         ) : (
           <button
             type="button"
-            disabled={
-              allStatusTwo ||
-              (isRejected
-                ? !docTypes2.every((docType2) => uploadedFiles[docType2])
-                : !docTypes.every((docType) => uploadedFiles[docType]))
-            }
+            disabled={!lastDocTypes.every((doc) => uploadedFiles[doc])}
             className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-    ${
-      !allStatusTwo &&
-      (isRejected
-        ? docTypes2.every((docType2) => uploadedFiles[docType2])
-        : docTypes.every((docType) => uploadedFiles[docType]))
-        ? "bg-blue-600 text-white hover:bg-blue-900"
-        : "bg-gray-400 text-gray-200 cursor-not-allowed"
-    }`}
+              ${
+                lastDocTypes.every((doc) => uploadedFiles[doc])
+                  ? "bg-blue-600 text-white hover:bg-blue-900"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              }`}
             onClick={handleSubmit}
           >
             پایان آپلود فایل‌های مرتبط با آماده سازی اسناد

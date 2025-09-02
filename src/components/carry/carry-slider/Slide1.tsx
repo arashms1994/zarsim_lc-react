@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   FIRST_SLIDE_DOCS,
@@ -6,12 +6,12 @@ import {
   TOAST_CONFIG,
 } from "@/utils/constants";
 import type { ICarrySlideProps } from "@/utils/type";
-import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
 import { updateCarryReceiptStatus } from "@/api/addData";
 import { toast } from "react-toastify";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 
 const Slide1: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -22,17 +22,34 @@ const Slide1: React.FC<ICarrySlideProps> = ({
 }) => {
   const [localReceipts, setLocalReceipts] = useState(selectedReceipts || []);
   const allStatusTwo = localReceipts.every((r) => Number(r.Status) >= 2);
-
   const subFolder = carryPhaseGUID || "";
-  const docTypes = FIRST_SLIDE_DOCS.map((d) => d.value);
-  const docTypes2 = FIRST_SLIDE_DOCS_VERSION2.map((d) => d.value);
-  const queryClient = useQueryClient();
-  const isRejected = localReceipts.some((r) => r.Bank_Confirm === "1");
 
-  const uploadedData = useMultipleUploadedFiles(faktorNumber, subFolder, [
-    ...docTypes,
-    ...docTypes2,
-  ]);
+  const rejectVersion = useMemo(
+    () => Number(selectedReceipts?.[0]?.Reject_Version || 0),
+    [selectedReceipts]
+  );
+
+  const baseDocTypes = useMemo(() => FIRST_SLIDE_DOCS.map((d) => d.value), []);
+
+  const dynamicDocTypes: string[] = useMemo(() => {
+    if (rejectVersion <= 0) return [];
+    return Array.from({ length: rejectVersion }, (_, i) =>
+      FIRST_SLIDE_DOCS_VERSION2.map((d) => `${d.value}_v${i + 1}`)
+    ).flat();
+  }, [rejectVersion]);
+
+  const allDocTypes = useMemo(
+    () => [...baseDocTypes, ...dynamicDocTypes],
+    [baseDocTypes, dynamicDocTypes]
+  );
+
+  const queryClient = useQueryClient();
+
+  const uploadedData = useMultipleUploadedFiles(
+    faktorNumber,
+    subFolder,
+    allDocTypes
+  );
 
   const itemIds =
     selectedReceipts
@@ -40,14 +57,16 @@ const Slide1: React.FC<ICarrySlideProps> = ({
       .filter((id): id is number => typeof id === "number") || [];
 
   useEffect(() => {
-    [...docTypes, ...docTypes2].forEach((docType) => {
-      const file = uploadedData[docType]?.data?.[0];
+    if (!allDocTypes.length) return;
+
+    allDocTypes.forEach((docType) => {
+      const file = uploadedData?.[docType]?.data?.[0];
       const fileUrl = file ? `${BASE_URL}${file.ServerRelativeUrl}` : null;
       if (fileUrl && uploadedFiles[docType] !== fileUrl) {
         setUploadedFiles((prev) => ({ ...prev, [docType]: fileUrl }));
       }
     });
-  }, [docTypes, docTypes2, uploadedData, uploadedFiles, setUploadedFiles]);
+  }, [allDocTypes, uploadedData, uploadedFiles, setUploadedFiles]);
 
   const handleUploadComplete = (docType: string) => {
     queryClient.invalidateQueries({
@@ -55,28 +74,34 @@ const Slide1: React.FC<ICarrySlideProps> = ({
     });
   };
 
+  const lastDocTypes = useMemo(() => {
+    return rejectVersion > 0
+      ? FIRST_SLIDE_DOCS_VERSION2.map((d) => `${d.value}_v${rejectVersion}`)
+      : baseDocTypes;
+  }, [rejectVersion, baseDocTypes]);
+
   const handleSubmit = async () => {
-    const allUploaded = docTypes.every((docType) => uploadedFiles[docType]);
+    const allUploaded = lastDocTypes.every(
+      (docType) => !!uploadedFiles[docType]
+    );
     if (!allUploaded) {
       toast.error("لطفاً همه فایل‌ها را آپلود کنید.", TOAST_CONFIG);
       return;
     }
 
-    if (itemIds.length === 0) {
+    if (!itemIds.length) {
       toast.error("آیتم‌های رسید حمل مشخص نشده‌اند!", TOAST_CONFIG);
       return;
     }
 
     try {
       await updateCarryReceiptStatus(itemIds, "2");
-
       setLocalReceipts((prev) =>
         prev.map((r) => ({
           ...r,
           Status: Number(r.Status) >= 2 ? r.Status : "2",
         }))
       );
-
       toast.success("وضعیت با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
       console.error(error);
@@ -86,52 +111,55 @@ const Slide1: React.FC<ICarrySlideProps> = ({
 
   return (
     <div className="flex flex-col justify-center items-center gap-5">
-      {FIRST_SLIDE_DOCS.map((doc) => (
-        <UploadSection
-          key={doc.value}
-          orderNumber={faktorNumber}
-          subFolder={subFolder}
-          docType={doc.value}
-          label={doc.label}
-          onUploadComplete={() => handleUploadComplete(doc.value)}
-        />
-      ))}
+      {allDocTypes.map((doc) => {
+        const isRevision = doc.includes("_v");
+        const baseValue = isRevision ? doc.split("_v")[0] : doc;
+        const versionNumber = isRevision ? doc.split("_v")[1] : null;
 
-      {isRejected &&
-        FIRST_SLIDE_DOCS_VERSION2.map((doc) => (
+        const docLabel = isRevision
+          ? `${
+              FIRST_SLIDE_DOCS_VERSION2.find((d) => d.value === baseValue)
+                ?.label || baseValue
+            } نسخه ${versionNumber}`
+          : FIRST_SLIDE_DOCS.find((d) => d.value === doc)?.label || doc;
+
+        return (
           <UploadSection
-            key={doc.value}
+            key={doc}
             orderNumber={faktorNumber}
             subFolder={subFolder}
-            docType={doc.value}
-            label={doc.label}
-            onUploadComplete={() => handleUploadComplete(doc.value)}
+            docType={doc}
+            label={docLabel}
+            onUploadComplete={() => handleUploadComplete(doc)}
           />
-        ))}
+        );
+      })}
 
       <div>
         {allStatusTwo ? (
-          <SectionHeader
-            title={"این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید."}
-          />
+          <SectionHeader title="این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید." />
         ) : (
           <button
             type="button"
             disabled={
               allStatusTwo ||
-              (isRejected
-                ? !docTypes2.every((docType2) => uploadedFiles[docType2])
-                : !docTypes.every((docType) => uploadedFiles[docType]))
+              !(rejectVersion > 0
+                ? FIRST_SLIDE_DOCS_VERSION2.map(
+                    (d) => `${d.value}_v${rejectVersion}`
+                  ).every((doc) => uploadedFiles[doc])
+                : baseDocTypes.every((doc) => uploadedFiles[doc]))
             }
             className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-    ${
-      !allStatusTwo &&
-      (isRejected
-        ? docTypes2.every((docType2) => uploadedFiles[docType2])
-        : docTypes.every((docType) => uploadedFiles[docType]))
-        ? "bg-blue-600 text-white hover:bg-blue-900"
-        : "bg-gray-400 text-gray-200 cursor-not-allowed"
-    }`}
+              ${
+                !allStatusTwo &&
+                (rejectVersion > 0
+                  ? FIRST_SLIDE_DOCS_VERSION2.map(
+                      (d) => `${d.value}_v${rejectVersion}`
+                    ).every((doc) => uploadedFiles[doc])
+                  : baseDocTypes.every((doc) => uploadedFiles[doc]))
+                  ? "bg-blue-600 text-white hover:bg-blue-900"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              }`}
             onClick={handleSubmit}
           >
             پایان آپلود فایل‌های مرتبط با حمل
