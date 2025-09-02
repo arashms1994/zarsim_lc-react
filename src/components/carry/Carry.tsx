@@ -3,7 +3,6 @@ import { Button } from "../ui/button";
 import { toast } from "react-toastify";
 import SectionHeader from "../ui/SectionHeader";
 import CarryForm from "./carry-form/CarryForm";
-import CarryTable from "./carry-table/CarryTable";
 import CarryPhaseTable from "./carry-phase-table/CarryPhaseTable";
 import Slider from "./carry-slider/Slider";
 import { useLayoutContext } from "@/providers/LayoutContext";
@@ -12,6 +11,7 @@ import { addCarryReceipt, addCarryPhaseGuid } from "@/api/addData";
 import type { CarryFormSchema } from "@/utils/validation";
 import type { ICarryReceipt } from "@/utils/type";
 import { MODAL_CLASSES, TOAST_CONFIG } from "@/utils/constants";
+import { CarryTable } from "./carry-table/CarryTable";
 
 const Carry = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
