@@ -26,28 +26,27 @@ const Slide5: React.FC<ICarrySlideProps> = ({
     selectedReceipts?.map((r) => r.Status ?? "0") || []
   );
 
-  const subFolder = carryPhaseGUID || "";
   const queryClient = useQueryClient();
+  const subFolder = carryPhaseGUID || "";
+  const baseDocType = "taeidasnad";
+  const label = "رسید تایید اسناد توسط بانک";
 
   const rejectVersion = useMemo(
     () => Number(selectedReceipts?.[0]?.Reject_Version || 0),
     [selectedReceipts]
   );
 
-  const baseDocType = useMemo(() => "taeidasnad", []);
-  const label = "رسید تایید اسناد توسط بانک";
-
-  const dynamicDocTypes: string[] = useMemo(() => {
+  const dynamicDocTypes = useMemo(() => {
     if (rejectVersion <= 0) return [];
     return Array.from(
       { length: rejectVersion },
       (_, i) => `${baseDocType}_v${i + 1}`
     );
-  }, [rejectVersion, baseDocType]);
+  }, [rejectVersion]);
 
   const allDocTypes = useMemo(
     () => [baseDocType, ...dynamicDocTypes],
-    [baseDocType, dynamicDocTypes]
+    [dynamicDocTypes]
   );
 
   const uploadedData = useMultipleUploadedFiles(
@@ -83,7 +82,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
       toast.error("لطفاً فایل اصلی را آپلود کنید.", TOAST_CONFIG);
       return;
     }
-    if (itemIds.length === 0) {
+    if (!itemIds.length) {
       toast.error("آیتم‌های Carry Receipt مشخص نشده‌اند!", TOAST_CONFIG);
       return;
     }
@@ -91,11 +90,40 @@ const Slide5: React.FC<ICarrySlideProps> = ({
     try {
       await updateCarryReceiptStatus(itemIds, "6");
       setLocalStatus(itemIds.map(() => "6"));
+
       await updateCarryBankConfirmation(itemIds, "0");
+
       toast.success("وضعیت همه آیتم‌ها با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
       console.error(error);
       toast.error("خطا در بروزرسانی وضعیت!", TOAST_CONFIG);
+    }
+  };
+
+  const handleReject = async () => {
+    if (!itemIds.length) {
+      toast.error("آیتم‌های Carry Receipt مشخص نشده‌اند!", TOAST_CONFIG);
+      return;
+    }
+
+    setRejectModalOpen(true);
+  };
+
+  const onRejected = async () => {
+    try {
+      await updateCarryBankConfirmation(itemIds, "1");
+      setLocalStatus(itemIds.map(() => "2"));
+
+      queryClient.invalidateQueries({
+        queryKey: ["uploadedFiles", faktorNumber, subFolder, baseDocType],
+      });
+
+      toast.info("اسناد رد شد و نسخه اصلاحیه فعال شد.", TOAST_CONFIG);
+    } catch (error) {
+      console.error(error);
+      toast.error("خطا در بروزرسانی وضعیت رد!", TOAST_CONFIG);
+    } finally {
+      setRejectModalOpen(false);
     }
   };
 
@@ -122,11 +150,11 @@ const Slide5: React.FC<ICarrySlideProps> = ({
             <SectionHeader title="این قسمت تکمیل شده است، لطفا به اسلاید بعد مراجعه کنید." />
           ) : (
             <>
-              <button
+              <Button
                 type="button"
                 onClick={handleConfirm}
                 disabled={!uploadedFiles[baseDocType]}
-                className={`border-none mt-5 rounded-lg min-w-[200px] p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
+                className={`min-w-[200px] mt-5 p-3 text-[18px] font-semibold
                   ${
                     uploadedFiles[baseDocType]
                       ? "bg-blue-600 text-white hover:bg-blue-900"
@@ -134,15 +162,15 @@ const Slide5: React.FC<ICarrySlideProps> = ({
                   }`}
               >
                 تایید اسناد توسط بانک
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="button"
-                className="border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-red-600 text-white transition-all duration-300 cursor-pointer hover:bg-red-900"
-                onClick={() => setRejectModalOpen(true)}
+                onClick={handleReject}
+                className="min-w-[200px] mt-5 p-3 text-[18px] font-semibold bg-red-600 text-white hover:bg-red-900"
               >
                 رد اسناد توسط بانک
-              </button>
+              </Button>
             </>
           )}
         </div>
@@ -168,17 +196,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
             <BankRejectionModal
               itemIds={itemIds}
               onClose={() => setRejectModalOpen(false)}
-              onRejected={() => {
-                setLocalStatus(itemIds.map(() => "2"));
-                queryClient.invalidateQueries({
-                  queryKey: [
-                    "uploadedFiles",
-                    faktorNumber,
-                    subFolder,
-                    baseDocType,
-                  ],
-                });
-              }}
+              onRejected={onRejected}
             />
           </div>
         </div>
