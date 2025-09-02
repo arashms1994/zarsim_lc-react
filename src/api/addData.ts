@@ -390,13 +390,14 @@ export async function updateCarryBankConfirmation(
       const itemData = await response.json();
       const currentRejectVersion = Number(itemData.d.Reject_Version || 0);
 
-      const newRejectVersion = currentRejectVersion + 1;
+      const updateBody: any = { __metadata: { type: itemType } };
 
-      const updateBody: any = {
-        __metadata: { type: itemType },
-        Bank_Confirm: bankConfirm,
-        Reject_Version: String(newRejectVersion),
-      };
+      if (bankConfirm === "1") {
+        updateBody.Bank_Confirm = "1";
+        updateBody.Reject_Version = String(currentRejectVersion + 1);
+      } else {
+        updateBody.Bank_Confirm = "0";
+      }
 
       const updateResponse = await fetch(
         `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items(${itemId})`,
@@ -420,4 +421,3 @@ export async function updateCarryBankConfirmation(
     })
   );
 }
-
