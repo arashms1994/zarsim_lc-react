@@ -8,10 +8,15 @@ import {
 import type { ICarrySlideProps } from "@/utils/type";
 import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
-import { updateCarryReceiptStatus } from "@/api/addData";
+import { updateCarryReceiptStatus, addNotificationItem } from "@/api/addData";
 import { toast } from "react-toastify";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
+import DateObject from "react-date-object";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import gregorian from "react-date-object/calendars/gregorian";
+import gregorian_en from "react-date-object/locales/gregorian_en";
 
 const Slide1: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -19,6 +24,7 @@ const Slide1: React.FC<ICarrySlideProps> = ({
   setUploadedFiles,
   carryPhaseGUID,
   selectedReceipts,
+  userName,
 }) => {
   const [localReceipts, setLocalReceipts] = useState(selectedReceipts || []);
   const allStatusTwo = localReceipts.every((r) => Number(r.Status) >= 2);
@@ -102,10 +108,43 @@ const Slide1: React.FC<ICarrySlideProps> = ({
           Status: Number(r.Status) >= 2 ? r.Status : "2",
         }))
       );
-      toast.success("وضعیت با موفقیت بروزرسانی شد!", TOAST_CONFIG);
+
+      const firstDateStr = selectedReceipts?.[0]?.Date;
+      if (firstDateStr) {
+        const dateObject = new DateObject({
+          date: firstDateStr,
+          calendar: persian,
+          locale: persian_fa,
+        });
+        const gregorianDateObject = dateObject.convert(gregorian, gregorian_en);
+        const fromDate = gregorianDateObject.toDate();
+
+        const deadlineDate = new Date(fromDate);
+        deadlineDate.setDate(deadlineDate.getDate() + 5);
+
+        const fromDateFormatted = gregorianDateObject.format("M/D/YYYY");
+        const deadlineFormatted = `${
+          deadlineDate.getMonth() + 1
+        }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+
+        await addNotificationItem({
+          Title: "آماده سازی اسناد",
+          dont_show: "0",
+          From_Date: fromDateFormatted,
+          deadline: deadlineFormatted,
+          assign: String(userName),
+          massage: "لطفاً اسناد مربوط به حمل را آپلود کنید.",
+          Item_URL: `https://portal.zarsim.com/SitePages/lcdocuments.aspx/carry?Factor_ID=${faktorNumber}`,
+        });
+      }
+
+      toast.success(
+        "اطلاعات با موفقیت ثبت شد و وضعیت بروزرسانی شد!",
+        TOAST_CONFIG
+      );
     } catch (error) {
       console.error(error);
-      toast.error("خطا در آپدیت وضعیت رسید حمل!", TOAST_CONFIG);
+      toast.error("خطا در ثبت اطلاعات!", TOAST_CONFIG);
     }
   };
 

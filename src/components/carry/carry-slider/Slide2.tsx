@@ -99,7 +99,10 @@ const Slide2: React.FC<ICarrySlideProps> = ({
           Status: Number(r.Status) >= 3 ? r.Status : "3",
         }))
       );
-      toast.success("وضعیت با موفقیت بروزرسانی شد!", TOAST_CONFIG);
+      toast.success(
+        "اطلاعات با موفقیت ثبت شد و وضعیت بروزرسانی شد!",
+        TOAST_CONFIG
+      );
     } catch (error) {
       console.error(error);
       toast.error("خطا در آپدیت وضعیت رسید حمل!", TOAST_CONFIG);
