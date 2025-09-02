@@ -388,23 +388,15 @@ export async function updateCarryBankConfirmation(
       }
 
       const itemData = await response.json();
-      
-      // فقط در صورت reject بودن، Reject_Version رو افزایش بده
-      const shouldIncrementRejectVersion = bankConfirm === "1"; // "1" یعنی reject
-      const currentRejectVersion = shouldIncrementRejectVersion 
-        ? (itemData.d.Reject_Version ? Number(itemData.d.Reject_Version) + 1 : 1)
-        : (itemData.d.Reject_Version || "0"); // اگر reject نیست، مقدار فعلی رو نگه دار
+      const currentRejectVersion = Number(itemData.d.Reject_Version || 0);
 
-      // آماده‌سازی body برای update
+      const newRejectVersion = currentRejectVersion + 1;
+
       const updateBody: any = {
         __metadata: { type: itemType },
         Bank_Confirm: bankConfirm,
+        Reject_Version: String(newRejectVersion),
       };
-
-      // فقط اگر reject_version تغییر کرده باشه، اضافه‌ش کن
-      if (shouldIncrementRejectVersion) {
-        updateBody.Reject_Version = String(currentRejectVersion);
-      }
 
       const updateResponse = await fetch(
         `${BASE_URL}/_api/web/lists(guid'0353e805-7395-46c1-8767-0ad173f3190b')/items(${itemId})`,
@@ -428,3 +420,4 @@ export async function updateCarryBankConfirmation(
     })
   );
 }
+
