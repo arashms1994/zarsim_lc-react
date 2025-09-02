@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useUploadedFiles } from "@/hooks/useUploadedFiles";
 import type { ICarrySlideProps } from "@/utils/type";
 import { useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
@@ -29,48 +29,42 @@ const Slide4: React.FC<ICarrySlideProps> = ({
   );
 
   const subFolder = carryPhaseGUID || "";
-  const docType = "residebank";
-  const docType2 = "residebank2";
-  const label = "رسید بانک";
-  const label2 = "رسید بانک 2";
-
   const queryClient = useQueryClient();
 
-  const { data: files } = useUploadedFiles(faktorNumber, subFolder, docType);
-  const { data: files2 } = useUploadedFiles(faktorNumber, subFolder, docType2);
+  const rejectVersion = Number(selectedReceipts?.[0]?.Reject_Version || 0);
 
-  const fileFromServer = files?.[0];
-  const fileUrl = fileFromServer
-    ? `${BASE_URL}${fileFromServer.ServerRelativeUrl}`
-    : null;
+  const [allDocTypes, setAllDocTypes] = useState<string[]>(["residebank"]);
 
-  const fileFromServer2 = files2?.[0];
-  const fileUrl2 = fileFromServer2
-    ? `${BASE_URL}${fileFromServer2.ServerRelativeUrl}`
-    : null;
+  useEffect(() => {
+    if (rejectVersion > 0) {
+      const dynamicDocs = Array.from(
+        { length: rejectVersion },
+        (_, i) => `residebank_v${i + 1}`
+      );
+      setAllDocTypes(["residebank", ...dynamicDocs]);
+    } else {
+      setAllDocTypes(["residebank"]);
+    }
+  }, [rejectVersion]);
+
+  const uploadedData = useMultipleUploadedFiles(
+    faktorNumber,
+    subFolder,
+    allDocTypes
+  );
+
+  useEffect(() => {
+    allDocTypes.forEach((docType) => {
+      const file = uploadedData?.[docType]?.data?.[0];
+      const fileUrl = file ? `${BASE_URL}${file.ServerRelativeUrl}` : null;
+      if (fileUrl && uploadedFiles[docType] !== fileUrl) {
+        setUploadedFiles((prev) => ({ ...prev, [docType]: fileUrl }));
+      }
+    });
+  }, [allDocTypes, uploadedData, uploadedFiles, setUploadedFiles]);
 
   const itemIds =
     selectedReceipts?.map((r) => r.Id).filter((id): id is number => !!id) || [];
-
-  const isRejected = selectedReceipts?.some((r) => r.Bank_Confirm === "1");
-  const isCompleted = localStatus.every((status) => Number(status) >= 5);
-
-  useEffect(() => {
-    if (fileUrl && uploadedFiles[docType] !== fileUrl) {
-      setUploadedFiles((prev) => ({ ...prev, [docType]: fileUrl }));
-    }
-    if (isRejected && fileUrl2 && uploadedFiles[docType2] !== fileUrl2) {
-      setUploadedFiles((prev) => ({ ...prev, [docType2]: fileUrl2 }));
-    }
-  }, [
-    fileUrl,
-    fileUrl2,
-    uploadedFiles,
-    setUploadedFiles,
-    docType,
-    docType2,
-    isRejected,
-  ]);
 
   const handleUploadComplete = (docTypeKey: string) => {
     queryClient.invalidateQueries({
@@ -78,8 +72,13 @@ const Slide4: React.FC<ICarrySlideProps> = ({
     });
   };
 
+  const isCompleted = localStatus.every((status) => Number(status) >= 5);
+
   const handleSubmit = async () => {
-    if (!uploadedFiles[docType] || (isRejected && !uploadedFiles[docType2])) {
+    const allUploaded = allDocTypes.every(
+      (docType) => !!uploadedFiles[docType]
+    );
+    if (!allUploaded) {
       toast.error("لطفاً همه فایل‌های الزامی را آپلود کنید.", TOAST_CONFIG);
       return;
     }
@@ -138,22 +137,16 @@ const Slide4: React.FC<ICarrySlideProps> = ({
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-5">
-        <UploadSection
-          orderNumber={faktorNumber}
-          subFolder={subFolder}
-          docType={docType}
-          label={label}
-          onUploadComplete={() => handleUploadComplete(docType)}
-        />
-        {isRejected && (
+        {allDocTypes.map((doc, index) => (
           <UploadSection
+            key={doc}
             orderNumber={faktorNumber}
             subFolder={subFolder}
-            docType={docType2}
-            label={label2}
-            onUploadComplete={() => handleUploadComplete(docType2)}
+            docType={doc}
+            label={index === 0 ? "رسید بانک" : `نسخه اصلاحیه ${index}`}
+            onUploadComplete={() => handleUploadComplete(doc)}
           />
-        )}
+        ))}
       </div>
 
       <div className="py-5">
@@ -172,13 +165,11 @@ const Slide4: React.FC<ICarrySlideProps> = ({
             <button
               type="button"
               disabled={
-                !uploadedFiles[docType] ||
-                (isRejected && !uploadedFiles[docType2])
+                !selectedDate || !allDocTypes.every((doc) => uploadedFiles[doc])
               }
               className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
                 ${
-                  uploadedFiles[docType] &&
-                  (!isRejected || uploadedFiles[docType2])
+                  selectedDate && allDocTypes.every((doc) => uploadedFiles[doc])
                     ? "bg-blue-600 text-white hover:bg-blue-900"
                     : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 }`}
