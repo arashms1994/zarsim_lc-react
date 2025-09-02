@@ -37,14 +37,21 @@ const Slide3: React.FC<ICarrySlideProps> = ({
 
   useEffect(() => {
     if (rejectVersion > 0) {
-      const dynamicDocs = Array.from({ length: rejectVersion }, (_, i) => `namehpoosheshi_v${i + 1}`);
+      const dynamicDocs = Array.from(
+        { length: rejectVersion },
+        (_, i) => `namehpoosheshi_v${i + 1}`
+      );
       setAllDocTypes(["namehpoosheshi", ...dynamicDocs]);
     } else {
       setAllDocTypes(["namehpoosheshi"]);
     }
   }, [rejectVersion]);
 
-  const uploadedData = useMultipleUploadedFiles(faktorNumber, subFolder, allDocTypes);
+  const uploadedData = useMultipleUploadedFiles(
+    faktorNumber,
+    subFolder,
+    allDocTypes
+  );
 
   useEffect(() => {
     allDocTypes.forEach((docType) => {
@@ -68,7 +75,9 @@ const Slide3: React.FC<ICarrySlideProps> = ({
   const isCompleted = localStatus.every((status) => Number(status) >= 4);
 
   const handleSubmit = async () => {
-    const allUploaded = allDocTypes.every((docType) => !!uploadedFiles[docType]);
+    const allUploaded = allDocTypes.every(
+      (docType) => !!uploadedFiles[docType]
+    );
     if (!allUploaded) {
       toast.error("لطفاً همه فایل‌های الزامی را آپلود کنید.", TOAST_CONFIG);
       return;
@@ -155,7 +164,9 @@ const Slide3: React.FC<ICarrySlideProps> = ({
           ) : (
             <button
               type="button"
-              disabled={!selectedDate || !allDocTypes.every((doc) => uploadedFiles[doc])}
+              disabled={
+                !selectedDate || !allDocTypes.every((doc) => uploadedFiles[doc])
+              }
               className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
                 ${
                   selectedDate && allDocTypes.every((doc) => uploadedFiles[doc])
