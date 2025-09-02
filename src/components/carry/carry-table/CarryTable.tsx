@@ -10,11 +10,6 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 import type { ICarryReceipt, ICarryTableProps } from "@/utils/type";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@radix-ui/react-tooltip";
 
 export const CarryTable: React.FC<ICarryTableProps> = ({
   carryReceipt = [],
@@ -50,47 +45,36 @@ export const CarryTable: React.FC<ICarryTableProps> = ({
     );
 
     return (
-      <Tooltip key={invoice.GUID}>
-        <TooltipTrigger asChild>
-          <TableRow
-            className={`cursor-pointer transition-all duration-300 ${
-              invoice.Carry_Phase_GUID
-                ? "bg-gray-100 text-gray-500"
-                : isSelected
-                ? "bg-blue-100 font-medium"
-                : "hover:bg-gray-50"
-            }`}
-            onClick={() => handleSelectReceipt(invoice)}
-          >
-            <TableCell className="text-right">
-              {invoice.Carry_Phase_GUID
-                ? "این فاکتور قبلا انتخاب شده است."
-                : isSelected
-                ? "انتخاب شده"
-                : ""}
-            </TableCell>
-            <TableCell className="font-medium text-right">
-              {invoice.Title}
-            </TableCell>
-            <TableCell className="text-right">{invoice.Date}</TableCell>
-            <TableCell className="text-right">
-              {formatNumberWithComma(invoice.Count ?? "0")}
-            </TableCell>
-            <TableCell className="text-right">
-              {formatNumberWithComma(invoice.Total ?? "0")}
-            </TableCell>
-            <TableCell className="text-right">{invoice.Order_Number}</TableCell>
-            <TableCell className="text-right">{invoice.LC_Number}</TableCell>
-          </TableRow>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>
-            {invoice.Carry_Phase_GUID
-              ? `این فاکتور در ${invoice.Carry_Phase_GUID} حمل قرار دارد.`
-              : "برای افزودن به مرحله حمل کلیک کنید."}
-          </p>
-        </TooltipContent>
-      </Tooltip>
+      <TableRow
+        className={`cursor-pointer transition-all duration-300 ${
+          invoice.Carry_Phase_GUID
+            ? "bg-gray-100 text-gray-500"
+            : isSelected
+            ? "bg-blue-100 font-medium"
+            : "hover:bg-gray-50"
+        }`}
+        onClick={() => handleSelectReceipt(invoice)}
+      >
+        <TableCell className="text-right">
+          {invoice.Carry_Phase_GUID
+            ? "این فاکتور قبلا انتخاب شده است."
+            : isSelected
+            ? "انتخاب شده"
+            : ""}
+        </TableCell>
+        <TableCell className="font-medium text-right">
+          {invoice.Title}
+        </TableCell>
+        <TableCell className="text-right">{invoice.Date}</TableCell>
+        <TableCell className="text-right">
+          {formatNumberWithComma(invoice.Count ?? "0")}
+        </TableCell>
+        <TableCell className="text-right">
+          {formatNumberWithComma(invoice.Total ?? "0")}
+        </TableCell>
+        <TableCell className="text-right">{invoice.Order_Number}</TableCell>
+        <TableCell className="text-right">{invoice.LC_Number}</TableCell>
+      </TableRow>
     );
   };
 
