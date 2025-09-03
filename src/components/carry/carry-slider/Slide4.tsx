@@ -3,17 +3,21 @@ import type { ICarrySlideProps } from "@/utils/type";
 import { useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
-import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
-import { addNotificationItem, updateCarryReceiptStatus } from "@/api/addData";
+import {
+  addNotificationItem,
+  updateCarryReceiptStatus,
+  updateTarikhResideBank,
+} from "@/api/addData";
 import { toast } from "react-toastify";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { TOAST_CONFIG } from "@/utils/constants";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 
 const Slide4: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -94,6 +98,14 @@ const Slide4: React.FC<ICarrySlideProps> = ({
     }
 
     try {
+      const updateResult = await updateTarikhResideBank(
+        faktorNumber,
+        selectedDate
+      );
+      if (!updateResult.success) {
+        throw new Error(updateResult.message);
+      }
+
       const dateObject = new DateObject({
         date: selectedDate,
         calendar: persian,

@@ -128,6 +128,7 @@ export interface ICustomer {
   total_mani: string;
   tarikhgoshayesh: string | null;
   tarikheblagh: string | null;
+  tarikhresidebank: string | null;
   MainTotalCu: number;
   MainTotakTICU: number;
   takhfif: string;
