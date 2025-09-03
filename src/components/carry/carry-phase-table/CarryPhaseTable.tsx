@@ -45,6 +45,7 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
       const orderNumber = receipts[0].Order_Number;
       const lcNumber = receipts[0].LC_Number;
       const description = receipts[0].Description || "";
+      const status = receipts[0].Status || "";
 
       return {
         carryPhaseGUID,
@@ -56,6 +57,7 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
         lcNumber,
         description,
         receipts,
+        status,
       };
     }
   );
@@ -82,42 +84,53 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
         </TableHeader>
         <TableBody>
           {carryPhases.length > 0 ? (
-            carryPhases.map((phase) => (
-              <Tooltip key={phase.carryPhaseGUID}>
-                <TooltipTrigger asChild>
-                  <TableRow
-                    onClick={() =>
-                      onPhaseClick?.(phase.receipts, phase.carryPhaseGUID)
-                    }
-                    className="cursor-pointer hover:bg-gray-100 transition-all duration-300"
-                  >
-                    <TableCell className="font-medium text-right">
-                      {phase.carryPhaseGUID}
-                    </TableCell>
-                    <TableCell className="text-right">{phase.titles}</TableCell>
-                    <TableCell className="text-right">{phase.date}</TableCell>
-                    <TableCell className="text-right">
-                      {formatNumberWithComma(phase.totalCount)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {formatNumberWithComma(phase.totalValue)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {phase.orderNumber}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {phase.lcNumber}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {phase.description}
-                    </TableCell>
-                  </TableRow>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>برای ثبت جزئیات مرحله حمل کلیک کنید.</p>
-                </TooltipContent>
-              </Tooltip>
-            ))
+            carryPhases.map((phase) => {
+              const isCompleted = Number(phase.status) >= 7;
+              return (
+                <Tooltip key={phase.carryPhaseGUID}>
+                  <TooltipTrigger asChild>
+                    <TableRow
+                      onClick={() =>
+                        onPhaseClick?.(phase.receipts, phase.carryPhaseGUID)
+                      }
+                      className={`cursor-pointer transition-all duration-300 ${
+                        isCompleted ? "bg-gray-400" : "hover:bg-gray-100"
+                      }`}
+                    >
+                      <TableCell className="font-medium text-right">
+                        {phase.carryPhaseGUID}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {phase.titles}
+                      </TableCell>
+                      <TableCell className="text-right">{phase.date}</TableCell>
+                      <TableCell className="text-right">
+                        {formatNumberWithComma(phase.totalCount)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {formatNumberWithComma(phase.totalValue)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {phase.orderNumber}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {phase.lcNumber}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {phase.description}
+                      </TableCell>
+                    </TableRow>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {isCompleted
+                        ? "این مرحله حمل به اتمام رسیده، برای دانلود فایل ها کلیک کنید."
+                        : "برای ثبت جزئیات مرحله حمل کلیک کنید."}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={8} className="text-center py-4 text-gray-500">
