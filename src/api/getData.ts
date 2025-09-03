@@ -32,7 +32,7 @@ export async function getCarryReceipts(
 ): Promise<ICarryReceipt[]> {
   const listTitle = "LC_carry_receipt";
   let allResults: ICarryReceipt[] = [];
-  let nextUrl = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=Order_Number eq '${factorNumber}'`;
+  let nextUrl = `${BASE_URL}/_api/web/lists/getbytitle('${listTitle}')/items?$filter=Order_Number eq '${factorNumber}'&$orderby=ID desc`;
 
   try {
     while (nextUrl) {
