@@ -10,8 +10,15 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import {
   updateCarryBankConfirmation,
   updateCarryReceiptStatus,
+  addNotificationItem,
 } from "@/api/addData";
 import { toast } from "react-toastify";
+import DateObject from "react-date-object";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import gregorian from "react-date-object/calendars/gregorian";
+import gregorian_en from "react-date-object/locales/gregorian_en";
+import { useCustomerFactor } from "@/api/getData";
 import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 
 const Slide5: React.FC<ICarrySlideProps> = ({
@@ -20,6 +27,7 @@ const Slide5: React.FC<ICarrySlideProps> = ({
   setUploadedFiles,
   carryPhaseGUID,
   selectedReceipts,
+  userName,
 }) => {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [localStatus, setLocalStatus] = useState<string[]>(
@@ -30,6 +38,10 @@ const Slide5: React.FC<ICarrySlideProps> = ({
   const subFolder = carryPhaseGUID || "";
   const baseDocType = "taeidasnad";
   const label = "رسید تایید اسناد توسط بانک";
+
+  const { data: factorData } = useCustomerFactor(faktorNumber);
+  const mabnavalue = factorData?.mabnavalue;
+  const tarikhmabnavalue = factorData?.tarikhmabnavalue;
 
   const rejectVersion = useMemo(
     () => Number(selectedReceipts?.[0]?.Reject_Version || 0),
@@ -93,10 +105,64 @@ const Slide5: React.FC<ICarrySlideProps> = ({
 
       await updateCarryBankConfirmation(itemIds, "0");
 
+      if (!mabnavalue || !tarikhmabnavalue) {
+        throw new Error("مقدار mabnavalue یا tarikhmabnavalue معتبر نیست.");
+      }
+
+      let fromDateStr: string | null | undefined;
+      switch (mabnavalue) {
+        case "از تاریخ گشایش":
+          fromDateStr = factorData?.tarikhgoshayesh;
+          break;
+        case "از تاریخ ابلاغ":
+          fromDateStr = factorData?.tarikheblagh;
+          break;
+        case "از تاریخ حمل/بارنامه":
+          fromDateStr = selectedReceipts?.[0]?.Date;
+          break;
+        case "از تاریخ فاکتور":
+          fromDateStr = factorData?.Date;
+          break;
+        case "از تاریخ ارائه اسناد به بانک/ معامله اسناد/ رسید دریافت بانک":
+          fromDateStr = factorData?.tarikhresidebank;
+          break;
+        default:
+          throw new Error("مقدار mabnavalue معتبر نیست.");
+      }
+
+      if (!fromDateStr) {
+        throw new Error("تاریخ مبنا معتبر نیست یا یافت نشد.");
+      }
+
+      const dateObject = new DateObject({
+        date: fromDateStr,
+        calendar: persian,
+        locale: persian_fa,
+      });
+      const gregorianDateObject = dateObject.convert(gregorian, gregorian_en);
+      const fromDateFormatted = gregorianDateObject.format("M/D/YYYY");
+
+      const daysToAdd = Number(tarikhmabnavalue) || 0;
+      const deadlineDate = gregorianDateObject.toDate();
+      deadlineDate.setDate(deadlineDate.getDate() + daysToAdd);
+      const deadlineFormatted = `${
+        deadlineDate.getMonth() + 1
+      }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+
+      await addNotificationItem({
+        Title: "پیگیری واریز مبلغ توسط بانک",
+        dont_show: "0",
+        From_Date: fromDateFormatted,
+        deadline: deadlineFormatted,
+        assign: String(userName),
+        massage: "لطفاً واریز مبلغ توسط بانک را پیگیری کنید.",
+        Item_URL: `https://portal.zarsim.com/SitePages/lcdocuments.aspx/carry?Factor_ID=${faktorNumber}`,
+      });
+
       toast.success("وضعیت همه آیتم‌ها با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
       console.error(error);
-      toast.error("خطا در بروزرسانی وضعیت!", TOAST_CONFIG);
+      toast.error("خطا در بروزرسانی وضعیت یا ارسال ناتیفیکیشن!", TOAST_CONFIG);
     }
   };
 
