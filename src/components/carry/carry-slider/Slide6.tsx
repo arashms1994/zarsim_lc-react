@@ -4,10 +4,14 @@ import { useUploadedFiles } from "@/hooks/useUploadedFiles";
 import { useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
-import { updateCarryReceiptStatus } from "@/api/addData";
+import { updateCarryReceiptStatus, addNotificationItem } from "@/api/addData";
 import { toast } from "react-toastify";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { TOAST_CONFIG } from "@/utils/constants";
+import DateObject from "react-date-object";
+import gregorian from "react-date-object/calendars/gregorian";
+import gregorian_en from "react-date-object/locales/gregorian_en";
+import { useCarryReceipts, useCustomerFactor } from "@/api/getData";
 
 const Slide6: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -15,11 +19,36 @@ const Slide6: React.FC<ICarrySlideProps> = ({
   setUploadedFiles,
   carryPhaseGUID,
   selectedReceipts,
+  userName,
 }) => {
   const label = "رسید واریز مبلغ";
   const subFolder = carryPhaseGUID || "";
   const docType = "residvariz";
   const queryClient = useQueryClient();
+
+  const { data: faktor } = useCustomerFactor(faktorNumber);
+  const { data: receipts } = useCarryReceipts(faktorNumber);
+  const [localStatus, setLocalStatus] = useState<string[]>(
+    selectedReceipts?.map((r) => r.Status ?? "0") || []
+  );
+
+  const isCompleted = localStatus.every((status) => Number(status) >= 7);
+
+  const totalCount =
+    receipts?.reduce((sum, receipt) => sum + (Number(receipt.Count) || 0), 0) ||
+    0;
+  const totalAmount =
+    receipts?.reduce((sum, receipt) => sum + (Number(receipt.Total) || 0), 0) ||
+    0;
+
+  const toleranceMosbat = Number(faktor?.tolerance_mosbat) || Infinity;
+  const toleranceManfi = Number(faktor?.tolerance_manfi) || -Infinity;
+
+  const isWithinTolerance =
+    totalCount >= toleranceManfi &&
+    totalCount <= toleranceMosbat &&
+    totalAmount >= toleranceManfi &&
+    totalAmount <= toleranceMosbat;
 
   const { data: files } = useUploadedFiles(faktorNumber, subFolder, docType);
   const fileFromServer = files?.[0];
@@ -29,12 +58,6 @@ const Slide6: React.FC<ICarrySlideProps> = ({
 
   const itemIds =
     selectedReceipts?.map((r) => r.Id).filter((id): id is number => !!id) || [];
-
-  const [localStatus, setLocalStatus] = useState<string[]>(
-    selectedReceipts?.map((r) => r.Status ?? "0") || []
-  );
-
-  const isCompleted = localStatus.every((status) => Number(status) >= 7);
 
   useEffect(() => {
     if (fileUrl && uploadedFiles[docType] !== fileUrl) {
@@ -62,6 +85,30 @@ const Slide6: React.FC<ICarrySlideProps> = ({
     try {
       await updateCarryReceiptStatus(itemIds, "7");
       setLocalStatus(itemIds.map(() => "7"));
+
+      if (isWithinTolerance) {
+        const today = new DateObject({
+          calendar: gregorian,
+          locale: gregorian_en,
+        });
+        const fromDateFormatted = today.format("M/D/YYYY");
+
+        const deadlineDate = new Date();
+        deadlineDate.setDate(deadlineDate.getDate() + 1);
+        const deadlineFormatted = `${
+          deadlineDate.getMonth() + 1
+        }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+
+        await addNotificationItem({
+          Title: "ثبت اختتامیه اعتبار اسنادی",
+          dont_show: "0",
+          From_Date: fromDateFormatted,
+          deadline: deadlineFormatted,
+          assign: String(userName),
+          massage: "لطفاً اختتامیه اعتبار اسنادی را ثبت کنید.",
+          Item_URL: `https://portal.zarsim.com/SitePages/lcdocuments.aspx/LCEnding?Factor_ID=${faktorNumber}`,
+        });
+      }
 
       toast.success("وضعیت همه آیتم‌ها با موفقیت بروزرسانی شد!", TOAST_CONFIG);
     } catch (error) {
