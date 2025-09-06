@@ -254,3 +254,21 @@ export interface ISPPageContextInfo {
   siteId: string;
   webId: string;
 }
+
+export interface INamehEkhtetamiehWordDataProps {
+  BankAccountvalue: string;
+  LCNumber: string;
+  Customer: string;
+  bankName?: string;
+}
+
+export interface INamehPoosheshiWordDataProps {
+  LCNumber: string;
+  LCTotal: string;
+  tarikhgoshayesh: string;
+  tarikhmabnavalue: string;
+  mabnavalue: string;
+  titles: string;
+  totals: string;
+  counts: string;
+}
