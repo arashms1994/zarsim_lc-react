@@ -20,8 +20,8 @@ export const CarryTable: React.FC<ICarryTableProps> = ({
   const columns = [
     { label: "شماره فاکتور", key: "Title" },
     { label: "تاریخ", key: "Date" },
-    { label: "متراژ", key: "Count" },
-    { label: "مبلغ کل", key: "Total" },
+    { label: "متراژ(متر)", key: "Count" },
+    { label: "مبلغ کل(ريال)", key: "Total" },
     { label: "شماره پیش‌فاکتور", key: "Order_Number" },
     { label: "شماره LC", key: "LC_Number" },
   ];
