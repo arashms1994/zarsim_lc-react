@@ -172,10 +172,6 @@ const Carry = () => {
         <Button
           type="button"
           onClick={() => {
-            console.log(
-              "setCarryFormModalOpen type:",
-              typeof setCarryFormModalOpen
-            );
             setCarryFormModalOpen(true);
           }}
           className="bg-green-600 text-white px-4 py-2 rounded-xl transition-all duration-300"
