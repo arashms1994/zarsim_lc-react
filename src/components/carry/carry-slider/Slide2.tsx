@@ -5,13 +5,15 @@ import {
   SECOND_SLIDE_DOCS_VERSION2,
   TOAST_CONFIG,
 } from "@/utils/constants";
-import { useQueryClient } from "@tanstack/react-query";
-import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
 import { updateCarryReceiptStatus } from "@/api/addData";
 import { toast } from "react-toastify";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { useCustomerFactor } from "@/api/getData";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
+import { generateNamehPoosheshi } from "@/utils/generateNamehPoosheshi";
 
 const Slide2: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -23,6 +25,7 @@ const Slide2: React.FC<ICarrySlideProps> = ({
   const [localReceipts, setLocalReceipts] = useState(selectedReceipts || []);
   const allStatusThree = localReceipts.every((r) => Number(r.Status) >= 3);
   const subFolder = carryPhaseGUID || "";
+  const { data: factorData } = useCustomerFactor(faktorNumber);
 
   const rejectVersion = useMemo(
     () => Number(selectedReceipts?.[0]?.Reject_Version || 0),
@@ -62,7 +65,6 @@ const Slide2: React.FC<ICarrySlideProps> = ({
       ?.map((r) => r.Id)
       .filter((id): id is number => typeof id === "number") || [];
 
-  // بروزرسانی فایل‌های آپلود شده
   useEffect(() => {
     if (!allDocTypes.length) return;
 
@@ -82,30 +84,72 @@ const Slide2: React.FC<ICarrySlideProps> = ({
   };
 
   const handleSubmit = async () => {
+
     const allUploaded = lastDocTypes.every((doc) => !!uploadedFiles[doc]);
     if (!allUploaded) {
+      console.error("خطا: همه فایل‌ها آپلود نشده‌اند", {
+        lastDocTypes,
+        uploadedFiles,
+      });
       toast.error("لطفاً همه فایل‌ها را آپلود کنید.", TOAST_CONFIG);
       return;
     }
     if (!itemIds.length) {
+      console.error("خطا: آیتم‌های رسید حمل مشخص نشده‌اند", { itemIds });
       toast.error("آیتم‌های رسید حمل مشخص نشده‌اند!", TOAST_CONFIG);
       return;
     }
+    if (!factorData) {
+      console.error("خطا: داده‌های فاکتور در دسترس نیست", { faktorNumber });
+      toast.error("داده‌های فاکتور در دسترس نیست!", TOAST_CONFIG);
+      return;
+    }
+
     try {
       await updateCarryReceiptStatus(itemIds, "3");
+
       setLocalReceipts((prev) =>
         prev.map((r) => ({
           ...r,
           Status: Number(r.Status) >= 3 ? r.Status : "3",
         }))
       );
+
+      const titles = selectedReceipts?.length
+        ? selectedReceipts.map((r) => r.Title || "نامشخص").join("-")
+        : "نامشخص";
+      const totals = selectedReceipts?.length
+        ? selectedReceipts
+            .reduce((sum, r) => sum + Number(r.Total || 0), 0)
+            .toString()
+        : "0";
+      const counts = selectedReceipts?.length
+        ? selectedReceipts
+            .reduce((sum, r) => sum + Number(r.Count || 0), 0)
+            .toString()
+        : "0";
+
+      await generateNamehPoosheshi({
+        LCNumber: factorData.LCNumber || "نامشخص",
+        LCTotal: factorData.LCTotal || "0",
+        tarikhgoshayesh: factorData.tarikhgoshayesh || "نامشخص",
+        titles,
+        totals,
+        counts,
+        tarikhmabnavalue: factorData.tarikhmabnavalue || "0",
+        mabnavalue: factorData.mabnavalue || "نامشخص",
+      });
+
       toast.success(
-        "اطلاعات با موفقیت ثبت شد و وضعیت بروزرسانی شد!",
+        "اطلاعات با موفقیت ثبت شد و فایل Word تولید شد!",
         TOAST_CONFIG
       );
     } catch (error) {
-      console.error(error);
-      toast.error("خطا در آپدیت وضعیت رسید حمل!", TOAST_CONFIG);
+      console.error("خطا در handleSubmit:", error);
+      toast.error(
+        `خطا در آپدیت وضعیت یا تولید فایل Word: ${error}`,
+        TOAST_CONFIG
+      );
     }
   };
 
