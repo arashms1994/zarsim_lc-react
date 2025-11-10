@@ -352,7 +352,7 @@ const OpenningForm = ({
           className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold text-white transition-all duration-300 cursor-pointer ${
             isSubmitDisabled
               ? "bg-gray-600 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-900"
+              : "bg-[#1e7677] hover:bg-[#165758]"
           }`}
           disabled={isSubmitDisabled}
         >
