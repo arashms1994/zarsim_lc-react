@@ -114,7 +114,7 @@ const FileUploader = forwardRef<unknown, IFileUploaderProps>(
         <div className="flex justify-around items-center min-w-[230px] h-[50px] gap-4 flex-wrap">
           <label
             htmlFor={inputId}
-            className="px-2 py-1 w-[95px] h-[30px] rounded-lg text-white bg-green-600 font-semibold flex justify-center items-center cursor-pointer hover:bg-green-800 transition-all duration-300"
+            className="px-2 py-1 w-[95px] h-[30px] rounded-lg text-white bg-[#1e7677] font-semibold flex justify-center items-center cursor-pointer hover:bg-[#13494a] transition-all duration-300"
           >
             انتخاب فایل
           </label>
@@ -167,7 +167,7 @@ const FileUploader = forwardRef<unknown, IFileUploaderProps>(
         {uploadStatus && (
           <div
             className={`font-bold text-sm mt-1 ${
-              uploadProgress === 100 ? "text-green-700" : "text-red-600"
+              uploadProgress === 100 ? "text-[#1e7677]" : "text-red-600"
             }`}
           >
             {uploadStatus}

@@ -80,7 +80,7 @@ const Slider: React.FC<ICarrySliderProps> = ({
               onClick={() => setPage(tab.id)}
               className={`text-[20px] min-w-[140px] min-h-24 font-medium cursor-pointer transition-all duration-300 p-1 rounded-full flex justify-center items-center border-none ${
                 page === tab.id
-                  ? "bg-[#009E08] text-white"
+                  ? "bg-[#1e7677] text-white"
                   : "bg-[#c5c5c5] text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
               }`}
             >

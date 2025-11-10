@@ -15,7 +15,7 @@ const SliderControls: React.FC<ISliderControlsProps> = ({
         className={`text-white rounded-full text-sm font-medium h-12 mt-10 p-2 transition-all duration-300 ${
           disablePrev
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-[#009E08] text-[#e7e7e7] hover:bg-[#c5c5c5]"
+            : "bg-[#1e7677] text-[#e7e7e7] hover:bg-[#c5c5c5]"
         }`}
         type="button"
       >
@@ -28,7 +28,7 @@ const SliderControls: React.FC<ISliderControlsProps> = ({
         className={`text-white rounded-full text-sm font-medium h-12 mt-10 p-2 transition-all duration-300 ${
           disableNext
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-[#009E08] text-[#e7e7e7] hover:bg-[#c5c5c5]"
+            : "bg-[#1e7677] text-[#e7e7e7] hover:bg-[#c5c5c5]"
         }`}
         type="button"
       >

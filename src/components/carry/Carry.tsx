@@ -174,7 +174,7 @@ const Carry = () => {
           onClick={() => {
             setCarryFormModalOpen(true);
           }}
-          className="bg-green-600 text-white px-4 py-2 rounded-xl transition-all duration-300"
+          className="bg-[#1e7677] text-white px-4 py-2 rounded-xl transition-all duration-300"
         >
           افزودن فاکتور
         </Button>

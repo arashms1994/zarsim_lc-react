@@ -52,25 +52,25 @@ export const Layout: React.FC = () => {
             <TabsList className="flex flex-row-reverse justify-around bg-transparent">
               <TabsTrigger
                 value="preinvoice"
-                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#1e7677] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
               >
                 اطلاعات پیش فاکتور
               </TabsTrigger>
               <TabsTrigger
                 value="openning"
-                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#1e7677] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
               >
                 اطلاعات اعتبار اسنادی (ابلاغ)
               </TabsTrigger>
               <TabsTrigger
                 value="carry"
-                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#1e7677] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
               >
                 حمل و پرداخت
               </TabsTrigger>
               <TabsTrigger
                 value="LCEnding"
-                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#009E08] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
+                className="text-xl border-none font-medium transition-all duration-300 px-4 py-2 rounded-full data-[state=active]:bg-[#1e7677] data-[state=active]:text-white data-[state=inactive]:bg-[#c5c5c5] data-[state=inactive]:text-[#e7e7e7] hover:bg-[#445861] hover:text-white"
               >
                 اختتامیه اعتبار اسنادی
               </TabsTrigger>

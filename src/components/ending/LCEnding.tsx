@@ -61,7 +61,7 @@ const LCEnding = () => {
           <button
             type="submit"
             className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-              ${isLoading ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-900"}`}
+              ${isLoading ? "bg-gray-400 text-gray-200 cursor-not-allowed" : "bg-[#1e7677] text-white hover:bg-[#124647]"}`}
             onClick={handleLCEnding}
             disabled={isLoading}
           >
