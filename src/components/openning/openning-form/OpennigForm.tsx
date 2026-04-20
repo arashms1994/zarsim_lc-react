@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { BASE_URL } from "@/api/base";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useUploadedFiles } from "@/hooks/useUploadedFiles";
+import FileDownloadLink from "@/components/ui/FileDownloadLink";
+import FileUploader from "@/components/file-uploader/FileUploader";
+import type { IFileUploadRef, IOpenningFormProps } from "@/utils/type";
+import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import {
   LC_OPENNING_DATES,
   LC_SETTLEMENT_DATES,
@@ -9,13 +16,6 @@ import {
   openningFormSchema,
   type OpenningFormSchema,
 } from "@/utils/validation";
-import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
-import FileUploader from "@/components/file-uploader/FileUploader";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { IFileUploadRef, IOpenningFormProps } from "@/utils/type";
-import FileDownloadLink from "@/components/ui/FileDownloadLink";
-import { useUploadedFiles } from "@/hooks/useUploadedFiles";
-import { BASE_URL } from "@/api/base";
 
 const OpenningForm = ({
   onSubmit,
@@ -99,7 +99,7 @@ const OpenningForm = ({
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">تاریخ گشایش:</label>
           {faktor?.tarikhgoshayesh &&
-          !isNaN(new Date(faktor.tarikhgoshayesh).getTime()) ? (
+            !isNaN(new Date(faktor.tarikhgoshayesh).getTime()) ? (
             <input
               type="text"
               readOnly
@@ -172,7 +172,7 @@ const OpenningForm = ({
         <div className="w-full max-w-[500px] flex justify-between items-center gap-5">
           <label className="text-[22px] font-medium">تاریخ ابلاغ:</label>
           {faktor?.tarikheblagh &&
-          !isNaN(new Date(faktor.tarikheblagh).getTime()) ? (
+            !isNaN(new Date(faktor.tarikheblagh).getTime()) ? (
             <input
               type="text"
               readOnly
@@ -349,11 +349,10 @@ const OpenningForm = ({
 
         <button
           type="submit"
-          className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold text-white transition-all duration-300 cursor-pointer ${
-            isSubmitDisabled
-              ? "bg-gray-600 cursor-not-allowed"
-              : "bg-[#1e7677] hover:bg-[#165758]"
-          }`}
+          className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold text-white transition-all duration-300 cursor-pointer ${isSubmitDisabled
+            ? "bg-gray-600 cursor-not-allowed"
+            : "bg-[#1e7677] hover:bg-[#165758]"
+            }`}
           disabled={isSubmitDisabled}
         >
           {isSubmitting ? "در حال ثبت..." : "ثبت اطلاعات"}

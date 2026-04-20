@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
+import { BASE_URL } from "@/api/base";
+import { toast } from "react-toastify";
+import { useCustomerFactor } from "@/api/getData";
 import type { ICarrySlideProps } from "@/utils/type";
+import { useQueryClient } from "@tanstack/react-query";
+import { updateCarryReceiptStatus } from "@/api/addData";
+import SectionHeader from "@/components/ui/SectionHeader";
+import UploadSection from "@/components/ui/UploadSection";
+import { generateNamehPoosheshi } from "@/utils/generateNamehPoosheshi";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import {
   SECOND_SLIDE_DOCS,
   SECOND_SLIDE_DOCS_VERSION2,
   TOAST_CONFIG,
 } from "@/utils/constants";
-import { BASE_URL } from "@/api/base";
-import UploadSection from "@/components/ui/UploadSection";
-import { updateCarryReceiptStatus } from "@/api/addData";
-import { toast } from "react-toastify";
-import SectionHeader from "@/components/ui/SectionHeader";
-import { useCustomerFactor } from "@/api/getData";
-import { useQueryClient } from "@tanstack/react-query";
-import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
-import { generateNamehPoosheshi } from "@/utils/generateNamehPoosheshi";
 
 const Slide2: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -120,13 +120,13 @@ const Slide2: React.FC<ICarrySlideProps> = ({
         : "نامشخص";
       const totals = selectedReceipts?.length
         ? selectedReceipts
-            .reduce((sum, r) => sum + Number(r.Total || 0), 0)
-            .toString()
+          .reduce((sum, r) => sum + Number(r.Total || 0), 0)
+          .toString()
         : "0";
       const counts = selectedReceipts?.length
         ? selectedReceipts
-            .reduce((sum, r) => sum + Number(r.Count || 0), 0)
-            .toString()
+          .reduce((sum, r) => sum + Number(r.Count || 0), 0)
+          .toString()
         : "0";
 
       await generateNamehPoosheshi({
@@ -161,10 +161,9 @@ const Slide2: React.FC<ICarrySlideProps> = ({
         const versionNumber = isRevision ? doc.split("_v")[1] : null;
 
         const docLabel = isRevision
-          ? `${
-              SECOND_SLIDE_DOCS_VERSION2.find((d) => d.value === baseValue)
-                ?.label || baseValue
-            } نسخه ${versionNumber}`
+          ? `${SECOND_SLIDE_DOCS_VERSION2.find((d) => d.value === baseValue)
+            ?.label || baseValue
+          } نسخه ${versionNumber}`
           : SECOND_SLIDE_DOCS.find((d) => d.value === doc)?.label || doc;
 
         return (
@@ -187,10 +186,9 @@ const Slide2: React.FC<ICarrySlideProps> = ({
             type="button"
             disabled={!lastDocTypes.every((doc) => uploadedFiles[doc])}
             className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-              ${
-                lastDocTypes.every((doc) => uploadedFiles[doc])
-                  ? "bg-blue-600 text-white hover:bg-blue-900"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              ${lastDocTypes.every((doc) => uploadedFiles[doc])
+                ? "bg-blue-600 text-white hover:bg-blue-900"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
               }`}
             onClick={handleSubmit}
           >

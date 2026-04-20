@@ -1,22 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
+import { BASE_URL } from "@/api/base";
+import { toast } from "react-toastify";
+import DateObject from "react-date-object";
+import type { ICarrySlideProps } from "@/utils/type";
 import { useQueryClient } from "@tanstack/react-query";
+import UploadSection from "@/components/ui/UploadSection";
+import SectionHeader from "@/components/ui/SectionHeader";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import gregorian from "react-date-object/calendars/gregorian";
+import gregorian_en from "react-date-object/locales/gregorian_en";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
+import { updateCarryReceiptStatus, addNotificationItem } from "@/api/addData";
 import {
   FIRST_SLIDE_DOCS,
   FIRST_SLIDE_DOCS_VERSION2,
   TOAST_CONFIG,
 } from "@/utils/constants";
-import type { ICarrySlideProps } from "@/utils/type";
-import { BASE_URL } from "@/api/base";
-import UploadSection from "@/components/ui/UploadSection";
-import { updateCarryReceiptStatus, addNotificationItem } from "@/api/addData";
-import { toast } from "react-toastify";
-import SectionHeader from "@/components/ui/SectionHeader";
-import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
-import DateObject from "react-date-object";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
-import gregorian from "react-date-object/calendars/gregorian";
-import gregorian_en from "react-date-object/locales/gregorian_en";
 
 const Slide1: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -123,9 +123,8 @@ const Slide1: React.FC<ICarrySlideProps> = ({
         deadlineDate.setDate(deadlineDate.getDate() + 5);
 
         const fromDateFormatted = gregorianDateObject.format("M/D/YYYY");
-        const deadlineFormatted = `${
-          deadlineDate.getMonth() + 1
-        }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+        const deadlineFormatted = `${deadlineDate.getMonth() + 1
+          }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
 
         await addNotificationItem({
           Title: "آماده سازی اسناد",
@@ -156,10 +155,9 @@ const Slide1: React.FC<ICarrySlideProps> = ({
         const versionNumber = isRevision ? doc.split("_v")[1] : null;
 
         const docLabel = isRevision
-          ? `${
-              FIRST_SLIDE_DOCS_VERSION2.find((d) => d.value === baseValue)
-                ?.label || baseValue
-            } نسخه ${versionNumber}`
+          ? `${FIRST_SLIDE_DOCS_VERSION2.find((d) => d.value === baseValue)
+            ?.label || baseValue
+          } نسخه ${versionNumber}`
           : FIRST_SLIDE_DOCS.find((d) => d.value === doc)?.label || doc;
 
         return (
@@ -184,20 +182,19 @@ const Slide1: React.FC<ICarrySlideProps> = ({
               allStatusTwo ||
               !(rejectVersion > 0
                 ? FIRST_SLIDE_DOCS_VERSION2.map(
-                    (d) => `${d.value}_v${rejectVersion}`
-                  ).every((doc) => uploadedFiles[doc])
+                  (d) => `${d.value}_v${rejectVersion}`
+                ).every((doc) => uploadedFiles[doc])
                 : baseDocTypes.every((doc) => uploadedFiles[doc]))
             }
             className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-              ${
-                !allStatusTwo &&
+              ${!allStatusTwo &&
                 (rejectVersion > 0
                   ? FIRST_SLIDE_DOCS_VERSION2.map(
-                      (d) => `${d.value}_v${rejectVersion}`
-                    ).every((doc) => uploadedFiles[doc])
+                    (d) => `${d.value}_v${rejectVersion}`
+                  ).every((doc) => uploadedFiles[doc])
                   : baseDocTypes.every((doc) => uploadedFiles[doc]))
-                  ? "bg-blue-600 text-white hover:bg-blue-900"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                ? "bg-blue-600 text-white hover:bg-blue-900"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
               }`}
             onClick={handleSubmit}
           >

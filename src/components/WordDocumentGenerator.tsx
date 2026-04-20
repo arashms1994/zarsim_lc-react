@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { saveAs } from "file-saver";
 import {
   Document,
   Packer,
@@ -9,7 +10,6 @@ import {
   TableCell,
   WidthType,
 } from "docx";
-import { saveAs } from "file-saver";
 
 const WordDocumentGenerator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -91,11 +91,10 @@ const WordDocumentGenerator: React.FC = () => {
       <button
         onClick={generateWordDocument}
         disabled={isLoading}
-        className={`px-4 py-2 rounded-lg text-white font-medium ${
-          isLoading
+        className={`px-4 py-2 rounded-lg text-white font-medium ${isLoading
             ? "bg-gray-400 cursor-not-allowed"
             : "bg-blue-600 hover:bg-blue-800"
-        }`}
+          }`}
       >
         {isLoading ? "در حال تولید..." : "دانلود فایل Word"}
       </button>

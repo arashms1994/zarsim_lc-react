@@ -1,7 +1,7 @@
 import React from "react";
-import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 import { Link } from "react-router";
 import type { IFaktorProps } from "@/utils/type";
+import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 
 const Faktor: React.FC<IFaktorProps> = ({ customer }) => {
   const customerDetails = [

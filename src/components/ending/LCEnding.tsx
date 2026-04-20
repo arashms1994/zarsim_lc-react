@@ -1,10 +1,10 @@
-import { useCustomerFactor } from "@/api/getData";
-import SectionHeader from "../ui/SectionHeader";
-import { useLayoutContext } from "@/providers/LayoutContext";
-import { updateLCEnding } from "@/api/addData";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { updateLCEnding } from "@/api/addData";
+import SectionHeader from "../ui/SectionHeader";
 import { TOAST_CONFIG } from "@/utils/constants";
+import { useCustomerFactor } from "@/api/getData";
+import { useLayoutContext } from "@/providers/LayoutContext";
 import { generateNamehEkhtetamieh } from "@/utils/generateNamehEkhtetamieh";
 
 const LCEnding = () => {

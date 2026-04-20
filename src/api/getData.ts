@@ -1,6 +1,6 @@
-import type { ICarryReceipt, ICustomer } from "./../utils/type";
-import { useQuery } from "@tanstack/react-query";
 import { BASE_URL } from "./base";
+import { useQuery } from "@tanstack/react-query";
+import type { ICarryReceipt, ICustomer } from "./../utils/type";
 
 export async function getCustomerFactor(
   factorNumber: string

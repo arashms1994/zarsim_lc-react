@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, Outlet, useNavigate } from "react-router-dom";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LayoutContext } from "@/providers/LayoutContext";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLocation, Outlet, useNavigate } from "react-router-dom";
 
 export const Layout: React.FC = () => {
   const location = useLocation();

@@ -1,4 +1,11 @@
+import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 import type { ICarryPhaseTableProps, ICarryReceipt } from "@/utils/type";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Table,
   TableBody,
@@ -8,13 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { formatNumberWithComma } from "@/utils/formatNumberWithComma";
 
 const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
   carryReceipt = [],
@@ -93,9 +93,8 @@ const CarryPhaseTable: React.FC<ICarryPhaseTableProps> = ({
                       onClick={() =>
                         onPhaseClick?.(phase.receipts, phase.carryPhaseGUID)
                       }
-                      className={`cursor-pointer transition-all duration-300 ${
-                        isCompleted ? "bg-gray-400" : "hover:bg-gray-100"
-                      }`}
+                      className={`cursor-pointer transition-all duration-300 ${isCompleted ? "bg-gray-400" : "hover:bg-gray-100"
+                        }`}
                     >
                       <TableCell className="font-medium text-right">
                         {phase.carryPhaseGUID}

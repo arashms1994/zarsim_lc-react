@@ -1,13 +1,13 @@
 import { useRef, useState } from "react";
-import { useLayoutContext } from "@/providers/LayoutContext";
-import { useCustomerFactor } from "@/api/getData";
-import { updateCustomerFactorItem } from "@/api/addData";
-import SectionHeader from "../ui/SectionHeader";
-import OpenningForm from "./openning-form/OpennigForm";
-import type { OpenningFormSchema } from "@/utils/validation";
-import type { IFileUploadRef } from "@/utils/type";
 import { toast } from "react-toastify";
+import SectionHeader from "../ui/SectionHeader";
 import { TOAST_CONFIG } from "@/utils/constants";
+import { useCustomerFactor } from "@/api/getData";
+import type { IFileUploadRef } from "@/utils/type";
+import OpenningForm from "./openning-form/OpennigForm";
+import { updateCustomerFactorItem } from "@/api/addData";
+import { useLayoutContext } from "@/providers/LayoutContext";
+import type { OpenningFormSchema } from "@/utils/validation";
 
 const Openning = () => {
   const { faktorNumber } = useLayoutContext();

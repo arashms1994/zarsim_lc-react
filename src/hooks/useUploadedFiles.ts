@@ -25,6 +25,7 @@ export const fetchUploadedFiles = async (
   }
 
   const json = await res.json();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return json.d.results.map((file: any) => ({
     Name: file.Name,
     ServerRelativeUrl: file.ServerRelativeUrl,

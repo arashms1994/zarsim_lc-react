@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
+import { BASE_URL } from "@/api/base";
+import { toast } from "react-toastify";
+import DateObject from "react-date-object";
+import { TOAST_CONFIG } from "@/utils/constants";
 import type { ICarrySlideProps } from "@/utils/type";
 import { useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
-import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
-import DateObject from "react-date-object";
+import SectionHeader from "@/components/ui/SectionHeader";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
+import PersianDatePicker from "@/components/persian-date-picker/PersianDatePicker";
 import {
   addNotificationItem,
   updateCarryReceiptStatus,
   updateTarikhResideBank,
 } from "@/api/addData";
-import { toast } from "react-toastify";
-import SectionHeader from "@/components/ui/SectionHeader";
-import { TOAST_CONFIG } from "@/utils/constants";
-import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 
 const Slide4: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -117,9 +117,8 @@ const Slide4: React.FC<ICarrySlideProps> = ({
       deadlineDate.setDate(deadlineDate.getDate() + 12);
 
       const fromDateFormatted = gregorianDateObject.format("M/D/YYYY");
-      const deadlineFormatted = `${
-        deadlineDate.getMonth() + 1
-      }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+      const deadlineFormatted = `${deadlineDate.getMonth() + 1
+        }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
 
       await addNotificationItem({
         Title: "تایید اسناد توسط بانک",
@@ -180,10 +179,9 @@ const Slide4: React.FC<ICarrySlideProps> = ({
                 !selectedDate || !allDocTypes.every((doc) => uploadedFiles[doc])
               }
               className={`border-none rounded-lg min-w-[200px] mt-5 p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-                ${
-                  selectedDate && allDocTypes.every((doc) => uploadedFiles[doc])
-                    ? "bg-blue-600 text-white hover:bg-blue-900"
-                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                ${selectedDate && allDocTypes.every((doc) => uploadedFiles[doc])
+                  ? "bg-blue-600 text-white hover:bg-blue-900"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 }`}
               onClick={handleSubmit}
             >

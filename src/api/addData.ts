@@ -1,11 +1,11 @@
+import { BASE_URL } from "./base";
 import { getDigest } from "@/utils/getDigest";
+import { generatePhaseNumber } from "@/utils/generatePhaseNumber";
 import type {
   ICarryReceipt,
   ICustomerFactorUpdate,
   INotificationItem,
 } from "@/utils/type";
-import { BASE_URL } from "./base";
-import { generatePhaseNumber } from "@/utils/generatePhaseNumber";
 
 export async function updateCustomerFactorItem(
   faktorNumber: string,
@@ -390,6 +390,7 @@ export async function updateCarryBankConfirmation(
       const itemData = await response.json();
       const currentRejectVersion = Number(itemData.d.Reject_Version || 0);
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const updateBody: any = { __metadata: { type: itemType } };
 
       if (bankConfirm === "1") {

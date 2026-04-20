@@ -1,7 +1,7 @@
-import { useQueries } from "@tanstack/react-query";
 import { useMemo } from "react";
-import type { IUseMultipleUploadedFilesResult } from "@/utils/type";
+import { useQueries } from "@tanstack/react-query";
 import { fetchUploadedFiles } from "./useUploadedFiles";
+import type { IUseMultipleUploadedFilesResult } from "@/utils/type";
 
 type DocType = string;
 

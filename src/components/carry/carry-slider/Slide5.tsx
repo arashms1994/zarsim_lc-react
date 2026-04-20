@@ -1,25 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
+import { BASE_URL } from "@/api/base";
+import { toast } from "react-toastify";
+import DateObject from "react-date-object";
+import { Button } from "@/components/ui/button";
+import { useCustomerFactor } from "@/api/getData";
 import type { ICarrySlideProps } from "@/utils/type";
 import { useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "@/api/base";
 import UploadSection from "@/components/ui/UploadSection";
-import { MODAL_CLASSES, TOAST_CONFIG } from "@/utils/constants";
-import { Button } from "@/components/ui/button";
-import BankRejectionModal from "@/components/ui/BankRejectionModal";
 import SectionHeader from "@/components/ui/SectionHeader";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import gregorian from "react-date-object/calendars/gregorian";
+import { MODAL_CLASSES, TOAST_CONFIG } from "@/utils/constants";
+import gregorian_en from "react-date-object/locales/gregorian_en";
+import BankRejectionModal from "@/components/ui/BankRejectionModal";
+import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 import {
   updateCarryBankConfirmation,
   updateCarryReceiptStatus,
   addNotificationItem,
 } from "@/api/addData";
-import { toast } from "react-toastify";
-import DateObject from "react-date-object";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
-import gregorian from "react-date-object/calendars/gregorian";
-import gregorian_en from "react-date-object/locales/gregorian_en";
-import { useCustomerFactor } from "@/api/getData";
-import { useMultipleUploadedFiles } from "@/hooks/useMultipleUploadedFiles ";
 
 const Slide5: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -145,9 +145,8 @@ const Slide5: React.FC<ICarrySlideProps> = ({
       const daysToAdd = Number(tarikhmabnavalue) || 0;
       const deadlineDate = gregorianDateObject.toDate();
       deadlineDate.setDate(deadlineDate.getDate() + daysToAdd);
-      const deadlineFormatted = `${
-        deadlineDate.getMonth() + 1
-      }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+      const deadlineFormatted = `${deadlineDate.getMonth() + 1
+        }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
 
       await addNotificationItem({
         Title: "پیگیری واریز مبلغ توسط بانک",
@@ -221,10 +220,9 @@ const Slide5: React.FC<ICarrySlideProps> = ({
                 onClick={handleConfirm}
                 disabled={!uploadedFiles[baseDocType]}
                 className={`min-w-[200px] mt-5 p-3 text-[18px] font-semibold
-                  ${
-                    uploadedFiles[baseDocType]
-                      ? "bg-blue-600 text-white hover:bg-blue-900"
-                      : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                  ${uploadedFiles[baseDocType]
+                    ? "bg-blue-600 text-white hover:bg-blue-900"
+                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
                   }`}
               >
                 تایید اسناد توسط بانک

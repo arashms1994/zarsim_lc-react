@@ -63,7 +63,7 @@ const FileUploader = forwardRef<unknown, IFileUploaderProps>(
               Accept: "application/json;odata=verbose",
               "X-RequestDigest": digest,
             },
-          }).catch(() => {}); // نادیده گرفتن خطا اگه پوشه قبلاً وجود داشته باشه
+          }).catch(() => { }); // نادیده گرفتن خطا اگه پوشه قبلاً وجود داشته باشه
 
         // ایجاد پوشه‌ها به ترتیب
         let currentPath = "";
@@ -166,9 +166,8 @@ const FileUploader = forwardRef<unknown, IFileUploaderProps>(
 
         {uploadStatus && (
           <div
-            className={`font-bold text-sm mt-1 ${
-              uploadProgress === 100 ? "text-[#1e7677]" : "text-red-600"
-            }`}
+            className={`font-bold text-sm mt-1 ${uploadProgress === 100 ? "text-[#1e7677]" : "text-red-600"
+              }`}
           >
             {uploadStatus}
           </div>

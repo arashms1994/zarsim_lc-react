@@ -1,6 +1,6 @@
-import { Document, Packer, Paragraph, TextRun, AlignmentType } from "docx";
 import { saveAs } from "file-saver";
 import type { INamehEkhtetamiehWordDataProps } from "./type";
+import { Document, Packer, Paragraph, TextRun, AlignmentType } from "docx";
 
 export async function generateNamehEkhtetamieh(
   data: INamehEkhtetamiehWordDataProps

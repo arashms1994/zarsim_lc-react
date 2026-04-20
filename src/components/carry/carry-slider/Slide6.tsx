@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import type { ICarrySlideProps } from "@/utils/type";
-import { useUploadedFiles } from "@/hooks/useUploadedFiles";
-import { useQueryClient } from "@tanstack/react-query";
 import { BASE_URL } from "@/api/base";
-import UploadSection from "@/components/ui/UploadSection";
-import { updateCarryReceiptStatus, addNotificationItem } from "@/api/addData";
 import { toast } from "react-toastify";
-import SectionHeader from "@/components/ui/SectionHeader";
-import { TOAST_CONFIG } from "@/utils/constants";
 import DateObject from "react-date-object";
+import { TOAST_CONFIG } from "@/utils/constants";
+import type { ICarrySlideProps } from "@/utils/type";
+import { useQueryClient } from "@tanstack/react-query";
+import SectionHeader from "@/components/ui/SectionHeader";
+import UploadSection from "@/components/ui/UploadSection";
+import { useUploadedFiles } from "@/hooks/useUploadedFiles";
 import gregorian from "react-date-object/calendars/gregorian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import { useCarryReceipts, useCustomerFactor } from "@/api/getData";
+import { updateCarryReceiptStatus, addNotificationItem } from "@/api/addData";
 
 const Slide6: React.FC<ICarrySlideProps> = ({
   faktorNumber,
@@ -95,9 +95,8 @@ const Slide6: React.FC<ICarrySlideProps> = ({
 
         const deadlineDate = new Date();
         deadlineDate.setDate(deadlineDate.getDate() + 1);
-        const deadlineFormatted = `${
-          deadlineDate.getMonth() + 1
-        }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
+        const deadlineFormatted = `${deadlineDate.getMonth() + 1
+          }/${deadlineDate.getDate()}/${deadlineDate.getFullYear()}`;
 
         await addNotificationItem({
           Title: "ثبت اختتامیه اعتبار اسنادی",
@@ -135,10 +134,9 @@ const Slide6: React.FC<ICarrySlideProps> = ({
             type="button"
             disabled={!uploadedFiles[docType]}
             className={`border-none rounded-lg min-w-[200px] p-3 text-[18px] font-semibold transition-all duration-300 cursor-pointer
-              ${
-                uploadedFiles[docType]
-                  ? "bg-blue-600 text-white hover:bg-blue-900"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              ${uploadedFiles[docType]
+                ? "bg-blue-600 text-white hover:bg-blue-900"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
               }`}
             onClick={handleSubmit}
           >
