@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 base.ts
+
+# docs
+docs.md
